@@ -76,10 +76,27 @@ function dfs_visit(g, start_vertex) {
 }
 
 
+
 //
-// MAIN
+// MAIN entrypoint..
 //
+
+const formulas = {}; // to keep track of formulas
+const vertices = [], adjacency = {};
+const g = new Graph(vertices, adjacency);
+
 function main() {
+
+    //
+    // add event listeners on buttons
+    //
+    document.querySelector('#add_col').addEventListener('click', (e) => {
+        addCol();
+    });
+
+    document.querySelector('#add_row').addEventListener('click', (e) => {
+        addRow();
+    });
 
     //
     // init table
@@ -89,11 +106,6 @@ function main() {
     }
 
 }
-
-
-const formulas = {}; // to keep track of formulas
-const vertices = [], adjacency = {};
-const g = new Graph(vertices, adjacency);
 
 
 
@@ -106,128 +118,130 @@ function listReference(formula) {
     return matches ? matches.map(match => match.substring(1)) : [];
 }
 
+function substitute(formula, ref) {
+    const value = document.querySelector('#' + ref + '_value').innerText;
+    console.log(`substituting #${ref} with ${value} in ${formula}`);
+    return formula.replaceAll('#' + ref, value);
+}
 
+function computeCell(referencedCell) {
+    let formula = formulas[referencedCell] ?? '';
+
+    // get all referenced cells in this one
+    refs = listReference(formula);
+
+    // substitute with "true" (already computed or "literal") value
+    refs.forEach(ref => formula = substitute(formula, ref));
+    //console.log("Substituted formula:", form);
+
+    // eval() : to apply arithmetic (+-*/) and more ...
+    const computed = refs && formula && formula !== '-' ? eval(formula) : '?';
+    //console.log("Final computed value:", computed);
+
+    document.querySelector('#'+referencedCell+'_value').innerHTML = computed;
+    // show formula (non-editable directly)
+    document.querySelector('#'+referencedCell+'_desc').innerHTML = refs.length ? formulas[referencedCell] : '';
+}
+
+function onValueClick(e) {
+    const [colrow, ] = e.target.id.split("_");
+    // hide the computed value
+    e.target.style.display = 'none';
+    document.querySelector('#' + colrow + '_desc').style.display = 'none';
+    // show the input box & focus into it
+    document.querySelector('#' + colrow).style.display = 'inline';
+    document.querySelector('#' + colrow).focus();
+}
+
+function onEnterPressed(e) {
+    if(e.key == 'Enter') {
+        e.target.blur();
+    }
+}
 
 /**
  * Add event on every cells (click, onBlur, keyUp)
+ * 
+ * also called when a new row or col is added !
  */
 function addEvents() {
 
     const values = document.querySelectorAll('.value');
     const inputs = document.querySelectorAll('.formula');
 
+    // delete everything.. (important ? when adding new row or col ?)
+    values.forEach(value => value.removeEventListener('click', onValueClick));
+    inputs.forEach(input => input.removeEventListener('blur', onInputBlur));
+    inputs.forEach(input => input.removeEventListener('keyup', onEnterPressed));
+
+    // add events
+    //
     // when user click on a cell to edit a formula
-    values.forEach(value => value.addEventListener('click', function(e) {
-        const [colrow, ] = e.target.id.split("_");
-        // hide the computed value
-        e.target.style.display = 'none';
-        document.querySelector('#' + colrow + '_desc').style.display = 'none';
-        // show the input box & focus into it
-        document.querySelector('#' + colrow).style.display = 'inline';
-        document.querySelector('#' + colrow).focus();
-    }));
+    values.forEach(value => value.addEventListener('click', onValueClick));
 
     // when finished editing a cell's formula
-    inputs.forEach(input => input.addEventListener('blur', function(e) {
-        const cell = e.target.id;
-        // hide formula input
-        e.target.style.display = 'none';
-
-        const formula = e.target.value;
-        formulas[cell] = formula; // ???
-
-        // display the computed (resulting) value
-        document.querySelector('#' + cell + "_value").style.display = 'inline';
-        document.querySelector('#' + cell + '_desc').style.display = 'inline';
-
-        // ref in this call
-        const references = listReference(formula);
-        if(references.length) {
-            // CHECK: **if necessary** add edge from this cell to an other one (this -> other),
-            // the "other" will need to be computed first
-            references.forEach(toVertex => g.add(cell, toVertex));
-
-            if(g.adj[cell]?.length) {
-                // (if necessary) remove edges that are no more needed (pointing from this cell to an other)
-                g.adj[cell] = g.adj[cell].filter(vertexToCheck => references.includes(vertexToCheck));
-            }
-        } else {
-            // 
-            // Update this cell, if no referenced cells, no need to compute formula's result...
-            // but other cells may reference this one ...
-            // 
-            document.querySelector('#' + cell + "_value").innerText = formulas[cell];
-        }
-
-
-        // recompute all orders at every changes ?!
-        g.reinit(); // put every graphs to WHITE and 0 / None ...
-        dfs(g);
-        //console.log("graph:", g);
-        //console.log("Order:", toposort);
-
-
-        //
-        // Propagate change in all cells referencing other cell(s) ...
-        //
-        // do the computations sequentially (in reverse order)
-        //      as the last element has no dependency (so can be calculated directly/first)
-        //
-        toposort.reverse().forEach(cell_ => {
-            //console.log("re-computing CELL : ", cell_);
-            // compute
-            form = formulas[cell_] ?? '';
-
-            // list of referenced cells in this cell
-            refs = listReference(form);
-
-            // substitute with "true" value (computed)
-            refs.forEach(ref => {
-                const value = document.querySelector('#' + ref + '_value').innerText;
-                form = form.replaceAll('#' + ref, value);
-            });
-            //console.log("Substituted formula:", form);
-
-            // eval() : to apply arithmetic (+-*/) and more ...
-            const computed = refs && form && form !== '-' ? eval(form) : '-';
-            //console.log("Final computed value:", computed);
-
-            document.querySelector('#'+cell_+'_value').innerHTML = computed;
-            // show formula (non-editable directly)
-            document.querySelector('#'+cell_+'_desc').innerHTML = refs.length ? formulas[cell_] : '';
-        });
-        
-    }));
+    inputs.forEach(input => input.addEventListener('blur', onInputBlur));
 
     // validate when type "Enter"
-    inputs.forEach(input => input.addEventListener('keyup', (e) => e.key == 'Enter' && e.target.blur()));
+    inputs.forEach(input => input.addEventListener('keyup', onEnterPressed));
 }
 
+function onInputBlur(e) {
+    const cell = e.target.id;
+    // hide formula input
+    e.target.style.display = 'none';
 
+    const formula = e.target.value;
+    formulas[cell] = formula; // ???
 
-//
-// add event listeners on buttons
-//
-document.querySelector('#add_col').addEventListener('click', (e) => {
-    const trs = document.querySelector("table").querySelectorAll("tr");
-    const nb_cols = trs[0].querySelectorAll('td').length;
+    // display the computed (resulting) value
+    document.querySelector('#' + cell + "_value").style.display = 'inline';
+    document.querySelector('#' + cell + '_desc').style.display = 'inline';
 
-    console.log("nb_cols:", nb_cols);
+    // get all the referenced cells used in this call (if any)
+    const references = listReference(formula);
+    if(references.length) {
+        // **if necessary**, add an edge from this cell to an other one (this -> other),
+        // the "other" will need to be computed first
+        references.forEach(toVertex => g.add(cell, toVertex));
 
-    trs.forEach((tr, i) => {
-        const letter = String.fromCharCode(65 + nb_cols - 1);
-        const cell = letter + i.toString();
-        if(i == 0) {
-            tr.innerHTML += `<td>${letter}</td>`;
-        } else {
-            tr.innerHTML += `<td>
-                <input id="${cell}" class="formula" />
-                <span id="${cell}_value" class="value">-</span>
-                <span id="${cell}_desc" class="small"></span>
-            </td>`
+        if(g.adj[cell]?.length) {
+            // (if necessary) remove edges that are no more needed (pointing from this cell to an other)
+            g.adj[cell] = g.adj[cell].filter(vertexToCheck => references.includes(vertexToCheck));
         }
-    });
-});
+    } else {
+        // 
+        // Update this cell, if no referenced cells, no need to compute formula's result...
+        // but other cells may reference this one ! (this case is handled below)
+        // 
+        document.querySelector('#' + cell + "_value").innerText = formulas[cell];
+    }
+
+    console.log(">>> edited cell = ", cell, g.V[cell]);
+
+    //
+    // TODO: check if any changes occured in this cell !
+    //
+    if(g.V[cell]) { // if this cell is used in a formula ?
+        // if this edited cell has referenced cells, always recompute order... (?)
+        if(references.length) {
+            console.log("recompute graph order");
+            g.reinit(); // put every graphs to WHITE and 0 / None ... to recalculate everything...
+            dfs(g); // use Depth-first search to compute topological sort
+            console.log("graph:", g, "order:", toposort);
+        }
+    }
+
+    // Propagate change inside every cells referencing other cell(s) ...
+    //
+    // do the computations sequentially (in reverse order !)
+    //      as the last element has "no dependency" (so can be calculated directly, & first)
+    //
+    console.log("order:", toposort);
+    // /!\ .reverse() is in-place !
+    [...toposort].reverse().forEach(c => computeCell(c));
+}
+
 
 function addRow() {
     const nb_rows = document.querySelector("table").querySelectorAll('tr').length - 1;
@@ -248,11 +262,31 @@ function addRow() {
             ${tds}
         </tr>`;
 
-    addEvents();
+    addEvents(); // add function that will handle events (click, blur (=unfocus), ...)
 }
 
-document.querySelector('#add_row').addEventListener('click', (e) => {
-    addRow();
-});
+function addCol() {
+    const trs = document.querySelector("table").querySelectorAll("tr");
+    const nb_cols = trs[0].querySelectorAll('td').length;
+
+    console.log("nb_cols:", nb_cols);
+
+    trs.forEach((tr, i) => {
+        const letter = String.fromCharCode(65 + nb_cols - 1);
+        const cell = letter + i.toString();
+        if(i == 0) {
+            tr.innerHTML += `<td>${letter}</td>`;
+        } else {
+            tr.innerHTML += `<td>
+                <input id="${cell}" class="formula" />
+                <span id="${cell}_value" class="value">-</span>
+                <span id="${cell}_desc" class="small"></span>
+            </td>`
+        }
+    });
+
+    addEvents(); // add function that will handle events (click, blur (=unfocus), ...)
+}
+
 
 main();
