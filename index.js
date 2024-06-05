@@ -187,22 +187,21 @@ function addEvents() {
 }
 
 function onInputBlur(e) {
-    const cell = e.target.id;
-    // hide formula input
+    const cell = e.target.id; // eg. B1
+    const formula = e.target.value; // eg. #B2 + 1
+
+    // hide currently edited formula <input>
     e.target.style.display = 'none';
 
-    const formula = e.target.value;
-    formulas[cell] = formula; // ???
-
-    // display the computed (resulting) value
-    document.querySelector('#' + cell + "_value").style.display = 'inline';
-    document.querySelector('#' + cell + '_desc').style.display = 'inline';
+    formulas[cell] = formula; // save it
 
     // get all the referenced cells used in this call (if any)
     const references = listReference(formula);
-    if(references.length) {
+
+    if(references.length)
+    {
         // **if necessary**, add an edge from this cell to an other one (this -> other),
-        // the "other" will need to be computed first
+        // (INFO: the "other" will need to be computed first)
         references.forEach(toVertex => g.add(cell, toVertex));
 
         if(g.adj[cell]?.length) {
@@ -217,21 +216,22 @@ function onInputBlur(e) {
         document.querySelector('#' + cell + "_value").innerText = formulas[cell];
     }
 
-    console.log(">>> edited cell = ", cell, g.V[cell]);
+    console.log(">>> edited cell = ", cell, "in G:", g.V[cell]);
 
     //
-    // TODO: check if any changes occured in this cell !
+    // TODO: check if any changes occured in this cell ! (if not, do nothing !)
     //
-    if(g.V[cell]) { // if this cell is used in a formula ?
-        // if this edited cell has referenced cells, always recompute order... (?)
+    if(g.V[cell]) { // if this cell is used in a formula (even simply referenced in an other cell's formula)
+        // if this edited cell has referenced cells, always recompute order... (even if no changes..?)
         if(references.length) {
             console.log("recompute graph order");
             g.reinit(); // put every graphs to WHITE and 0 / None ... to recalculate everything...
             dfs(g); // use Depth-first search to compute topological sort
-            console.log("graph:", g, "order:", toposort);
+            console.log("graph:", g);
         }
     }
 
+    //
     // Propagate change inside every cells referencing other cell(s) ...
     //
     // do the computations sequentially (in reverse order !)
@@ -239,7 +239,11 @@ function onInputBlur(e) {
     //
     console.log("order:", toposort);
     // /!\ .reverse() is in-place !
-    [...toposort].reverse().forEach(c => computeCell(c));
+    [...toposort].reverse().forEach(c => computeCell(c)); // TODO: recompute only from this cell in the graph (not everything...)
+
+    // at the end, display the computed (resulting) value
+    document.querySelector('#' + cell + "_value").style.display = 'inline';
+    document.querySelector('#' + cell + '_desc').style.display = 'inline';
 }
 
 
