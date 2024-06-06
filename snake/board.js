@@ -25,6 +25,10 @@ export class Board {
         this.players.push(player);
     }
 
+    getPlayer(name) {
+        return this.players.find(player => player.name == name);
+    }
+
     isEmpty(posX, posY) {
         const isInsideBoard = posX >= 0 && posX < this.nbCells && posY >= 0 && posY < this.nbCells;
         const noPlayerHere = this.players.every(player => !player.body.map(p => p[0]+"-"+p[1]).includes(posX+'-'+posY));

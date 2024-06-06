@@ -9,15 +9,21 @@ export class Snake {
     currentDirection;
     color;
     name;
+    method; // control method
 
     body = [];
 
-    constructor(board, posX, posY, color, name = 'player') {
+    constructor(board, posX, posY, color, name = 'player', method='randomWalk') {
         this.board = board;
         this.color = color;
         this.name = name;
+        this.method = method;
         //console.log("snake created at", posX, posY);
         this.body.push([posX, posY]);
+    }
+
+    setMethod(method) {
+        this.method = method;
     }
 
     show() {

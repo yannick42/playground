@@ -9,6 +9,7 @@ const ctx = canvas.getContext('2d');
 const CELL_NB = 40;
 const CELL_SIZE = (canvas.width - 1) / CELL_NB;
 const SNAKE_INIT_SIZE = 4;
+const NB_PLAYERS = 4;
 
 let board, intervalId;
 let frame = 0;
@@ -23,16 +24,17 @@ function main() {
     const names = ['python', 'boa', 'anaconda', 'snake'];
     const colors = ['seagreen', 'orange', 'cyan', 'violet'];
     
-    for(let n = 0; n < 4; n++) {
+    for(let n = 0; n < NB_PLAYERS; n++) {
         const snake = new Snake(
             board,
             randInt(0, CELL_NB - 1),
             randInt(0, CELL_NB - 1),
             colors[n],
-            names[n]
+            names[n],
+            'randomWalk'
         );
 
-        // make it grow a bit (until 6 squares)
+        // make it grow a bit (until 4 squares)
         for(let i = 0; i < SNAKE_INIT_SIZE - 1; i++) {
             const success = snake.grow(randInt(0, 3));
             if(!success) i -= 1; // retry
@@ -54,16 +56,25 @@ function run() {
 
         let hasLoser = false;
 
-        board.players.forEach(player => {
+        board.players.forEach((player, i) => {
+            let ok;
             const dirs = player.possibleDirs();
-            const chosenDir = choice(dirs);
-            //console.log("available dirs:", dirs, "chosen :", chosenDir);
-            const ok = player.move(chosenDir);
+            if(player.name == 'python' && move !== null) {
+                if(dirs.includes(move)) {
+                    ok = player.move(move);
+                } else {
+                    ok = player.move(player.currentDirection);
+                }
+            } else {
+                const chosenDir = choice(dirs);
+                ok = player.move(chosenDir);
+                //console.log("available dirs:", dirs, "chosen :", chosenDir);
+            }
             player.show();
             if(!ok) {
                 hasLoser = true;
                 clearInterval(intervalId);
-                console.log(player.name);
+                console.log(player.name, "lose !");
                 document.querySelector("#message").innerHTML += '<br/><br/>-> Player <b style="color: '+player.color+'">'+player.name+'</b> lose !!';
                 document.querySelector("#message").className = 'error';
             } else {
@@ -72,7 +83,7 @@ function run() {
                     const players = board.players;
                     players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
                     players.forEach(player => {
-                        message += `<div style="color: ${player.color}">${player.name} : ${player.body.length}</div>`;
+                        message += `<div style="color: ${player.color}">${player.name} (${player.method}) : ${player.body.length}</div>`;
                     })
                     message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
                     document.querySelector("#message").innerHTML = message;
@@ -96,6 +107,20 @@ document.querySelector("#pause").addEventListener('click', (e) => {
         run();
         document.querySelector("#pause").innerText = 'Pause';
     }
+});
+
+let move = null;
+document.querySelector("body").addEventListener('keydown', (e) => {
+    if(e.code == 'ArrowUp') {
+        move = UP;
+    } else if(e.code == 'ArrowDown') {
+        move = DOWN;
+    } else if(e.code == 'ArrowLeft') {
+        move = LEFT;
+    } else if(e.code == 'ArrowRight') {
+        move = RIGHT;
+    }
+    board.getPlayer('python').setMethod('human');
 });
 
 main();

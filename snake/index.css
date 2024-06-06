@@ -16,3 +16,9 @@
 .error {
     color: red;
 }
+
+#desc {
+    font-style: italic;
+    color: gray;
+    font-size: small;
+}
