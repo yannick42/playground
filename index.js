@@ -58,7 +58,7 @@ function dfs(g) {
 
 function dfs_visit(g, start_vertex) {
     TIME += 1
-    g.V[start_vertex].d = TIME;
+    g.V[start_vertex].d = TIME; // discovery time
     g.V[start_vertex].color = GRAY;
 
     g.adj[start_vertex]?.forEach(end_vertex => {
@@ -69,7 +69,7 @@ function dfs_visit(g, start_vertex) {
     });
 
     TIME += 1;
-    g.V[start_vertex].f = TIME;
+    g.V[start_vertex].f = TIME; // finish time
     g.V[start_vertex].color = BLACK;
 
     toposort.unshift(start_vertex); // add this vertex at the front of the list
