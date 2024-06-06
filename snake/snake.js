@@ -26,19 +26,36 @@ export class Snake {
         this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], i == bodySize-1 ? 'dark'+this.color : this.color, this.board.squareSize));
     }
 
+    shouldGrowAgainBy = 0;
     move(dir) {
         const oldestBodypart = this.body[0];
         const isMovePossible = this.grow(dir);
         if(isMovePossible) {
             
             const newestBodypart = this.body[this.body.length - 1];
-            if(! this.board.apples.map(p => p[0]+'-'+p[1]).includes(newestBodypart[0]+'-'+newestBodypart[1])) {
+            const appleReached = this.board.apples.map(p => p[0]+'-'+p[1]).includes(newestBodypart[0]+'-'+newestBodypart[1]);
+
+            if(
+                this.shouldGrowAgainBy == 0 // if != 0 -> do not erase yet (continue growth of the snake)
+                &&
+                ! appleReached
+            ) {
                 // erase oldest body part ...
                 fillSquare(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'lightgrey', this.board.squareSize, 1)
                 this.body.shift(); // removes the first element
             } else {
-                this.board.apples = this.board.apples.filter(apple => apple[0] !== newestBodypart[0] && apple[1] !== newestBodypart[1])
-                this.board.spawnApple();
+
+                if(appleReached) {
+                    // remove it
+                    this.board.apples = this.board.apples.filter(apple => apple[0] !== newestBodypart[0] && apple[1] !== newestBodypart[1]);
+                    this.board.spawnApple(); // & replace by a new one !
+                }
+                
+                if(this.shouldGrowAgainBy == 0) {
+                    this.shouldGrowAgainBy = 1; // 1 = growth of +2 ...
+                } else {
+                    this.shouldGrowAgainBy -= 1;
+                }
             }
 
             return true;
