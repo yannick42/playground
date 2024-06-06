@@ -143,19 +143,19 @@ export class Snake {
 
     /**
      * get:
-     * - normalized distance (0 to 1 ?) to walls
+     * - normalized distance (-1 to 1) to walls (N to S, E to W ?)
      * - body size
-     * - 
+     * - ?
      */
     getSensorData() {
 
         const head = this.head();
 
         return {
-            wallW: head[0],
-            wallN: head[1],
-            wallE: this.board.nbCells - head[0],
-            wallS: this.board.nbCells - head[1],
+            wallW: 2 * head[0] / this.board.nbCells - 1,
+            wallN: 2 * head[1] / this.board.nbCells - 1,
+            wallE: 2 * (this.board.nbCells - head[0]) / this.board.nbCells - 1,
+            wallS: 2 * (this.board.nbCells - head[1]) / this.board.nbCells - 1,
             size: this.body.length,
         }
     }

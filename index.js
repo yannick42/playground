@@ -1,81 +1,4 @@
-
-//
-// GRAPH + topological sort
-//
-
-const WHITE = 0;
-const GRAY = 1;
-const BLACK = 2;
-const DEFAULT = { color: WHITE, pred: null, d: null, f: null, };
-
-class Graph {
-    V = {} // vertices
-    adj = {} // adjacency list
-    constructor(V, adj) {
-        this.V = Object.assign({}, ...V.map(vertex => ({ [vertex]: DEFAULT})));
-        this.adj = adj;
-    }
-
-    reinit() {
-        Object.keys(this.V).forEach(vertex => {
-            this.V[vertex] = Object.assign({}, DEFAULT);
-        });
-    }
-
-    // add vertices if necessary
-    add(from, to) {
-        //console.log("add:", from, to);
-        if(! Object.keys(this.V).includes(from)) {
-            this.V[from] = Object.assign({}, DEFAULT);
-        }
-        if(! Object.keys(this.V).includes(to)) {
-            this.V[to] = Object.assign({}, DEFAULT);
-        }
-        if(! this.adj[from]?.includes(to)) {
-            if(this.adj[from]) {
-                this.adj[from].push(to);
-            } else {
-                this.adj[from] = [to];
-            }
-        }
-    }
-}
-
-let TIME;
-
-const toposort = [];
-function dfs(g) {
-
-    TIME = 0; // reinit
-    toposort.splice(0, toposort.length); // erase array
-
-    Object.keys(g.V).forEach(vertex => {
-        if(g.V[vertex].color === WHITE) {
-            dfs_visit(g, vertex);
-        }
-    });
-}
-
-function dfs_visit(g, start_vertex) {
-    TIME += 1
-    g.V[start_vertex].d = TIME; // discovery time
-    g.V[start_vertex].color = GRAY;
-
-    g.adj[start_vertex]?.forEach(end_vertex => {
-        if(g.V[end_vertex].color === WHITE) {
-            g.V[end_vertex].pred = start_vertex;
-            dfs_visit(g, end_vertex);
-        }
-    });
-
-    TIME += 1;
-    g.V[start_vertex].f = TIME; // finish time
-    g.V[start_vertex].color = BLACK;
-
-    toposort.unshift(start_vertex); // add this vertex at the front of the list
-}
-
-
+import { Graph, dfs, toposort } from './common/graph.js';
 
 //
 // MAIN entrypoint..
@@ -101,12 +24,14 @@ function main() {
     //
     // init table
     //
+    const rows = [
+        ['Test:', '12', '#B1 * 2'],
+        ['Test 2:', '5', '#B1 * #B2 + #C1']
+    ]
     for(let i = 0; i < 6; i++) {
-        addRow();
+        addRow(rows[i]??[]);
     }
-
 }
-
 
 
 /**
@@ -128,7 +53,7 @@ function computeCell(referencedCell) {
     let formula = formulas[referencedCell] ?? '';
 
     // get all referenced cells in this one
-    refs = listReference(formula);
+    const refs = listReference(formula);
 
     // substitute with "true" (already computed or "literal") value
     refs.forEach(ref => formula = substitute(formula, ref));
@@ -193,6 +118,11 @@ function onInputBlur(e) {
     // hide currently edited formula <input>
     e.target.style.display = 'none';
 
+    apply(cell, formula);
+}
+
+function apply(cell, formula) {
+
     formulas[cell] = formula; // save it
 
     // get all the referenced cells used in this call (if any)
@@ -247,7 +177,7 @@ function onInputBlur(e) {
 }
 
 
-function addRow() {
+function addRow(row=[]) {
     const nb_rows = document.querySelector("table").querySelectorAll('tr').length - 1;
     const nb_cols = document.querySelector("table").querySelector('tr:nth-of-type(1)').querySelectorAll('td').length - 1;
 
@@ -256,8 +186,8 @@ function addRow() {
         const letter = String.fromCharCode(65 + i);
         const cell = letter + (nb_rows + 1).toString();
         tds += `<td>
-            <input id="${cell}" class="formula" />
-            <span id="${cell}_value" class="value">-</span>
+            <input id="${cell}" class="formula" value="${row[i] ? row[i] : '-'}"/>
+            <span id="${cell}_value" class="value">${row[i] ? row[i] : '-'}</span>
             <span id="${cell}_desc" class="small"></span>
         </td>`;
     }
@@ -266,6 +196,14 @@ function addRow() {
             ${tds}
         </tr>`;
 
+    row.forEach((formula, i) => {
+        const letter = String.fromCharCode(65 + i);
+        const cell = letter + (nb_rows + 1).toString();
+        console.log(cell, formula);
+        formulas[cell] = formula;
+        apply(cell, formula);
+    });
+    
     addEvents(); // add function that will handle events (click, blur (=unfocus), ...)
 }
 
