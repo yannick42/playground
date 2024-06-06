@@ -1,1 +1,2 @@
-https://yannick42.github.io/dsa-tests/
+- Implementation of a spreadsheet with formulas referencing other cells, eg. `#A3*10` (using topological sort) : https://yannick42.github.io/dsa-tests/
+- Snake game in JS : https://yannick42.github.io/dsa-tests/snake/
