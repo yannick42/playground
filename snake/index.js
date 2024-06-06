@@ -135,7 +135,7 @@ function run() {
 
             if(player.name == 'python') {
                 // show input data
-                document.querySelector("#debug").innerHTML = "sensor data: <br/>" + JSON.stringify(player.getSensorData(),null, 2);
+                document.querySelector("#debug").innerHTML = "sensor data:\n\n" + JSON.stringify(player.getSensorData(), null, '\t');
             }
 
 
