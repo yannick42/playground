@@ -3,6 +3,8 @@ import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { setUpCanvas, drawGrid } from './canvas.helper.js';
 import { randInt, choice } from './helper.js'
 
+import { Graph, dfs, toposort } from '../common/graph.js';
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
@@ -54,6 +56,58 @@ function main() {
     board.spawnApple(20);
 
     run();
+
+
+    createDAG();
+
+}
+
+let g; // DAG
+function createDAG() {
+    const vertices = [], adjacency = {};
+    g = new Graph(vertices, adjacency);
+
+    // 5 input, 3 hidden neurons (in 1 layer), 3 output
+    //      => 5*3 + 3*3 = 24 parameters ?
+
+    //
+    // Input to 1st hidden layer
+    //
+    g.add("I_1", "H_1");
+    g.add("I_2", "H_1");
+    g.add("I_3", "H_1");
+    g.add("I_4", "H_1");
+    g.add("I_5", "H_1");
+    
+    g.add("I_1", "H_2");
+    g.add("I_2", "H_2");
+    g.add("I_3", "H_2");
+    g.add("I_4", "H_2");
+    g.add("I_5", "H_2");
+
+    g.add("I_1", "H_3");
+    g.add("I_2", "H_3");
+    g.add("I_3", "H_3");
+    g.add("I_4", "H_3");
+    g.add("I_5", "H_3");
+
+    // Hidden layer to output layer
+    g.add("H_1", "O_1");
+    g.add("H_2", "O_1");
+    g.add("H_3", "O_1");
+
+    g.add("H_1", "O_2");
+    g.add("H_2", "O_2");
+    g.add("H_3", "O_2");
+
+    g.add("H_1", "O_3");
+    g.add("H_2", "O_3");
+    g.add("H_3", "O_3");
+    
+    dfs(g);
+
+    document.querySelector("#nn_info").innerHTML = "24 neurons sorted topologically : " + JSON.stringify(toposort);
+
 }
 
 function run() {
@@ -81,7 +135,7 @@ function run() {
 
             if(player.name == 'python') {
                 // show input data
-                document.querySelector("#debug").innerHTML = "sensor data: " + JSON.stringify(player.getSensorData());
+                document.querySelector("#debug").innerHTML = "sensor data: <br/>" + JSON.stringify(player.getSensorData(),null, 2);
             }
 
 

@@ -25,6 +25,7 @@
 
 #debug {
     padding: 5px;
-    font-size: small;
+    font-size: x-small;
     background-color: antiquewhite;
+    height: 50px;
 }
