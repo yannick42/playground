@@ -10,9 +10,12 @@ it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculation
 
 @TODO
 - be able to run a game without canvas visualization
-- see timings
-- add weight to DAG
+- visualize timings
+- add weights to DAG
 - add 1 or 2 activation functions when calculing output
 - display action decided by NN
 - add Genetic Algorithms to select a group of fittest NNs, and mutate/crossover them for next population generation (the weight values only for now)
 - add a slider to modify canvas game speed
+- be able to play multiple games quickly
+- trace the gain / find a cost function to assess fitness
+- ... ?
