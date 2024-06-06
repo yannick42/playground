@@ -78,11 +78,22 @@ function run() {
                 //console.log("available dirs:", dirs, "chosen :", chosenDir);
             }
             player.show();
+
+            if(player.name == 'python') {
+                // show input data
+                document.querySelector("#debug").innerHTML = "sensor data: " + JSON.stringify(player.getSensorData());
+            }
+
+
             if(!ok) {
                 hasLoser = true;
 
                 losers.push(player); // to keep track of them (as their are removed from the board..)
                 board.removePlayer(player.name);
+
+                if(player.name == 'python') {
+                    document.querySelector("#debug").innerHTML = 'sensor data: DEAD !';
+                }
 
                 // add to the losers list
                 document.querySelector("#losers").className = 'error';

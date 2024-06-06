@@ -22,3 +22,9 @@
     color: gray;
     font-size: small;
 }
+
+#debug {
+    padding: 5px;
+    font-size: small;
+    background-color: antiquewhite;
+}

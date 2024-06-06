@@ -37,13 +37,17 @@ export class Snake {
         this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], 'lightgray', this.board.squareSize));
     }
 
+    head() {
+        return this.body[this.body.length - 1];
+    }
+
     shouldGrowAgainBy = 0;
     move(dir) {
         const oldestBodypart = this.body[0];
         const isMovePossible = this.grow(dir);
         if(isMovePossible) {
             
-            const newestBodypart = this.body[this.body.length - 1];
+            const newestBodypart = this.head();
             const appleReached = this.board.apples.map(p => p[0]+'-'+p[1]).includes(newestBodypart[0]+'-'+newestBodypart[1]);
 
             if(
@@ -136,4 +140,24 @@ export class Snake {
             return this.board.isEmpty(posX, posY);
         })
     }
+
+    /**
+     * get:
+     * - normalized distance (0 to 1 ?) to walls
+     * - body size
+     * - 
+     */
+    getSensorData() {
+
+        const head = this.head();
+
+        return {
+            wallW: head[0],
+            wallN: head[1],
+            wallE: this.board.nbCells - head[0],
+            wallS: this.board.nbCells - head[1],
+            size: this.body.length,
+        }
+    }
+
 }
