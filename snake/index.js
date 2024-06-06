@@ -18,8 +18,11 @@ function main() {
     setUpCanvas(ctx, canvas.width, canvas.height);
     drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
 
+    console.log("Creating new board...");
     board = new Board(ctx, CELL_SIZE, CELL_NB);
     console.log("board:", board);
+
+    move = null; // 
 
     const names = ['python', 'boa', 'anaconda', 'snake'];
     const colors = ['seagreen', 'orange', 'cyan', 'violet'];
@@ -42,6 +45,8 @@ function main() {
 
         board.addPlayer(snake);
     }
+
+    console.log("Number of players:", board.players.length);
 
     document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
