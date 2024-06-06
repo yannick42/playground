@@ -25,6 +25,13 @@ export class Board {
         this.players.push(player);
     }
 
+    removePlayer(name) {
+        const removedPlayer = this.getPlayer(name);
+        removedPlayer.hide();
+        // delete from the board !
+        this.players = this.players.filter(player => player.name !== name);
+    }
+
     getPlayer(name) {
         return this.players.find(player => player.name == name);
     }

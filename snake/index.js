@@ -52,10 +52,12 @@ function main() {
 }
 
 function run() {
+    const losers = [];
     intervalId = setInterval(() => {
 
         let hasLoser = false;
 
+        //console.log("number of players :", board.players.length);
         board.players.forEach((player, i) => {
             let ok;
             const dirs = player.possibleDirs();
@@ -73,23 +75,38 @@ function run() {
             player.show();
             if(!ok) {
                 hasLoser = true;
-                clearInterval(intervalId);
-                console.log(player.name, "lose !");
-                document.querySelector("#message").innerHTML += '<br/><br/>-> Player <b style="color: '+player.color+'">'+player.name+'</b> lose !!';
-                document.querySelector("#message").className = 'error';
+
+                losers.push(player); // to keep track of them (as their are removed from the board..)
+                board.removePlayer(player.name);
+
+                // add to the losers list
+                document.querySelector("#losers").className = 'error';
+                document.querySelector("#losers").innerHTML = '';
+                losers.forEach(loser => {
+                    document.querySelector("#losers").innerHTML += `<br/><br/>-> Player <b style="color: ${loser.color}">${loser.name}</b> lose with <b>${loser.body.length} points</b>!`;
+                });
+
+                if(board.players.length === 1) { // stop if only 1 player
+                    showLeaderboard(board);
+                    clearInterval(intervalId);
+                }
             } else {
                 if(!hasLoser) {
-                    let message = '';
-                    const players = board.players;
-                    players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
-                    players.forEach(player => {
-                        message += `<div style="color: ${player.color}">${player.name} (${player.method}) : ${player.body.length}</div>`;
-                    })
-                    message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
-                    document.querySelector("#message").innerHTML = message;
+                    showLeaderboard(board);
                 }
             }
         });
+
+        function showLeaderboard(board) {
+            let message = '';
+            const players = board.players;
+            players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
+            players.forEach(player => {
+                message += `<div style="color: ${player.color}"><b>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
+            })
+            message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
+            document.querySelector("#message").innerHTML = message;
+        }
         
         frame += 1;
     }, 75);
@@ -111,16 +128,18 @@ document.querySelector("#pause").addEventListener('click', (e) => {
 
 let move = null;
 document.querySelector("body").addEventListener('keydown', (e) => {
-    if(e.code == 'ArrowUp') {
-        move = UP;
-    } else if(e.code == 'ArrowDown') {
-        move = DOWN;
-    } else if(e.code == 'ArrowLeft') {
-        move = LEFT;
-    } else if(e.code == 'ArrowRight') {
-        move = RIGHT;
+    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+        if(e.code == 'ArrowUp') {
+            move = UP;
+        } else if(e.code == 'ArrowDown') {
+            move = DOWN;
+        } else if(e.code == 'ArrowLeft') {
+            move = LEFT;
+        } else if(e.code == 'ArrowRight') {
+            move = RIGHT;
+        }
+        board.getPlayer('python')?.setMethod('human'); // can be already dead (= null)
     }
-    board.getPlayer('python').setMethod('human');
 });
 
 main();

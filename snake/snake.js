@@ -32,6 +32,11 @@ export class Snake {
         this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], i == bodySize-1 ? 'dark'+this.color : this.color, this.board.squareSize));
     }
 
+    hide() {
+        const bodySize = this.body.length;
+        this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], 'lightgray', this.board.squareSize));
+    }
+
     shouldGrowAgainBy = 0;
     move(dir) {
         const oldestBodypart = this.body[0];
