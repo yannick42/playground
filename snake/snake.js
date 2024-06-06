@@ -30,8 +30,17 @@ export class Snake {
         const oldestBodypart = this.body[0];
         const isMovePossible = this.grow(dir);
         if(isMovePossible) {
-            fillSquare(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'lightgrey', this.board.squareSize)
-            this.body.shift(); // removes the first element
+            
+            const newestBodypart = this.body[this.body.length - 1];
+            if(! this.board.apples.map(p => p[0]+'-'+p[1]).includes(newestBodypart[0]+'-'+newestBodypart[1])) {
+                // erase oldest body part ...
+                fillSquare(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'lightgrey', this.board.squareSize, 1)
+                this.body.shift(); // removes the first element
+            } else {
+                this.board.apples = this.board.apples.filter(apple => apple[0] !== newestBodypart[0] && apple[1] !== newestBodypart[1])
+                this.board.spawnApple();
+            }
+
             return true;
         } else {
             return false;

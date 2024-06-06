@@ -1,27 +1,17 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { setUpCanvas, drawGrid } from './canvas.helper.js';
+import { randInt, choice } from './helper.js'
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
 const CELL_NB = 40;
 const CELL_SIZE = (canvas.width - 1) / CELL_NB;
-const SNAKE_INIT_SIZE = 6;
+const SNAKE_INIT_SIZE = 4;
 
-function randInt(min, max) {
-    // Ensure the min and max values are integers
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    // Generate a random integer between min and max (inclusive)
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function choice(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-let board;
+let board, intervalId;
+let frame = 0;
 
 function main() {
     setUpCanvas(ctx, canvas.width, canvas.height);
@@ -31,7 +21,7 @@ function main() {
     console.log("board:", board);
 
     const names = ['python', 'boa', 'anaconda', 'snake'];
-    const colors = ['green', 'orange', 'red', 'blue'];
+    const colors = ['seagreen', 'orange', 'cyan', 'violet'];
     
     for(let n = 0; n < 4; n++) {
         const snake = new Snake(
@@ -51,23 +41,42 @@ function main() {
         board.addPlayer(snake);
     }
 
-    let frame = 0;
     document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
 
-    const id = setInterval(() => {
+    board.spawnApple(20);
+
+    run();
+}
+
+function run() {
+    intervalId = setInterval(() => {
+
+        let hasLoser = false;
 
         board.players.forEach(player => {
             const dirs = player.possibleDirs();
             const chosenDir = choice(dirs);
             //console.log("available dirs:", dirs, "chosen :", chosenDir);
-            const ok = player.grow(chosenDir); // use .move ?
+            const ok = player.move(chosenDir);
             player.show();
             if(!ok) {
-                clearInterval(id);
+                hasLoser = true;
+                clearInterval(intervalId);
                 console.log(player.name);
-                document.querySelector("#message").innerHTML = 'Player <b style="color: '+player.color+'">'+player.name+'</b> lose !!';
+                document.querySelector("#message").innerHTML += '<br/><br/>-> Player <b style="color: '+player.color+'">'+player.name+'</b> lose !!';
                 document.querySelector("#message").className = 'error';
+            } else {
+                if(!hasLoser) {
+                    let message = '';
+                    const players = board.players;
+                    players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
+                    players.forEach(player => {
+                        message += `<div style="color: ${player.color}">${player.name} : ${player.body.length}</div>`;
+                    })
+                    message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
+                    document.querySelector("#message").innerHTML = message;
+                }
             }
         });
         
@@ -75,6 +84,18 @@ function main() {
     }, 75);
 }
 
-document.querySelector("#restart").addEventListener('click', (e) => main());
+document.querySelector("#restart").addEventListener('click', (e) => {
+    clearInterval(intervalId);
+    main();
+});
+document.querySelector("#pause").addEventListener('click', (e) => {
+    if(e.target.innerText == 'Pause') {
+        clearInterval(intervalId);
+        document.querySelector("#pause").innerText = 'Resume';
+    } else {
+        run();
+        document.querySelector("#pause").innerText = 'Pause';
+    }
+});
 
 main();

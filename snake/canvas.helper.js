@@ -1,7 +1,6 @@
 
-export function fillSquare(ctx, posX, posY, color='green', squareSize=15) {
+export function fillSquare(ctx, posX, posY, color='green', squareSize=15, margin=2) {
     ctx.fillStyle = color;
-    const margin = 2;
     ctx.fillRect(squareSize * posX + margin, squareSize * posY + margin, squareSize - 2*margin, squareSize - 2*margin);
 }
 
