@@ -106,7 +106,7 @@ function createDAG() {
     
     dfs(g);
 
-    document.querySelector("#nn_info").innerHTML = "24 neurons sorted topologically : " + JSON.stringify(toposort);
+    document.querySelector("#nn_info").innerHTML = "11 neurons (24 parameters) sorted topologically : " + JSON.stringify(toposort);
 
 }
 
