@@ -156,7 +156,7 @@ export class Snake {
             wallN: 2 * head[1] / this.board.nbCells - 1,
             wallE: 2 * (this.board.nbCells - head[0]) / this.board.nbCells - 1,
             wallS: 2 * (this.board.nbCells - head[1]) / this.board.nbCells - 1,
-            size: this.body.length,
+            size: this.body.length / 100,
         }
     }
 

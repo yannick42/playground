@@ -10,10 +10,13 @@ import { Graph, dfs } from '../common/graph.js';
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
-const CELL_NB = 40;
-const CELL_SIZE = (canvas.width - 1) / CELL_NB;
-const SNAKE_INIT_SIZE = 4;
-const NB_PLAYERS = 4;
+const CELL_NB = 40,
+    CELL_SIZE = (canvas.width - 1) / CELL_NB,
+    SNAKE_INIT_SIZE = 4,
+    INIT_NB_APPLES = 25,
+    names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
+    colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'],
+    NB_PLAYERS = names.length;
 
 let board, intervalId;
 let frame = 0;
@@ -28,17 +31,14 @@ function main() {
 
     move = null; // 
 
-    const names = ['python', 'boa', 'anaconda', 'snake'];
-    const colors = ['seagreen', 'orange', 'cyan', 'violet'];
-    
     for(let n = 0; n < NB_PLAYERS; n++) {
         const snake = new Snake(
             board,
             randInt(0, CELL_NB - 1),
             randInt(0, CELL_NB - 1),
-            colors[n],
+            colors[n % colors.length],
             names[n],
-            n == 0 ? 'Random_Neural_Net' : 'randomWalk'
+            n == 0 ? 'Random Neural Net' : 'Random Walk'
         );
 
         // make it grow a bit (until 4 squares)
@@ -55,7 +55,7 @@ function main() {
     document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
 
-    board.spawnApple(20);
+    board.spawnApple(INIT_NB_APPLES);
 
     run();
 
@@ -128,7 +128,7 @@ function run() {
                 } else {
                     ok = player.move(player.currentDirection);
                 }
-            } else if(player.method == 'Random_Neural_Net') {
+            } else if(player.method == 'Random Neural Net') {
 
                 const proba = computeOutput(g, player.getSensorData());
                 const action = argmax(proba);
@@ -190,7 +190,7 @@ function run() {
             players.forEach(player => {
                 message += `<div style="color: ${player.color}"><b ${losers.includes(player) ? 'style="text-decoration: line-through;"': ''}>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
             })
-            message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
+            message += `<hr/><div style="color: red">Number of apples : ${board.apples.length}</div>`;
             document.querySelector("#message").innerHTML = message;
         }
         
@@ -202,6 +202,9 @@ function run() {
     }, 100);
 }
 
+document.querySelector("#reload_page").addEventListener('click', () => {
+    location.reload(true);
+})
 document.querySelector("#restart").addEventListener('click', (e) => {
     clearInterval(intervalId);
     main();

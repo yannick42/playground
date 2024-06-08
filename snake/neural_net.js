@@ -13,6 +13,7 @@ export function computeOutput(g, inputs) {
     let j = 0, i = 0;
     const activationDone = [];
 
+    // in topological order
     g.toposort.forEach((neuron) => {
         //console.log(`Calculating ${neuron} linked to ${g.adj[neuron] ?? 'no'} neurons`);
 
@@ -24,26 +25,30 @@ export function computeOutput(g, inputs) {
 
         // accumulate weights additions into temp[nextNeuron]
         g.adj[neuron]?.forEach(nextNeuron => {
-            const link = neuron+"-"+nextNeuron;
-            const weight = g.getWeight(link); // weight of the link
-            //console.log(`(${link}) weight: ${weight}`)
+            const linkName = neuron+"-"+nextNeuron;
+            const weight = g.getWeight(linkName); // weight of the link
+            //console.log(`(${linkName}) weight: ${weight}`)
 
-            if(!temp[nextNeuron]) temp[nextNeuron] = 0;
+            if(!temp[nextNeuron]) temp[nextNeuron] = 0; // if first time, init to 0
+
+            // accumulate weights in nextNeuron
             temp[nextNeuron] += temp[neuron] * weight;
             
             //console.log(`accumulate ${neuron} ${nextNeuron} ${temp[nextNeuron]}`);
 
+            // is accumulation finished ?
             if(i >= neuronsPerLayer[j] * neuronsPerLayer[j+1] && !activationDone.includes(neuron)) {
-                activationDone.push(neuron);
+                activationDone.push(neuron); // mark as "done"
+
                 //console.log("i:", i);
-                // accumulation finish -> apply activation function (to add non-linearity)
+                // apply activation function (to add non-linearity)
                 temp[neuron] = Math.tanh(temp[neuron]);
                 //console.warn(`${neuron} > after activation : ${temp[neuron]}`);
             }
 
             if(i >= neuronsPerLayer[j] * neuronsPerLayer[j+1] + neuronsPerLayer[j+1] * neuronsPerLayer[j+2]) {
                 j += 1; // pass to next "layer"
-                i = 0; // reinitialize the count of neurons ?
+                i = 0; // reinitialize the count of neurons "batch"
             }
 
             i += 1;
