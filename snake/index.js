@@ -117,7 +117,7 @@ function startNewGame() {
 
     console.log("Number of players:", board.players.length);
 
-    document.querySelector("#message").innerHTML = '';
+    //document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
 
 
@@ -250,7 +250,12 @@ function run() {
                 debug.innerHTML += '\n\nLatest network output (after softmax, actions=[-1, 0, 1]) : ' + JSON.stringify(proba, null, 2);
                 debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
 
-                ok = player.move(move);
+                // if possible move
+                //if(dirs.includes(move)) {
+                    ok = player.move(move);
+                //} else {
+                //    ok = player.move(player.currentDirection); // continue in same direction ?
+                //}
             }else {
                 const chosenDir = choice(dirs);
                 ok = player.move(chosenDir);
