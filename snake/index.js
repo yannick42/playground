@@ -28,7 +28,7 @@ const CELL_NB = 40,
 let board, intervalId;
 let frame = 0;
 
-const DAGs = [];
+let currentDAGs = [];
 let losers = [];
 let bestDAGs = [];
 
@@ -48,7 +48,7 @@ function startNewGame() {
     board.spawnApple(INIT_NB_APPLES);
     
     move = null; // remove human player (if user used keyboard)
-
+    currentDAGs = [];
 
     // prune ?
     if(bestDAGs.length >= PRUNE_AT) {
@@ -92,16 +92,16 @@ function startNewGame() {
                 const copy = bestDAGs.slice(index, index+1)[0]; // TODO : ???
                 console.log("mutate :", copy);
                 const DAG = mutateDAG(copy);
-                DAGs.push(DAG);
+                currentDAGs.push(DAG);
 
                 console.log(`reuse one of the best with fitness = ${DAG.fitness}, and mutate it a bit...`);
 
             } else {
                 const DAG = createDAG([5, 3, 3]); // create a new random neural net (5 inputs and 3 outputs)
-                DAGs.push(DAG);
+                currentDAGs.push(DAG);
             }
         } else {
-            DAGs.push(null);
+            currentDAGs.push(null);
         }
 
         //
@@ -192,7 +192,7 @@ function finished(winner, fitness=0) {
         console.log(`FINISHED ! winner is ${winner.name} (fitness=${fitness})`);
         const index = board.players.findIndex(p => p.name == winner.name);
         // keep track of this winner DAG
-        const dag = DAGs.slice(index, index+1); // make a copy ?
+        const dag = currentDAGs.slice(index, index+1); // make a copy ?
         dag[0].fitness = fitness;
         bestDAGs.push(dag[0]);
         console.log("number of 'best' DAGs :", bestDAGs.length);
@@ -231,7 +231,7 @@ function run() {
                 }
             } else if(player.method == 'Random Neural Net') {
 
-                const g = DAGs[i];
+                const g = currentDAGs[i];
                 const proba = computeOutput(g, player.getSensorData());
                 const action = argmax(proba);
                 const changeBy = [-1, 0, 1][action];
