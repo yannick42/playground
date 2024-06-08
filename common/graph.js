@@ -4,6 +4,9 @@ export const toposort = [];
 export class Graph {
     V = {} // vertices
     adj = {} // adjacency list
+
+    customData = {};
+
     constructor(V, adj) {
         this.V = Object.assign({}, ...V.map(vertex => ({ [vertex]: DEFAULT})));
         this.adj = adj;
@@ -13,6 +16,14 @@ export class Graph {
         Object.keys(this.V).forEach(vertex => {
             this.V[vertex] = Object.assign({}, DEFAULT);
         });
+    }
+
+    weight(link, value) {
+        this.customData[link] = value;
+    }
+
+    getWeight(link) {
+        return this.customData[link];
     }
 
     // add vertices if necessary
