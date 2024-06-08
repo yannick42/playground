@@ -31,3 +31,10 @@
     text-wrap: balance;
     overflow: scroll;
 }
+
+#nb_dags,
+#mean_fitness,
+#min_fitness,
+#max_fitness {
+    font-weight: bold;
+}

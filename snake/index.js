@@ -10,38 +10,103 @@ import { Graph, dfs } from '../common/graph.js';
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
+function getRandomFloat(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 const CELL_NB = 40,
     CELL_SIZE = (canvas.width - 1) / CELL_NB,
     SNAKE_INIT_SIZE = 4,
-    INIT_NB_APPLES = 25,
+    INIT_NB_APPLES = 30,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'],
-    NB_PLAYERS = names.length;
+    NB_PLAYERS = names.length,
+    MIN_POOL = 8, // start reusing DAG at MIN_POOL
+    PRUNE_AT = 16, // keep only the fittest
+    NEW_DAG_PROBA = 0.33; // if enough elite, at which rate to still create new random graphs ?
 
 let board, intervalId;
 let frame = 0;
 
-function main() {
-    setUpCanvas(ctx, canvas.width, canvas.height);
-    drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
+const DAGs = [];
+let losers = [];
+let bestDAGs = [];
 
-    console.log("Creating new board...");
+const nbDags = document.querySelector("#nb_dags");
+const mean = document.querySelector("#mean_fitness");
+const min = document.querySelector("#min_fitness");
+const max = document.querySelector("#max_fitness");
+document.querySelector("#prune_at").innerText = PRUNE_AT;
+
+function startNewGame() {
+
+    // creating new board
     board = new Board(ctx, CELL_SIZE, CELL_NB);
     console.log("board:", board);
 
-    move = null; // 
+    // add apples
+    board.spawnApple(INIT_NB_APPLES);
+    
+    move = null; // remove human player (if user used keyboard)
 
-    for(let n = 0; n < NB_PLAYERS; n++) {
+
+    // prune ?
+    if(bestDAGs.length >= PRUNE_AT) {
+        bestDAGs.sort((a, b) => a.fitness > b.fitness ? -1 : 1);
+        //console.warn("sorted bests:", JSON.stringify(bestDAGs)); // TODO : it doesn't select the bests !!!!!????
+        console.log("PRUNE:", bestDAGs.map(d => d.fitness));
+        bestDAGs = bestDAGs.filter((dag, i) => i < MIN_POOL); // keep 10 bests ...
+    }
+
+    nbDags.innerText = bestDAGs.length;
+    const meanFitness = bestDAGs.length ? bestDAGs.reduce((acc, d) => acc + d.fitness, 0) / bestDAGs.length : 0;
+    mean.innerText = Math.round(meanFitness * 100) / 100;
+    const fitnesses = bestDAGs.map(d => d.fitness);
+    console.log("fitnesses : ", fitnesses);
+    
+    const maxFitness = fitnesses.length ? Math.max(...fitnesses) : 0;
+    max.innerText = Math.round(maxFitness * 100) / 100;
+    const minFitness = fitnesses.length ? Math.min(...fitnesses) : 0;
+    min.innerText = Math.round(minFitness * 100) / 100;
+    console.log(minFitness, maxFitness);
+
+
+    for(let n = 0; n < NB_PLAYERS; n++)
+    {
         const snake = new Snake(
             board,
             randInt(0, CELL_NB - 1),
             randInt(0, CELL_NB - 1),
             colors[n % colors.length],
             names[n],
-            n == 0 ? 'Random Neural Net' : 'Random Walk'
+            //n == 0 ? 'Random Neural Net' : 'Random Walk'
+            'Random Neural Net'
         );
 
+        if(snake.method == 'Random Neural Net') {
+            // if enough elite DAGs pool, reuse one of the best (modified)... **half of the time** (to allow new "genes")
+            if(bestDAGs.length >= MIN_POOL && Math.random() > NEW_DAG_PROBA) {
+                const index = randInt(0, bestDAGs.length - 1); // pick a random one
+
+                // used by newly created player
+                const copy = bestDAGs.slice(index, index+1)[0]; // TODO : ???
+                console.log("mutate :", copy);
+                const DAG = mutateDAG(copy);
+                DAGs.push(DAG);
+
+                console.log(`reuse one of the best with fitness = ${DAG.fitness}, and mutate it a bit...`);
+
+            } else {
+                const DAG = createDAG([5, 3, 3]); // create a new random neural net (5 inputs and 3 outputs)
+                DAGs.push(DAG);
+            }
+        } else {
+            DAGs.push(null);
+        }
+
+        //
         // make it grow a bit (until 4 squares)
+        //
         for(let i = 0; i < SNAKE_INIT_SIZE - 1; i++) {
             const success = snake.grow(randInt(0, 3));
             if(!success) i -= 1; // retry
@@ -55,25 +120,44 @@ function main() {
     document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
 
-    board.spawnApple(INIT_NB_APPLES);
 
-    run();
-
+    run(); // start game loop
 }
 
-let g; // DAG
+
+function mutateDAG(g, perc=0.2) {
+
+    Object.keys(g.customData).forEach(d => {
+        //console.log("mutateDAG:", d, g.customData[d]);
+        if(Math.random() < perc) { // mutate ?
+            g.customData[d] += getRandomFloat(-0.1, 0.1);
+        }
+    })
+
+    return g;
+}
+
+function main() {
+    setUpCanvas(ctx, canvas.width, canvas.height);
+    drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
+
+    startNewGame();
+}
+
 let nb_params = 0;
 
-function createDAG() {
-    const vertices = [], adjacency = {};
-    g = new Graph(vertices, adjacency);
+function createDAG(sizes) {
+    const   vertices = [],
+            adjacency = {};
+    const g = new Graph(vertices, adjacency);
 
+    // example :
     // 5 input, 3 hidden neurons (in 1 layer), 3 output
     //      => 5*3 + 3*3 = 24 parameters ?
 
-    const nb_input = 5;
-    const hiddens = [3];
-    const nb_output = 3;
+    const nb_input = sizes[0];
+    const hiddens = sizes.slice(1, sizes.length - 1);
+    const nb_output = sizes[sizes.length - 1];
 
     // Input to 1st hidden layer
     for(let i = 0; i < nb_input; i++) {
@@ -98,18 +182,35 @@ function createDAG() {
     }
     
     dfs(g);
+    return g;
 }
 
+function finished(winner, fitness=0) {
+    if(!winner) {
+        console.log("DRAW!");
+    } else {
+        console.log(`FINISHED ! winner is ${winner.name} (fitness=${fitness})`);
+        const index = board.players.findIndex(p => p.name == winner.name);
+        // keep track of this winner DAG
+        const dag = DAGs.slice(index, index+1); // make a copy ?
+        dag[0].fitness = fitness;
+        bestDAGs.push(dag[0]);
+        console.log("number of 'best' DAGs :", bestDAGs.length);
+    }
 
+    setUpCanvas(ctx, canvas.width, canvas.height);
+    drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
+
+    startNewGame();
+}
 
 let AIMoves = [];
 const debug = document.querySelector("#debug");
 
 function run() {
-    const losers = [];
     AIMoves = [];
-
-    createDAG(); // create neural net ...
+    losers = [];
+    frame = 0;
 
     intervalId = setInterval(() => {
 
@@ -130,6 +231,7 @@ function run() {
                 }
             } else if(player.method == 'Random Neural Net') {
 
+                const g = DAGs[i];
                 const proba = computeOutput(g, player.getSensorData());
                 const action = argmax(proba);
                 const changeBy = [-1, 0, 1][action];
@@ -172,16 +274,19 @@ function run() {
                     document.querySelector("#losers").innerHTML += `<br/><br/>-> Player <b style="color: ${loser.color}">${loser.name} (${loser.method})</b> lose with <b>${loser.body.length} points</b>!`;
                 });*/
 
-                if(board.players.length === 1) { // stop if only 1 player
-                    showLeaderboard(board);
-                    clearInterval(intervalId);
-                }
             } else {
                 if(!hasLoser) {
                     showLeaderboard(board);
                 }
             }
         });
+
+        /*
+        if(board.players.length - losers.length === 1) { // stop if only 1 player
+            showLeaderboard(board);
+            clearInterval(intervalId);
+        }
+        */
 
         function showLeaderboard(board) {
             let message = '';
@@ -195,6 +300,19 @@ function run() {
         }
         
         frame += 1;
+
+        console.log(">", losers.length);
+
+        const nbRemainingPlayers = board.players.length - losers.length;
+        if(nbRemainingPlayers === 1) {
+            const winner = board.players.filter(player => !losers.includes(player))[0];
+            finished(winner, frame + 10 * winner.body.length);
+            clearInterval(intervalId);
+        }
+        if(nbRemainingPlayers === 0) {
+            finished(null);
+            clearInterval(intervalId);
+        }
 
         // STOP
         //clearInterval(intervalId);

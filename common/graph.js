@@ -6,6 +6,7 @@ export class Graph {
     adj = {} // adjacency list
 
     customData = {};
+    fitness = 0;
     toposort = [];
 
     constructor(V, adj) {
