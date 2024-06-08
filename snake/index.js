@@ -151,6 +151,8 @@ function createDAG(sizes) {
             adjacency = {};
     const g = new Graph(vertices, adjacency);
 
+    nb_params = 0;
+
     // example :
     // 5 input, 3 hidden neurons (in 1 layer), 3 output
     //      => 5*3 + 3*3 = 24 parameters ?
