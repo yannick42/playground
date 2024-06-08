@@ -6,6 +6,7 @@ export class Graph {
     adj = {} // adjacency list
 
     customData = {};
+    toposort = [];
 
     constructor(V, adj) {
         this.V = Object.assign({}, ...V.map(vertex => ({ [vertex]: DEFAULT})));
@@ -66,6 +67,9 @@ export function dfs(g) {
             dfs_visit(g, vertex);
         }
     });
+
+    //console.log("end ?");
+    g.toposort = toposort;
 }
 
 function dfs_visit(g, start_vertex) {

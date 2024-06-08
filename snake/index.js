@@ -1,9 +1,11 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
+import { computeOutput, argmax } from './neural_net.js';
+
 import { setUpCanvas, drawGrid } from './canvas.helper.js';
 import { randInt, choice } from './helper.js'
 
-import { Graph, dfs, toposort } from '../common/graph.js';
+import { Graph, dfs } from '../common/graph.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -57,9 +59,6 @@ function main() {
 
     run();
 
-
-    createDAG();
-
 }
 
 let g; // DAG
@@ -103,102 +102,15 @@ function createDAG() {
 
 
 
-function computeOutput(g, inputs) {
-
-    const temp = {
-        'I_1': inputs.wallW,
-        'I_2': inputs.wallN,
-        'I_3': inputs.wallE,
-        'I_4': inputs.wallS,
-        'I_5': inputs.size
-    }; // cumulate computations
-
-    const neuronsPerLayer = [5, 3, 3];
-    let j = 0, i = 0;
-    const activationDone = [];
-
-    toposort.forEach((neuron) => {
-        //console.log(`Calculating ${neuron} linked to ${g.adj[neuron] ?? 'no'} neurons`);
-
-        // outputs
-        if(!g.adj[neuron]) {
-            temp[neuron] = Math.tanh(temp[neuron]);
-            //console.error(`${neuron} > after activation : ${temp[neuron]}`);
-        }
-
-        // accumulate weights additions into temp[nextNeuron]
-        g.adj[neuron]?.forEach(nextNeuron => {
-            const link = neuron+"-"+nextNeuron;
-            const weight = g.getWeight(link); // weight of the link
-            //console.log(`(${link}) weight: ${weight}`)
-
-            if(!temp[nextNeuron]) temp[nextNeuron] = 0;
-            temp[nextNeuron] += temp[neuron] * weight;
-            
-            //console.log(`accumulate ${neuron} ${nextNeuron} ${temp[nextNeuron]}`);
-
-            if(i >= neuronsPerLayer[j] * neuronsPerLayer[j+1] && !activationDone.includes(neuron)) {
-                activationDone.push(neuron);
-                //console.log("i:", i);
-                // accumulation finish -> apply activation function (to add non-linearity)
-                temp[neuron] = Math.tanh(temp[neuron]);
-                //console.warn(`${neuron} > after activation : ${temp[neuron]}`);
-            }
-
-            if(i >= neuronsPerLayer[j] * neuronsPerLayer[j+1] + neuronsPerLayer[j+1] * neuronsPerLayer[j+2]) {
-                j += 1; // pass to next "layer"
-                i = 0; // reinitialize the count of neurons ?
-            }
-
-            i += 1;
-        });
-    });
-
-    const outputs = [temp['O_1'], temp['O_2'] , temp['O_3']];
-    //console.warn("outputs:", outputs);
-    const proba = softmax(outputs);
-    //console.warn("proba:", proba);
-
-    return proba;
-}
-
-function softmax(arr) {
-    // Calculate the exponential of each value
-    const expValues = arr.map(value => Math.exp(value));
-    
-    // Calculate the sum of the exponential values
-    const sumExpValues = expValues.reduce((acc, value) => acc + value, 0);
-    
-    // Divide each exponential value by the sum to get the softmax values
-    const softmaxValues = expValues.map(value => value / sumExpValues);
-    
-    return softmaxValues;
-}
-
-function argmax(arr) {
-    if (arr.length === 0) {
-        throw new Error("The array cannot be empty");
-    }
-
-    let maxIndex = 0;
-    let maxValue = arr[0];
-
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i] > maxValue) {
-            maxIndex = i;
-            maxValue = arr[i];
-        }
-    }
-
-    return maxIndex;
-}
-
 let AIMoves = [];
 const debug = document.querySelector("#debug");
 
 function run() {
     const losers = [];
     AIMoves = [];
+
+    createDAG(); // create neural net ...
+
     intervalId = setInterval(() => {
 
         let hasLoser = false;
@@ -216,11 +128,8 @@ function run() {
                 } else {
                     ok = player.move(player.currentDirection);
                 }
-            } if(player.method == 'Random_Neural_Net') {
+            } else if(player.method == 'Random_Neural_Net') {
 
-                //console.log(player.currentDirection);
-
-                // show input data
                 const proba = computeOutput(g, player.getSensorData());
                 const action = argmax(proba);
                 const changeBy = [-1, 0, 1][action];
@@ -231,9 +140,9 @@ function run() {
                 //
                 // Debug message
                 //
-                debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(toposort)}`;
+                debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(g.toposort)}`;
                 debug.innerHTML += "\n\nsensor data:\n" + JSON.stringify(player.getSensorData(), null, '\t');
-                debug.innerHTML += '\n\nActions chosen by neural network : ' + AIMoves.join(", ");
+                debug.innerHTML += '\n\nActions chosen by neural network :\n >>> ' + AIMoves.join(", ");
                 debug.innerHTML += '\n\nLatest network output (after softmax, actions=[-1, 0, 1]) : ' + JSON.stringify(proba, null, 2);
                 debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
 
@@ -279,14 +188,13 @@ function run() {
             const players = board.players;
             players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
             players.forEach(player => {
-                message += `<div style="${losers.includes(player) ? 'text-decoration: line-through;': ''} color: ${player.color}"><b>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
+                message += `<div style="color: ${player.color}"><b ${losers.includes(player) ? 'style="text-decoration: line-through;"': ''}>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
             })
             message += `<div style="color: black">Number of apples : ${board.apples.length}</div>`;
             document.querySelector("#message").innerHTML = message;
         }
         
         frame += 1;
-
 
         // STOP
         //clearInterval(intervalId);
