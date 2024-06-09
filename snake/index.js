@@ -1,19 +1,27 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { computeOutput, argmax } from './neural_net.js';
-
 import { setUpCanvas, drawGrid, fillSquare } from './canvas.helper.js';
 import { randInt, choice } from './helper.js'
-
-import { Graph, dfs } from '../common/graph.js';
+import { Graph, dfs, createDAG, nb_params } from '../common/graph.js';
+import { crossover, mutate } from './genetic_algorithm.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
-function getRandomFloat(min, max) {
-    return Math.random() * (max - min) + min;
-}
+//
+// DOM elements
+//
+const debug = document.querySelector("#debug");
+const messageDiv = document.querySelector("#message");
+const nbDags = document.querySelector("#nb_dags");
+const mean = document.querySelector("#mean_fitness");
+const min = document.querySelector("#min_fitness");
+const max = document.querySelector("#max_fitness");
 
+//
+// Constants
+//
 const CELL_NB = 40,
     CELL_SIZE = (canvas.width - 1) / CELL_NB,
     SNAKE_INIT_SIZE = 4,
@@ -25,47 +33,39 @@ const CELL_NB = 40,
     NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
     PRUNE_AT = 200, // regularly, keep only the fittest
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
+    meanHistory = [],
     // Neural net
-    NB_INPUTS = 15, // walls, nearest obstacle, apples in 4 directions, snake length
+    NB_INPUTS = 15, // 2d-position, 4 x walls, 4 x nearest obstacle, 4 x apples + snake length
     NB_HIDDEN_LAYER_1 = 10,
     NB_OUTPUTS = 3;
 
+//
+// Variables
+//
 let DEBUG = false,
     SHOW_LEADERBOARD = false,
     INIT_FRAME_RATE_MS = 0,
     FRAME_RATE_MS = INIT_FRAME_RATE_MS,
-    NORMAL_FRAME_RATE = 75;
+    NORMAL_FRAME_RATE = 75,
+    board, // "singleton" of the game board ...
+    intervalId,
+    frame = 1,
+    move = null, // if not null, a human player has taken control
+    currentDAGs = [],
+    losers = [],
+    bestDAGs = [],
+    AIMoves = {},
+    nbOfGamesPlayed = 0;
 
-let board, intervalId;
-let frame = 1;
-
-let move = null; // if not null, a human player has taken control
-
-let currentDAGs = [];
-let losers = [];
-let bestDAGs = [];
-
-const meanHistory = [];
-
-let AIMoves = {};
-const debug = document.querySelector("#debug");
-const messageDiv = document.querySelector("#message");
-
-if(!DEBUG) {
-    debug.style.display = 'none';
-}
-if(!SHOW_LEADERBOARD) {
-    debug.innerHTML = '';
-}
-
-const nbDags = document.querySelector("#nb_dags");
-const mean = document.querySelector("#mean_fitness");
-const min = document.querySelector("#min_fitness");
-const max = document.querySelector("#max_fitness");
+// update web page
+if(!DEBUG) { debug.style.display = 'none'; }
+if(!SHOW_LEADERBOARD) { debug.innerHTML = ''; }
 document.querySelector("#prune_at").innerText = PRUNE_AT;
 document.querySelector("#min_pool").innerText = MIN_POOL
+    
 
-let nbOfGamesPlayed = 0;
+
+
 
 function startNewGame(bestDAG=null) {
 
@@ -160,9 +160,11 @@ function startNewGame(bestDAG=null) {
                     } else {
                         // crossover between 2 of the bests
                         if(Math.random() < 0.5) {
+                            const newDAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
+
                             const index = randInt(0, bestDAGs.length - 1); // pick 2 random one
                             const index2 = randInt(0, bestDAGs.length - 1);
-                            DAG = crossover(bestDAGs[index], bestDAGs[index2]);
+                            DAG = crossover(bestDAGs[index], bestDAGs[index2], newDAG);
 
                         // or mutate one of the best
                         } else {
@@ -207,43 +209,6 @@ function startNewGame(bestDAG=null) {
 
     run(); // start game loop
 }
-
-
-
-//
-// Genetic algorithm
-//
-
-function mutate(g, perc=0.2) {
-    // mutate by a small amount, around 20% of the weights
-    Object.keys(g.customData).forEach(d => {
-        //console.log("mutate:", d, g.customData[d]);
-        if(Math.random() < perc) { // mutate ?
-            g.customData[d] += getRandomFloat(-0.1, 0.1);
-        }
-    })
-    return g;
-}
-
-function crossover(g1, g2) {
-    // one-point crossover (TODO: multi-point / uniform / Davis’ Order Crossover (OX1) ...)
-    const cutPosition = randInt(0 , Object.keys(g1.customData).length - 1);
-
-    const DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
-
-    const firstKeys = Object.keys(g1.customData).slice(0, cutPosition + 1);
-    const secondKeys = Object.keys(g2.customData).slice(cutPosition + 1);
-
-    DAG.customData = Object.assign({},
-        ...firstKeys.map(key => ({[key]: g1.customData[key]})),
-        ...secondKeys.map(key => ({[key]: g2.customData[key]})));
-
-    //console.log("crossover:", DAG);
-    
-    dfs(DAG);
-    return DAG;
-}
-
 
 
 let eventsAdded = false;
@@ -331,49 +296,6 @@ function main() {
 
     startTime = Date.now();
     startNewGame();
-}
-
-let nb_params = 0;
-
-function createDAG(sizes) {
-    const   vertices = [],
-            adjacency = {};
-    const g = new Graph(vertices, adjacency);
-
-    nb_params = 0;
-
-    // example :
-    // 5 input, 3 hidden neurons (in 1 layer), 3 output
-    //      => 5*3 + 3*3 = 24 parameters ?
-
-    const nb_input = sizes[0];
-    const hiddens = sizes.slice(1, sizes.length - 1);
-    const nb_output = sizes[sizes.length - 1];
-
-    // Input to 1st hidden layer
-    for(let i = 0; i < nb_input; i++) {
-        for(let j = 0; j < hiddens[0]; j++) {
-            const from = "I_" + (i + 1);
-            const to = "H_" + (j + 1);
-            g.add(from, to);
-            g.weight(from+"-"+to, Math.random() * 2 - 1);
-            nb_params += 1;
-        }
-    }
-
-    // Hidden layer to output layer
-    for(let i = 0; i < nb_output; i++) {
-        for(let j = 0; j < hiddens[0]; j++) {
-            const from = "H_" + (j + 1);
-            const to = "O_" + (i + 1);
-            g.add("H_" + (j + 1), "O_" + (i + 1));
-            g.weight(from+"-"+to, Math.random() * 2 - 1);
-            nb_params += 1;
-        }
-    }
-    
-    dfs(g);
-    return g;
 }
 
 function finished(winner, fitness=0) {
