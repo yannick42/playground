@@ -18,6 +18,7 @@ const nbDags = document.querySelector("#nb_dags");
 const mean = document.querySelector("#mean_fitness");
 const min = document.querySelector("#min_fitness");
 const max = document.querySelector("#max_fitness");
+const gaInfo = document.querySelector("#ga_info");
 
 //
 // Constants
@@ -29,15 +30,23 @@ const CELL_NB = 40,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'], // hsla(${hue},${saturation}%,${lightness}%,${alpha})
     NB_PLAYERS = 5,
-    MIN_POOL = 100, // start reusing DAG at MIN_POOL
-    NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
-    PRUNE_AT = 200, // regularly, keep only the fittest
+    MIN_POOL = 250, // start reusing DAG at MIN_POOL
+    NEW_DAG_PROBA = 0.0, // if enough elite, at which rate to still create new random graphs ?
+    PRUNE_AT = 500, // regularly, keep only the fittest
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
     meanHistory = [],
+    //
     // Neural net
+    //
     NB_INPUTS = 15, // 2d-position, 4 x walls, 4 x nearest obstacle, 4 x apples + snake length
     NB_HIDDEN_LAYER_1 = 10,
-    NB_OUTPUTS = 3;
+    NB_OUTPUTS = 3,
+    //
+    // Genetic Algorithm
+    //
+    CROSSOVER_METHOD = 'uniform',
+    CROSSOVER_METHOD_LIST = ['uniform', 'one-point', 'two-point'],
+    PERCENT_MUTATION = 0.33; // one-point, two-point
 
 //
 // Variables
@@ -61,8 +70,10 @@ let DEBUG = false,
 if(!DEBUG) { debug.style.display = 'none'; }
 if(!SHOW_LEADERBOARD) { debug.innerHTML = ''; }
 document.querySelector("#prune_at").innerText = PRUNE_AT;
-document.querySelector("#min_pool").innerText = MIN_POOL
-    
+document.querySelector("#min_pool").innerText = MIN_POOL;
+gaInfo.innerHTML = `&bull; crossover method : ${CROSSOVER_METHOD_LIST.map(method => method == CROSSOVER_METHOD ? `<b><u>${method}</u></b>` : method).join(", ")}`;
+gaInfo.innerHTML += `<br/> &bull; mutation percentage : <b>${PERCENT_MUTATION * 100}%</b>`;
+
 
 
 
@@ -113,7 +124,7 @@ function startNewGame(bestDAG=null) {
         const currentTime = Date.now() - startTime;
 
         const time = currentTime < 60*1000 ? `${Math.round(currentTime / 100)/10} sec.` : `${Math.floor(currentTime / 1000 / 60)} min. ${Math.floor(currentTime / 1000) % 60} s.`;
-        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} <span class="tag">${time}</span> : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">(stalled)</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
+        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} <span class="tag">${time}</span> : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">[stalled]</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
         meanHistory.push(meanFitness);
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -159,15 +170,17 @@ function startNewGame(bestDAG=null) {
                         DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS])
                     } else {
                         // crossover between 2 of the bests
-                        if(Math.random() < 0.5) {
+                        if(true) { //Math.random() < 0.5) {
                             const newDAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
 
                             const index = randInt(0, bestDAGs.length - 1); // pick 2 random one
                             const index2 = randInt(0, bestDAGs.length - 1);
-                            DAG = crossover(bestDAGs[index], bestDAGs[index2], newDAG);
+                            DAG = crossover(bestDAGs[index], bestDAGs[index2], newDAG, CROSSOVER_METHOD);
 
-                        // or mutate one of the best
-                        } else {
+                            // add random mutations !
+                            DAG = mutate(DAG, PERCENT_MUTATION);
+
+                        } /*else {
 
                             const index = randInt(0, bestDAGs.length - 1); // pick a random one
 
@@ -178,7 +191,7 @@ function startNewGame(bestDAG=null) {
                             DAG.toposort = bestDAGs[index].toposort;
                             DAG = mutate(DAG);
                             //console.log(`reuse one of the best with fitness = ${bestDAGs[index].fitness}, and mutate it a bit...`);
-                        }
+                        }*/
                     }
                 } else { // to initialize a pool of genes
                     DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // create a new random neural net

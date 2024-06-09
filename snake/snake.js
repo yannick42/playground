@@ -186,7 +186,7 @@ export class Snake {
             if(this.board.hasApple(head[1], i) && nearestAppleW === this.board.nbCells) {
                 nearestAppleW = head[0] - i;
             }
-            if(!this.board.isEmpty(head[0], i) && obstacleW === this.board.nbCells) {
+            if(!this.board.isEmpty(head[1], i) && obstacleW === this.board.nbCells) {
                 obstacleW = head[0] - i;
                 break;
             }
