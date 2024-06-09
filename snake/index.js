@@ -105,7 +105,10 @@ function startNewGame(bestDAG=null) {
     if(bestDAGs.length === MIN_POOL) {
         const lastMean = meanHistory[meanHistory.length - 1];
         const diff = lastMean ? Math.round((meanFitness - lastMean)*100)/100 : null;
-        document.querySelector("#fitness").innerHTML += `- at game ${nbOfGamesPlayed - 1} : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">(stalled)</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
+
+        const currentTime = Date.now() - startTime;
+
+        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} (after ${Math.round(currentTime / 100)/10}s) : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">(stalled)</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
         meanHistory.push(meanFitness);
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -308,7 +311,7 @@ function addEvents() {
     console.log("Event listeners added !");
 }
 
-
+let startTime;
 function main() {
 
     if(!eventsAdded) {
@@ -318,6 +321,7 @@ function main() {
     setUpCanvas(ctx, canvas.width, canvas.height);
     drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
 
+    startTime = Date.now();
     startNewGame();
 }
 

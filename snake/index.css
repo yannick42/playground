@@ -27,11 +27,17 @@
     font-size: small;
 }
 
+.info {
+    font-size: small;
+    font-style: italic;
+    color: blue;
+}
+
 #debug {
     padding: 5px;
     font-size: x-small;
     background-color: antiquewhite;
-    height: 575px;
+    height: 100%;
     text-wrap: balance;
     overflow: scroll;
     float: right;
