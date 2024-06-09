@@ -2,22 +2,24 @@
 export function computeOutput(g, inputs) {
 
     const temp = {
-        'I_1': inputs.wallW,
-        'I_2': inputs.wallN,
-        'I_3': inputs.wallE,
-        'I_4': inputs.wallS,
-        'I_5': inputs.obstacleN,
-        'I_6': inputs.obstacleS,
-        'I_7': inputs.obstacleW,
-        'I_8': inputs.obstacleE,
-        'I_9': inputs.appleN,
-        'I_10': inputs.appleS,
-        'I_11': inputs.appleW,
-        'I_12': inputs.appleE,
-        'I_13': inputs.size
+        'I_1': inputs.headX,
+        'I_2': inputs.headY,
+        'I_3': inputs.wallW,
+        'I_4': inputs.wallN,
+        'I_5': inputs.wallE,
+        'I_6': inputs.wallS,
+        'I_7': inputs.obstacleN,
+        'I_8': inputs.obstacleS,
+        'I_9': inputs.obstacleW,
+        'I_10': inputs.obstacleE,
+        'I_11': inputs.appleN,
+        'I_12': inputs.appleS,
+        'I_13': inputs.appleW,
+        'I_14': inputs.appleE,
+        'I_15': inputs.size
     }; // cumulate computations
 
-    const neuronsPerLayer = [13, 10, 3];
+    const neuronsPerLayer = [Object.keys(temp).length, 10, 3];
     let j = 0, i = 0;
     const activationDone = [];
 

@@ -24,9 +24,10 @@ const CELL_NB = 40,
     MIN_POOL = 100, // start reusing DAG at MIN_POOL
     NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
     PRUNE_AT = 200, // regularly, keep only the fittest
-    NB_HIDDEN_LAYER_1 = 10,
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
-    NB_INPUTS = 12, // walls, nearest obstacle, apples in 4 directions, snake length
+    // Neural net
+    NB_INPUTS = 15, // walls, nearest obstacle, apples in 4 directions, snake length
+    NB_HIDDEN_LAYER_1 = 10,
     NB_OUTPUTS = 3;
 
 let DEBUG = false,
