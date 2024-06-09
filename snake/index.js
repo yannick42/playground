@@ -2,7 +2,7 @@ import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { computeOutput, argmax } from './neural_net.js';
 
-import { setUpCanvas, drawGrid } from './canvas.helper.js';
+import { setUpCanvas, drawGrid, fillSquare } from './canvas.helper.js';
 import { randInt, choice } from './helper.js'
 
 import { Graph, dfs } from '../common/graph.js';
@@ -20,12 +20,14 @@ const CELL_NB = 40,
     INIT_NB_APPLES = 30,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'], // hsla(${hue},${saturation}%,${lightness}%,${alpha})
-    NB_PLAYERS = 2,
-    MIN_POOL = 50, // start reusing DAG at MIN_POOL
+    NB_PLAYERS = 5,
+    MIN_POOL = 100, // start reusing DAG at MIN_POOL
     NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
-    PRUNE_AT = 100, // regularly, keep only the fittest
+    PRUNE_AT = 200, // regularly, keep only the fittest
     NB_HIDDEN_LAYER_1 = 10,
-    STOP_WHEN_ALONE = false; // to keep earning "fitness" points even if already winner ! (3x slower ?)
+    STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
+    NB_INPUTS = 12, // walls, nearest obstacle, apples in 4 directions, snake length
+    NB_OUTPUTS = 3;
 
 let DEBUG = false,
     SHOW_LEADERBOARD = false,
@@ -41,10 +43,10 @@ let move = null; // if not null, a human player has taken control
 let currentDAGs = [];
 let losers = [];
 let bestDAGs = [];
-let nbInputs = 9; // walls, apples in 4 directions, snake length
+
 const meanHistory = [];
 
-let AIMoves = [];
+let AIMoves = {};
 const debug = document.querySelector("#debug");
 const messageDiv = document.querySelector("#message");
 
@@ -131,14 +133,14 @@ function startNewGame(bestDAG=null) {
             names[n],
             method
         );
-        nbInputs = Object.keys(snake.getSensorData()).length;
+        //NB_INPUTS = Object.keys(snake.getSensorData()).length;
 
         if(snake.method == 'Random Neural Net') {
 
             let DAG;
 
-            if(bestDAG) { // reuse best DAG (to show its performance)
-                DAG = createDAG([nbInputs, NB_HIDDEN_LAYER_1, 3]);
+            if(bestDAG) { // reuse best DAG to "showcase" (to see its performance)
+                DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
 
                 // copy weights used by newly created player
                 DAG.customData = bestDAG.customData;
@@ -153,7 +155,7 @@ function startNewGame(bestDAG=null) {
                 if(bestDAGs.length >= MIN_POOL) {
 
                     if(Math.random() > NEW_DAG_PROBA) { // for diversity
-                        DAG = createDAG([nbInputs, NB_HIDDEN_LAYER_1, 3])
+                        DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS])
                     } else {
                         // crossover between 2 of the bests
                         if(Math.random() < 0.5) {
@@ -166,7 +168,7 @@ function startNewGame(bestDAG=null) {
 
                             const index = randInt(0, bestDAGs.length - 1); // pick a random one
 
-                            DAG = createDAG([nbInputs, NB_HIDDEN_LAYER_1, 3]);
+                            DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
 
                             // copy weights used by newly created player
                             DAG.customData = bestDAGs[index].customData;
@@ -176,7 +178,7 @@ function startNewGame(bestDAG=null) {
                         }
                     }
                 } else { // to initialize a pool of genes
-                    DAG = createDAG([nbInputs, NB_HIDDEN_LAYER_1, 3]); // create a new random neural net
+                    DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // create a new random neural net
                 }
 
                 currentDAGs.push(DAG);
@@ -226,7 +228,7 @@ function crossover(g1, g2) {
     // one-point crossover (TODO: multi-point / uniform / Davis’ Order Crossover (OX1) ...)
     const cutPosition = randInt(0 , Object.keys(g1.customData).length - 1);
 
-    const DAG = createDAG([nbInputs, NB_HIDDEN_LAYER_1, 3]);
+    const DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
 
     const firstKeys = Object.keys(g1.customData).slice(0, cutPosition + 1);
     const secondKeys = Object.keys(g2.customData).slice(cutPosition + 1);
@@ -260,6 +262,7 @@ function addEvents() {
             clearInterval(intervalId);
             document.querySelector("#pause").innerText = 'Resume';
         } else {
+            startTime = Date.now(); // reset start time ...
             run();
             document.querySelector("#pause").innerText = 'Pause';
         }
@@ -280,6 +283,8 @@ function addEvents() {
         SHOW_LEADERBOARD = this.checked;
         if(!SHOW_LEADERBOARD) { // empty content
             messageDiv.innerHTML = '';
+        } else {
+            showLeaderboard(board);
         }
     });
     
@@ -393,8 +398,19 @@ function finished(winner, fitness=0) {
     startNewGame(best);
 }
 
+function showLeaderboard(board) {
+    let message = '';
+    const players = board.players;
+    players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
+    players.forEach(player => {
+        message += `<div style="color: ${player.color}"><b ${losers.includes(player) ? 'style="text-decoration: line-through;"': ''}>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
+    })
+    message += `<hr/><div style="color: red">Number of apples : ${board.apples.length}</div>`;
+    messageDiv.innerHTML = message;
+}
+
 function run() {
-    AIMoves = [];
+    AIMoves = {};
     losers = [];
     frame = 0;
     let lastFrame = 0;
@@ -434,6 +450,10 @@ function run() {
 
             if(losers.includes(player)) return; // skip dead snakes
 
+            if(!Object.keys(AIMoves).includes(player.name)) {
+                AIMoves[player.name] = [];
+            }
+
             const dirs = player.possibleDirs();
             if(player.name == 'python' && move !== null) {
                 if(dirs.includes(move)) {
@@ -451,19 +471,22 @@ function run() {
                 const changeBy = [-1, 0, 1][action];
                 const move = ((player.currentDirection + changeBy) + 4) % 4;
                 const moveNames = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
-                AIMoves.push(moveNames[move]+' (Δ='+changeBy+')');
+                AIMoves[player.name].push(moveNames[move]+' (Δ='+changeBy+')');
 
                 //
                 // Debug message
                 //
 
                 if(DEBUG) {
-                    debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(g.toposort, null, 2)}
+                    debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(g.toposort)}
                         \n\nsensor data of ${player.name} :\n ${JSON.stringify(player.getSensorData(), null, '\t')}
                         \n\nLatest network output (after softmax, actions=[-1, 0, 1]) : ${JSON.stringify(proba, null, 2)}
-                        \n\nActions chosen by neural network from currentDirection = ${moveNames[player.currentDirection]} (${player.currentDirection}) :\n >>> ${AIMoves.join(", ")}`;
+                        \n\nActions chosen by neural network from currentDirection = ${moveNames[player.currentDirection]} (${player.currentDirection}) :\n >>> ${AIMoves[player.name].join(", ")}`;
                     
                     debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
+                    const head = player.head();
+                    console.log(head);
+                    //fillSquare(ctx, head[0], head[1], 'black'); // ??? shifted ???
                 }
                 // if possible move
                 //if(dirs.includes(move)) {
@@ -520,17 +543,6 @@ function run() {
             clearInterval(intervalId);
         }
         */
-
-        function showLeaderboard(board) {
-            let message = '';
-            const players = board.players;
-            players.sort((a, b) => a.body.length > b.body.length ? -1 : 1);
-            players.forEach(player => {
-                message += `<div style="color: ${player.color}"><b ${losers.includes(player) ? 'style="text-decoration: line-through;"': ''}>${player.name}</b> (${player.method}) : ${player.body.length}</div>`;
-            })
-            message += `<hr/><div style="color: red">Number of apples : ${board.apples.length}</div>`;
-            messageDiv.innerHTML = message;
-        }
 
         //console.log(">", losers.length);
 

@@ -51,6 +51,7 @@
     overflow: scroll;
     float: right;
     width: 375px;
+    overflow-wrap: break-word;
 }
 
 #nb_dags,

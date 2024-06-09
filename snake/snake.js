@@ -154,45 +154,81 @@ export class Snake {
         let nearestAppleN = this.board.nbCells,
             nearestAppleS = this.board.nbCells,
             nearestAppleW = this.board.nbCells,
-            nearestAppleE = this.board.nbCells;
+            nearestAppleE = this.board.nbCells,
+            obstacleN = this.board.nbCells,
+            obstacleS = this.board.nbCells,
+            obstacleW = this.board.nbCells,
+            obstacleE = this.board.nbCells;
         
-        for(let i = head[0]; i >= 0; i--) { // North
-            if(this.board.hasApple(i, head[1])) {
-                nearestAppleN = head[0] - i;
+        // TODO? : slow ???
+
+        for(let i = head[1]; i >= -1; i--) { // North
+            if(this.board.hasApple(i, head[0]) && nearestAppleN === this.board.nbCells) {
+                nearestAppleN = head[1] - i;
+            }
+            if(!this.board.isEmpty(i, head[0]) && obstacleN === this.board.nbCells) {
+                obstacleN = head[1] - i;
                 break;
             }
         }
 
-        for(let i = head[0]; i < this.board.nbCells; i++) { // South
-            if(this.board.hasApple(i, head[1])) {
+        for(let i = head[1]; i < this.board.nbCells + 1; i++) { // South
+            if(this.board.hasApple(i, head[0]) && nearestAppleS === this.board.nbCells) {
                 nearestAppleS = i;
+            }
+            if(!this.board.isEmpty(i, head[0]) && obstacleS === this.board.nbCells) {
+                obstacleS = i;
                 break;
             }
         }
 
-        for(let i = head[1]; i >= 0; i--) { // West
-            if(this.board.hasApple(head[0], i)) {
-                nearestAppleW = i;
+        for(let i = head[0]; i >= -1; i--) { // West
+            if(this.board.hasApple(head[1], i) && nearestAppleW === this.board.nbCells) {
+                nearestAppleW = head[0] - i;
+            }
+            if(!this.board.isEmpty(head[0], i) && obstacleW === this.board.nbCells) {
+                obstacleW = head[0] - i;
                 break;
             }
         }
 
-        for(let i = head[1]; i < this.board.nbCells; i++) { // East
-            if(this.board.hasApple(head[0], i)) {
-                nearestAppleE = i;
+        for(let i = head[0]; i < this.board.nbCells + 1; i++) { // East
+            if(this.board.hasApple(head[1], i) && nearestAppleE === this.board.nbCells) {
+                nearestAppleE = i - head[0];
+            }
+            if(!this.board.isEmpty(head[1], i) && obstacleE === this.board.nbCells) {
+                obstacleE = i - head[0];
                 break;
             }
         }
 
         return {
+            headX: head[0],
+            headY: head[1],
             wallN: 2 * head[1] / this.board.nbCells - 1,
+            wallN_unnormalized: head[1],
             wallS: 2 * (this.board.nbCells - head[1]) / this.board.nbCells - 1,
+            wallS_unnormalized: this.board.nbCells - head[1],
             wallW: 2 * head[0] / this.board.nbCells - 1,
+            wallW_unnormalized: head[0],
             wallE: 2 * (this.board.nbCells - head[0]) / this.board.nbCells - 1,
+            wallE_unnormalized: this.board.nbCells - head[0],
+            obstacleN: 2 * obstacleN / this.board.nbCells - 1,
+            obstacleN_unnormalized: obstacleN,
+            obstacleS: 2 * obstacleS / this.board.nbCells - 1,
+            obstacleS_unnormalized: obstacleS,
+            obstacleW: 2 * obstacleW / this.board.nbCells - 1,
+            obstacleW_unnormalized: obstacleW,
+            obstacleE: 2 * obstacleE / this.board.nbCells - 1,
+            obstacleE_unnormalized: obstacleE,
             appleN: 2 * nearestAppleN / this.board.nbCells - 1,
+            appleN_unnormalized: nearestAppleN,
             appleS: 2 * nearestAppleS / this.board.nbCells - 1,
+            appleS_unnormalized: nearestAppleS,
             appleW: 2 * nearestAppleW / this.board.nbCells - 1,
+            appleW_unnormalized: nearestAppleW,
             appleE: 2 * nearestAppleE / this.board.nbCells - 1,
+            appleE_unnormalized: nearestAppleE,
             size: this.body.length / 100,
         }
     }
