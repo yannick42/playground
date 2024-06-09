@@ -20,11 +20,12 @@ const CELL_NB = 40,
     INIT_NB_APPLES = 30,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'], // hsla(${hue},${saturation}%,${lightness}%,${alpha})
-    NB_PLAYERS = names.length,
+    NB_PLAYERS = 2,
     MIN_POOL = 50, // start reusing DAG at MIN_POOL
     NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
     PRUNE_AT = 100, // regularly, keep only the fittest
-    NB_HIDDEN_LAYER_1 = 10;
+    NB_HIDDEN_LAYER_1 = 10,
+    STOP_WHEN_ALONE = false; // to keep earning "fitness" points even if already winner ! (3x slower ?)
 
 let DEBUG = false,
     SHOW_LEADERBOARD = false,
@@ -411,15 +412,16 @@ function run() {
             frameLastScoreChange = frame;
         }
 
-        // number of moves (to detect blocks)
-        if(frame - frameLastScoreChange > 50) {
+        const remainingPlayers = board.players.filter(player => !losers.includes(player));
+
+        // ONLY 1 PLAYER   OR   NO APPLE EATEN !? number of moves (to detect blocks)
+        if(remainingPlayers.length <= 1 && STOP_WHEN_ALONE || (frame - frameLastScoreChange) > 50) {
             //console.log("Too long. Loop ?");
             clearInterval(intervalId);
 
-            const stillPlaying = board.players.filter(p => !losers.includes(p));
-            const lengths = stillPlaying.map((p, i) => p.body.length);
+            const lengths = remainingPlayers.map((p, i) => p.body.length);
             const bestLength = Math.max(...lengths);
-            const bestPlayer = stillPlaying.find(p => p.body.length == bestLength);
+            const bestPlayer = remainingPlayers.find(p => p.body.length == bestLength);
             const fitness = frame + 10 * bestLength;
             //console.log("current best is", fitness, "=", bestPlayer.name);
             
@@ -469,7 +471,7 @@ function run() {
                 //} else {
                 //    ok = player.move(player.currentDirection); // continue in same direction ?
                 //}
-            }else {
+            } else {
                 const chosenDir = choice(dirs);
                 ok = player.move(chosenDir);
                 //console.log("available dirs:", dirs, "chosen :", chosenDir);
