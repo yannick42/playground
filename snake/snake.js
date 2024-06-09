@@ -151,11 +151,48 @@ export class Snake {
 
         const head = this.head();
 
+        let nearestAppleN = this.board.nbCells,
+            nearestAppleS = this.board.nbCells,
+            nearestAppleW = this.board.nbCells,
+            nearestAppleE = this.board.nbCells;
+        
+        for(let i = head[0]; i >= 0; i--) { // North
+            if(this.board.hasApple(i, head[1])) {
+                nearestAppleN = head[0] - i;
+                break;
+            }
+        }
+
+        for(let i = head[0]; i < this.board.nbCells; i++) { // South
+            if(this.board.hasApple(i, head[1])) {
+                nearestAppleS = i;
+                break;
+            }
+        }
+
+        for(let i = head[1]; i >= 0; i--) { // West
+            if(this.board.hasApple(head[0], i)) {
+                nearestAppleW = i;
+                break;
+            }
+        }
+
+        for(let i = head[1]; i < this.board.nbCells; i++) { // East
+            if(this.board.hasApple(head[0], i)) {
+                nearestAppleE = i;
+                break;
+            }
+        }
+
         return {
-            wallW: 2 * head[0] / this.board.nbCells - 1,
             wallN: 2 * head[1] / this.board.nbCells - 1,
-            wallE: 2 * (this.board.nbCells - head[0]) / this.board.nbCells - 1,
             wallS: 2 * (this.board.nbCells - head[1]) / this.board.nbCells - 1,
+            wallW: 2 * head[0] / this.board.nbCells - 1,
+            wallE: 2 * (this.board.nbCells - head[0]) / this.board.nbCells - 1,
+            appleN: 2 * nearestAppleN / this.board.nbCells - 1,
+            appleS: 2 * nearestAppleS / this.board.nbCells - 1,
+            appleW: 2 * nearestAppleW / this.board.nbCells - 1,
+            appleE: 2 * nearestAppleE / this.board.nbCells - 1,
             size: this.body.length / 100,
         }
     }

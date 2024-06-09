@@ -6,10 +6,14 @@ export function computeOutput(g, inputs) {
         'I_2': inputs.wallN,
         'I_3': inputs.wallE,
         'I_4': inputs.wallS,
-        'I_5': inputs.size
+        'I_5': inputs.appleN,
+        'I_6': inputs.appleS,
+        'I_7': inputs.appleW,
+        'I_8': inputs.appleE,
+        'I_9': inputs.size
     }; // cumulate computations
 
-    const neuronsPerLayer = [5, 3, 3];
+    const neuronsPerLayer = [9, 10, 3];
     let j = 0, i = 0;
     const activationDone = [];
 

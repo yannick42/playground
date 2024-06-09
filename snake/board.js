@@ -47,11 +47,11 @@ export class Board {
         return [randInt(0, this.nbCells - 1), randInt(0, this.nbCells - 1)];
     }
 
-    noApple(X, Y) {
-        return this.apples.every(apple => apple[0] !== X && apple[1] !== Y);
+    hasApple(X, Y) {
+        return this.apples.find(apple => apple[0] === X && apple[1] === Y) != null;
     }
 
-    spawnApple(number=1) {
+    spawnApple(number=1, showIt=true) {
         //console.log("add", number, "apple(s)");
         for(let i = 0; i < number; i++) {
             let attempts = 0;
@@ -61,9 +61,11 @@ export class Board {
                 const [X, Y] = this.getRandomCell();
                 attempts += 1;
 
-                if(this.isEmpty(X, Y) && this.noApple(X, Y)) { // if no player (and inside board) and no other apples
+                if(this.isEmpty(X, Y) && !this.hasApple(X, Y)) { // if no player (and inside board) and no other apples
                     this.apples.push([X, Y]);
-                    fillSquare(this.ctx, X, Y, this.appleColor, this.squareSize, 2);
+                    if(showIt) {
+                        fillSquare(this.ctx, X, Y, this.appleColor, this.squareSize, 2);
+                    }
                     found = true;
                 }
             }
