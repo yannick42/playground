@@ -8,6 +8,10 @@
     height: 30px;
 }
 
+.stalled {
+    background-color: lightcoral;
+}
+
 #message {
     width: 100%;
     text-align: center;
