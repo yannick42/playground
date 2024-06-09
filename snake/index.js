@@ -108,7 +108,8 @@ function startNewGame(bestDAG=null) {
 
         const currentTime = Date.now() - startTime;
 
-        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} (after ${Math.round(currentTime / 100)/10}s) : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">(stalled)</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
+        const time = currentTime < 60*1000 ? `${Math.round(currentTime / 100)/10} sec.` : `${Math.floor(currentTime / 1000 / 60)} min. ${Math.floor(currentTime / 1000) % 60} s.`;
+        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} <span class="tag">${time}</span> : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">(stalled)</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
         meanHistory.push(meanFitness);
         window.scrollTo(0, document.body.scrollHeight);
     }

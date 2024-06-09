@@ -33,6 +33,15 @@
     color: blue;
 }
 
+.tag {
+    background-color: gray;
+    color: gold;
+    padding: 2px 4px 1px 4px;
+    font-size: 9pt;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
 #debug {
     padding: 5px;
     font-size: x-small;
