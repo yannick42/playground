@@ -23,16 +23,16 @@ const gaInfo = document.querySelector("#ga_info");
 //
 // Constants
 //
-const CELL_NB = 40,
+const CELL_NB = 30,
     CELL_SIZE = (canvas.width - 1) / CELL_NB,
     SNAKE_INIT_SIZE = 4,
     INIT_NB_APPLES = 30,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'], // hsla(${hue},${saturation}%,${lightness}%,${alpha})
     NB_PLAYERS = 5,
-    MIN_POOL = 250, // start reusing DAG at MIN_POOL
-    NEW_DAG_PROBA = 0.0, // if enough elite, at which rate to still create new random graphs ?
-    PRUNE_AT = 500, // regularly, keep only the fittest
+    MIN_POOL = 40, // start reusing DAG at MIN_POOL
+    NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
+    PRUNE_AT = 400, // prune "regularly" to keep only the fittest, for the new generation
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
     meanHistory = [],
     //
@@ -44,9 +44,9 @@ const CELL_NB = 40,
     //
     // Genetic Algorithm
     //
-    CROSSOVER_METHOD = 'uniform',
+    CROSSOVER_METHOD = 'two-point',
     CROSSOVER_METHOD_LIST = ['uniform', 'one-point', 'two-point'],
-    PERCENT_MUTATION = 0.02; // one-point, two-point
+    PERCENT_MUTATION = 0.05; // one-point, two-point
 
 //
 // Variables
@@ -74,13 +74,11 @@ document.querySelector("#min_pool").innerText = MIN_POOL;
 gaInfo.innerHTML = `&bull; crossover method : ${CROSSOVER_METHOD_LIST.map(method => method == CROSSOVER_METHOD ? `<b><u>${method}</u></b>` : method).join(", ")}`;
 gaInfo.innerHTML += `<br/> &bull; mutation percentage : <b>${PERCENT_MUTATION * 100}%</b>`;
 
-
-
-
+let populations = [];
 
 function startNewGame(bestDAG=null) {
 
-    nbOfGamesPlayed += 1;
+    console.warn(performance.memory.usedJSHeapSize);
 
     // creating new board
     board = new Board(ctx, CELL_SIZE, CELL_NB);
@@ -94,16 +92,8 @@ function startNewGame(bestDAG=null) {
     }
     
     move = null; // remove human player (if user used keyboard)
-    FRAME_RATE_MS = INIT_FRAME_RATE_MS;
-    currentDAGs = [];
-
-    // prune ?
-    if(bestDAGs.length >= PRUNE_AT) {
-        bestDAGs.sort((a, b) => a.fitness > b.fitness ? -1 : 1);
-        //console.warn("sorted bests:", JSON.stringify(bestDAGs)); // TODO : it doesn't select the bests !!!!!????
-        //console.log("PRUNE:", bestDAGs.map(d => d.fitness));
-        bestDAGs = bestDAGs.filter((dag, i) => i < MIN_POOL); // keep 10 bests ...
-    }
+    FRAME_RATE_MS = (move || bestDAG) ? NORMAL_FRAME_RATE : INIT_FRAME_RATE_MS;
+    currentDAGs = []; // reinit. NN players (can be null if Random Walk, ...)
 
     nbDags.innerText = bestDAGs.length;
     const meanFitness = bestDAGs.length ? bestDAGs.reduce((acc, d) => acc + d.fitness, 0) / bestDAGs.length : 0;
@@ -117,14 +107,29 @@ function startNewGame(bestDAG=null) {
     min.innerText = Math.round(minFitness * 100) / 100;
     //console.log(minFitness, maxFitness);
 
-    if(bestDAGs.length === MIN_POOL) {
+    // Prune
+    if(bestDAGs.length >= PRUNE_AT) {
+        bestDAGs.sort((a, b) => a.fitness > b.fitness ? -1 : 1); // in-place sort
+        //console.log("PRUNE:", bestDAGs.map(d => d.fitness));
+        bestDAGs = bestDAGs.filter((dag, i) => i < MIN_POOL); // keep only the best/elite
+
+        console.log("(re)initialize the population");
+        // save new population
+        populations = bestDAGs; // already pruned at PRUNE_AT (previous game)
+        bestDAGs = []; // ready for new winners
+        document.querySelector("#population").innerHTML = populations.length;
+    
         const lastMean = meanHistory[meanHistory.length - 1];
         const diff = lastMean ? Math.round((meanFitness - lastMean)*100)/100 : null;
 
         const currentTime = Date.now() - startTime;
 
         const time = currentTime < 60*1000 ? `${Math.round(currentTime / 100)/10} sec.` : `${Math.floor(currentTime / 1000 / 60)} min. ${Math.floor(currentTime / 1000) % 60} s.`;
-        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed - 1} <span class="tag">${time}</span> : min=<b>${minFitness}</b>, mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="stalled">[stalled]</mark>' : ` (<mark>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''}, max=<b>${maxFitness}</b><br/>`;
+        document.querySelector("#fitness").innerHTML += `&bull; game ${nbOfGamesPlayed}
+            <span class="tag">${time}</span> :
+            min=<b>${minFitness}</b>,
+            mean=<b>${Math.round(meanFitness*100)/100}</b>${diff !== null ? (diff == 0 ? ' <mark class="dropped">[stalled]</mark>' : ` (<mark ${diff<0?' class="stalled"':''}>δ: ${diff>0?'+':''}${diff}</mark>)`) : ''},
+            max=<b>${maxFitness}</b><br/>`;
         meanHistory.push(meanFitness);
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -163,35 +168,23 @@ function startNewGame(bestDAG=null) {
                 FRAME_RATE_MS = NORMAL_FRAME_RATE; // slow down !
             } else {
 
+                //console.log(populations.length, bestDAGs.length);
                 // if enough elite DAGs pool, reuse one of the best (modified)... **half of the time** (to allow new "genes")
-                if(bestDAGs.length >= MIN_POOL) {
+                if(populations.length) {
 
-                    if(Math.random() > NEW_DAG_PROBA) { // for diversity
-                        DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS])
+                    if(Math.random() < NEW_DAG_PROBA) { // for diversity
+                        DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // random DAG
                     } else {
                         // crossover between 2 of the bests
-                        if(true) { //Math.random() < 0.5) {
-                            const newDAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
+                        
+                        // random but will be filled by parents
+                        const newDAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
 
-                            const index = randInt(0, bestDAGs.length - 1); // pick 2 random one
-                            const index2 = randInt(0, bestDAGs.length - 1);
-                            DAG = crossover(bestDAGs[index], bestDAGs[index2], newDAG, CROSSOVER_METHOD);
+                        const index = randInt(0, populations.length - 1); // pick 2 random one
+                        const index2 = randInt(0, populations.length - 1);
 
-                            // add random mutations !
-                            DAG = mutate(DAG, PERCENT_MUTATION);
-
-                        } /*else {
-
-                            const index = randInt(0, bestDAGs.length - 1); // pick a random one
-
-                            DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
-
-                            // copy weights used by newly created player
-                            DAG.customData = bestDAGs[index].customData;
-                            DAG.toposort = bestDAGs[index].toposort;
-                            DAG = mutate(DAG);
-                            //console.log(`reuse one of the best with fitness = ${bestDAGs[index].fitness}, and mutate it a bit...`);
-                        }*/
+                        DAG = crossover(populations[index], populations[index2], newDAG, CROSSOVER_METHOD);
+                        DAG = mutate(DAG, PERCENT_MUTATION, 0.2);
                     }
                 } else { // to initialize a pool of genes
                     DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // create a new random neural net
@@ -219,6 +212,7 @@ function startNewGame(bestDAG=null) {
     //document.querySelector("#message").innerHTML = '';
     document.querySelector("#message").className = '';
 
+    nbOfGamesPlayed += 1; // ...
 
     run(); // start game loop
 }
@@ -251,7 +245,9 @@ function addEvents() {
         const bestFitness = Math.max(...bestDAGs.map(o => o.fitness));
         const bestDAG = bestDAGs.find(d => d.fitness == bestFitness);
         //console.log("reusing best DAG with fitness : ", bestFitness, bestDAG);
-    
+
+        clearInterval(intervalId);
+
         setUpCanvas(ctx, canvas.width, canvas.height);
         drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
     
@@ -374,7 +370,11 @@ function run() {
             const lengths = remainingPlayers.map((p, i) => p.body.length);
             const bestLength = Math.max(...lengths);
             const bestPlayer = remainingPlayers.find(p => p.body.length == bestLength);
-            const fitness = frame + 10 * bestLength;
+            
+            //
+            // FITNESS
+            //
+            const fitness = frame + bestPlayer.eaten * 10;
             //console.log("current best is", fitness, "=", bestPlayer.name);
             
             finished(bestPlayer, fitness);
@@ -488,7 +488,10 @@ function run() {
             //console.warn("STOP !");
             clearInterval(intervalId);
             const winner = board.players.filter(player => !losers.includes(player))[0];
-            finished(winner, frame + 10 * winner.body.length);
+            //
+            // FITNESS = frame reached
+            //
+            finished(winner, frame + 10 * winner.eaten);
         }
 
         // STOP

@@ -64,7 +64,7 @@ export class Board {
                 if(this.isEmpty(X, Y) && !this.hasApple(X, Y)) { // if no player (and inside board) and no other apples
                     this.apples.push([X, Y]);
                     if(showIt) {
-                        fillShape(this.ctx, X, Y, 'circle', this.appleColor, this.squareSize, 2);
+                        fillShape(this.ctx, X, Y, 'circle', this.appleColor, this.squareSize, 3);
                     }
                     found = true;
                 }

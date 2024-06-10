@@ -10,7 +10,8 @@
             <div>
                 Code : <a href="https://github.com/yannick42/dsa-tests/" target="_blank">https://github.com/yannick42/dsa-tests/</a><br/><br/>
                 Number of winner DAGs (elite pruned to <span id="min_pool"></span> at <span id="prune_at"></span>) : <span id="nb_dags"></span><br/>
-                Fitness : min=<span id="min_fitness"></span> / mean=<span id="mean_fitness"></span> / max=<span id="max_fitness"></span>
+                Fitness : min=<span id="min_fitness"></span> / mean=<span id="mean_fitness"></span> / max=<span id="max_fitness"></span><br/>
+                Population size : <span id="population"></span>
             </div>
             <button id="restart">Restart</button>
             <br/>
@@ -18,8 +19,8 @@
             <canvas id="board" width="500" height="500"></canvas>
             
             <button id="pause">Pause</button>
-            <button id="reload_page">Reload page (without cache?)</button>
-            <button id="use_best">Show best NN again Random Walk</button>
+            <button id="reload_page">Reload page (w/o cache?)</button>
+            <button id="use_best">Start current best NN against "Random Walk"</button>
 
             <div id="desc">
                 You can control "python" snake using the keyboard arrows.<br/>

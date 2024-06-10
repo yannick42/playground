@@ -11,6 +11,8 @@ export class Snake {
     color;
     name;
     method; // control method
+    
+    eaten;
 
     body = [];
 
@@ -19,6 +21,7 @@ export class Snake {
         this.color = color;
         this.name = name;
         this.method = method;
+        this.eaten = 0;
         //console.log("snake created at", posX, posY);
         this.body.push([posX, posY]);
     }
@@ -78,6 +81,7 @@ export class Snake {
             } else {
 
                 if(appleReached) {
+                    this.eaten += 1;
                     // remove it
                     this.board.apples = this.board.apples.filter(apple => apple[0] !== newestBodypart[0] && apple[1] !== newestBodypart[1]);
                     this.board.spawnApple(); // & replace by a new one !

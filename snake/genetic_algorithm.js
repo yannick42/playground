@@ -1,12 +1,11 @@
 import { randInt, randFloat } from './helper.js'
 import { createDAG, dfs } from '../common/graph.js'
 
-export function mutate(g, perc=0.2) {
-    // mutate by a small amount, around 20% of the weights
+export function mutate(g, perc=0.2, delta=0.1) {
+    // mutate the weights by a small delta
     Object.keys(g.customData).forEach(d => {
-        //console.log("mutate:", d, g.customData[d]);
-        if(Math.random() < perc) { // mutate ?
-            g.customData[d] += randFloat(-0.1, 0.1);
+        if(Math.random() < perc) { // but only 20% of the time...
+            g.customData[d] += randFloat(-delta, delta); // mutation !
         }
     })
     return g;

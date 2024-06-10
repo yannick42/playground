@@ -8,8 +8,12 @@
     height: 30px;
 }
 
-.stalled {
+.dropped {
     background-color: lightcoral;
+}
+
+.stalled {
+    background-color: orange;
 }
 
 #message {
