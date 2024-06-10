@@ -1,7 +1,16 @@
 
-export function fillSquare(ctx, posX, posY, color='green', squareSize=15, margin=2) {
+export function fillShape(ctx, posX, posY, shape='square', color='green', size=15, margin=2) {
     ctx.fillStyle = color;
-    ctx.fillRect(squareSize * posX + margin, squareSize * posY + margin, squareSize - 2*margin, squareSize - 2*margin);
+    if(shape == 'circle') {
+        ctx.beginPath();
+        ctx.arc(size * posX + size/2, size * posY + size/2, size / 2 - margin, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#DAF7A6"; // light green
+        ctx.stroke();
+    } else {
+        ctx.fillRect(size * posX + margin, size * posY + margin, size - 2*margin, size - 2*margin);
+    }
 }
 
 export function setUpCanvas(ctx, width, height) {
@@ -10,6 +19,9 @@ export function setUpCanvas(ctx, width, height) {
 }
 
 export function drawGrid(ctx, width, height, cellSize) {
+
+    ctx.lineWidth = 1;
+
     // vertical lines
     for(let x = 0; x < width; x += cellSize) {
         ctx.beginPath();

@@ -1,4 +1,4 @@
-import { fillSquare } from './canvas.helper.js';
+import { fillShape } from './canvas.helper.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { convertToRGB, RGBToHSL } from './color.js';
 
@@ -44,14 +44,14 @@ export class Snake {
             const color = `hsl(${h},${s}%,${l}%)`;
             //console.log("color:", color);
 
-            fillSquare(this.board.ctx, pos[0], pos[1], 'lightgrey', this.board.squareSize, 1)
-            fillSquare(this.board.ctx, pos[0], pos[1], color, this.board.squareSize, bodySize - 1 === i ? 2 : 3)
+            fillShape(this.board.ctx, pos[0], pos[1], 'square', 'lightgrey', this.board.squareSize, 1)
+            fillShape(this.board.ctx, pos[0], pos[1], 'square', color, this.board.squareSize, bodySize - 1 === i ? 2 : 3)
         });
     }
 
     hide() {
         const bodySize = this.body.length;
-        this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], 'lightgray', this.board.squareSize));
+        this.body.forEach((pos, i) => fillShape(this.board.ctx, pos[0], pos[1], 'square', 'lightgray', this.board.squareSize));
     }
 
     head() {
@@ -73,7 +73,7 @@ export class Snake {
                 ! appleReached
             ) {
                 // erase oldest body part ...
-                fillSquare(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'lightgrey', this.board.squareSize, 1)
+                fillShape(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'square', 'lightgrey', this.board.squareSize, 1)
                 this.body.shift(); // removes the first element
             } else {
 
@@ -100,7 +100,7 @@ export class Snake {
         const oldestBodypart = this.body[0];
         const isMovePossible = this.grow(this.currentDirection);
         if(isMovePossible) {
-            fillSquare(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'lightgrey', this.board.squareSize)
+            fillShape(this.board.ctx, oldestBodypart[0], oldestBodypart[1], 'square', 'lightgrey', this.board.squareSize)
             this.body.shift(); // removes the first element
             return true;
         } else {

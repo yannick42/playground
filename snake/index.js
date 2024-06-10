@@ -1,7 +1,7 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { computeOutput, argmax } from './neural_net.js';
-import { setUpCanvas, drawGrid, fillSquare } from './canvas.helper.js';
+import { setUpCanvas, drawGrid, fillShape } from './canvas.helper.js';
 import { randInt, choice } from './helper.js'
 import { Graph, dfs, createDAG, nb_params } from '../common/graph.js';
 import { crossover, mutate } from './genetic_algorithm.js';
@@ -422,7 +422,7 @@ function run() {
                     debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
                     const head = player.head();
                     console.log(head);
-                    //fillSquare(ctx, head[0], head[1], 'black'); // ??? shifted ???
+                    //fillShape(ctx, head[0], head[1], 'square', 'black'); // ??? shifted ???
                 }
                 // if possible move
                 //if(dirs.includes(move)) {
