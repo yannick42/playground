@@ -46,7 +46,7 @@ const CELL_NB = 40,
     //
     CROSSOVER_METHOD = 'uniform',
     CROSSOVER_METHOD_LIST = ['uniform', 'one-point', 'two-point'],
-    PERCENT_MUTATION = 0.33; // one-point, two-point
+    PERCENT_MUTATION = 0.02; // one-point, two-point
 
 //
 // Variables

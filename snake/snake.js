@@ -1,5 +1,6 @@
 import { fillSquare } from './canvas.helper.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
+import { convertToRGB, RGBToHSL } from './color.js';
 
 export class Snake {
     // head position
@@ -27,9 +28,25 @@ export class Snake {
     }
 
     show() {
-        // TODO: if moved (and no eat) hide last part of the body ?
+        const rgb = convertToRGB(this.color);
+        const arr = rgb.substring(1)
+            .match(/.{2}/g)
+            .map(i => parseInt(i, 16));
+
+        //console.log("arr:", arr);
+        const [h, s, l] = RGBToHSL(...arr);
         const bodySize = this.body.length;
-        this.body.forEach((pos, i) => fillSquare(this.board.ctx, pos[0], pos[1], i == bodySize-1 ? 'dark'+this.color : this.color, this.board.squareSize));
+
+        this.body.forEach((pos, i) => {
+            //const l = Math.ceil((bodySize - i) / bodySize * 55); // dark to mid-color...
+            //const l = Math.ceil(i / bodySize * 50 + 50); // white to mid-color
+            const l = Math.ceil(100 - i / bodySize * 50 - 20); // mid-color to almost white
+            const color = `hsl(${h},${s}%,${l}%)`;
+            //console.log("color:", color);
+
+            fillSquare(this.board.ctx, pos[0], pos[1], 'lightgrey', this.board.squareSize, 1)
+            fillSquare(this.board.ctx, pos[0], pos[1], color, this.board.squareSize, bodySize - 1 === i ? 2 : 3)
+        });
     }
 
     hide() {
