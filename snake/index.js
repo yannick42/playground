@@ -19,6 +19,8 @@ const mean = document.querySelector("#mean_fitness");
 const min = document.querySelector("#min_fitness");
 const max = document.querySelector("#max_fitness");
 const gaInfo = document.querySelector("#ga_info");
+const frameRate = document.querySelector("#frame_rate");
+const frameRateSlider = document.querySelector("#frame_rate_value");
 
 //
 // Constants
@@ -35,6 +37,7 @@ const CELL_NB = 30,
     PRUNE_AT = 400, // prune "regularly" to keep only the fittest, for the new generation
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
     meanHistory = [],
+    INIT_METHOD = 'Random Walk', // | 'Random Neural Net'
     //
     // Neural net
     //
@@ -46,16 +49,16 @@ const CELL_NB = 30,
     //
     CROSSOVER_METHOD = 'two-point',
     CROSSOVER_METHOD_LIST = ['uniform', 'one-point', 'two-point'],
-    PERCENT_MUTATION = 0.05; // one-point, two-point
+    PERCENT_MUTATION = 0.05, // one-point, two-point
+    NORMAL_FRAME_RATE = 24,
+    FAST_FRAME_RATE = 0;
 
 //
 // Variables
 //
 let DEBUG = false,
-    SHOW_LEADERBOARD = false,
-    INIT_FRAME_RATE_MS = 0,
-    FRAME_RATE_MS = INIT_FRAME_RATE_MS,
-    NORMAL_FRAME_RATE = 75,
+    SHOW_LEADERBOARD = true,
+    FRAME_RATE = 24, // Images per second, eg. 1000ms / 24 img. = 41.66 ms
     board, // "singleton" of the game board ...
     intervalId,
     frame = 1,
@@ -66,7 +69,9 @@ let DEBUG = false,
     AIMoves = {},
     nbOfGamesPlayed = 0;
 
+
 // update web page
+frameRate.innerText = FRAME_RATE;
 if(!DEBUG) { debug.style.display = 'none'; }
 if(!SHOW_LEADERBOARD) { debug.innerHTML = ''; }
 document.querySelector("#prune_at").innerText = PRUNE_AT;
@@ -74,11 +79,22 @@ document.querySelector("#min_pool").innerText = MIN_POOL;
 gaInfo.innerHTML = `&bull; crossover method : ${CROSSOVER_METHOD_LIST.map(method => method == CROSSOVER_METHOD ? `<b><u>${method}</u></b>` : method).join(", ")}`;
 gaInfo.innerHTML += `<br/> &bull; mutation percentage : <b>${PERCENT_MUTATION * 100}%</b>`;
 
+
+
+
+frameRateSlider.addEventListener('change', (e) => {
+    FRAME_RATE = e.target.value;
+    modifyInterval(FRAME_RATE);
+});
+
+
 let populations = [];
 
-function startNewGame(bestDAG=null) {
 
-    console.warn(performance.memory.usedJSHeapSize);
+// TODO: move to "board.js" -> `board.start();`
+function startNewGame(bestDAG=null, init_method='Random Neural Net') {
+
+    console.warn("startNewGame():", performance.memory.usedJSHeapSize);
 
     // creating new board
     board = new Board(ctx, CELL_SIZE, CELL_NB);
@@ -86,13 +102,13 @@ function startNewGame(bestDAG=null) {
 
     // add apples
     if(frame % 1000 == 0) {
-        board.spawnApple(INIT_NB_APPLES, true);
+        //board.spawnApple(INIT_NB_APPLES, true);
     } else {
         board.spawnApple(INIT_NB_APPLES);
     }
     
     move = null; // remove human player (if user used keyboard)
-    FRAME_RATE_MS = (move || bestDAG) ? NORMAL_FRAME_RATE : INIT_FRAME_RATE_MS;
+    FRAME_RATE = init_method == 'Random Neural Net' && !bestDAG ? FAST_FRAME_RATE : NORMAL_FRAME_RATE;
     currentDAGs = []; // reinit. NN players (can be null if Random Walk, ...)
 
     nbDags.innerText = bestDAGs.length;
@@ -137,10 +153,10 @@ function startNewGame(bestDAG=null) {
     let method;
     for(let n = 0; n < NB_PLAYERS; n++)
     {
-        if(bestDAG) {
+        if(bestDAG) { // to showcase the best NN
             method = n == 0 ? 'Random Neural Net' : 'Random Walk';
         } else {
-            method = 'Random Neural Net';
+            method = init_method;
         }
         const snake = new Snake(
             board,
@@ -164,8 +180,6 @@ function startNewGame(bestDAG=null) {
                 DAG.toposort = bestDAG.toposort;
 
                 currentDAGs.push(DAG);
-
-                FRAME_RATE_MS = NORMAL_FRAME_RATE; // slow down !
             } else {
 
                 //console.log(populations.length, bestDAGs.length);
@@ -226,9 +240,11 @@ function addEvents() {
     document.querySelector("#reload_page").addEventListener('click', () => {
         location.reload(true);
     })
-    document.querySelector("#restart").addEventListener('click', (e) => {
+    document.querySelector("#restart_training").addEventListener('click', (e) => {
         clearInterval(intervalId);
-        main();
+        FRAME_RATE = FAST_FRAME_RATE;
+        frameRate.innerText = FRAME_RATE;
+        main('Random Neural Net');
     });
     document.querySelector("#pause").addEventListener('click', (e) => {
         if(e.target.innerText == 'Pause') {
@@ -241,12 +257,13 @@ function addEvents() {
         }
     });
     document.querySelector("#use_best").addEventListener('click', () => {
-        FRAME_RATE_MS = NORMAL_FRAME_RATE;
+        clearInterval(intervalId);
+
+        FRAME_RATE = NORMAL_FRAME_RATE;
+        frameRate.innerText = FRAME_RATE;
         const bestFitness = Math.max(...bestDAGs.map(o => o.fitness));
         const bestDAG = bestDAGs.find(d => d.fitness == bestFitness);
         //console.log("reusing best DAG with fitness : ", bestFitness, bestDAG);
-
-        clearInterval(intervalId);
 
         setUpCanvas(ctx, canvas.width, canvas.height);
         drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
@@ -285,7 +302,8 @@ function addEvents() {
                 move = RIGHT;
             }
             board.getPlayer('python')?.setMethod('human'); // can be already dead (= null) TODO: take an other one ?
-            FRAME_RATE_MS = NORMAL_FRAME_RATE;
+            FRAME_RATE = NORMAL_FRAME_RATE;
+            frameRate.innerText = FRAME_RATE;
         }
     });
 
@@ -294,7 +312,7 @@ function addEvents() {
 }
 
 let startTime;
-function main() {
+function main(method=INIT_METHOD) {
 
     if(!eventsAdded) {
         addEvents();
@@ -304,7 +322,7 @@ function main() {
     drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
 
     startTime = Date.now();
-    startNewGame();
+    startNewGame(null, method);
 }
 
 function finished(winner, fitness=0) {
@@ -327,7 +345,7 @@ function finished(winner, fitness=0) {
 
     const best = currentDAGs.filter(d => d != null).length == 1 ? currentDAGs.find(d => d != null) : null;
     //console.log("redo best:", best)
-    startNewGame(best);
+    startNewGame(best, !best ? INIT_METHOD : best.method);
 }
 
 function showLeaderboard(board) {
@@ -384,19 +402,23 @@ function run() {
         board.players.forEach((player, i) => {
             let ok;
 
-            if(losers.includes(player)) return; // skip dead snakes
+            if(losers.includes(player)) return; // skip dead snakes (no more moves)
 
-            if(!Object.keys(AIMoves).includes(player.name)) {
-                AIMoves[player.name] = [];
+            if(! Object.keys(AIMoves).includes(player.name)) {
+                AIMoves[player.name] = []; // init. this NN player move list
             }
 
             const dirs = player.possibleDirs();
+
+            // Manual control ?
             if(player.name == 'python' && move !== null) {
                 if(dirs.includes(move)) {
                     ok = player.move(move);
                 } else {
                     ok = player.move(player.currentDirection);
                 }
+            
+            // Neural net ?
             } else if(player.method == 'Random Neural Net' && currentDAGs[i]) {
 
                 //console.log(i, player.method);
@@ -435,14 +457,12 @@ function run() {
                 ok = player.move(chosenDir);
                 //console.log("available dirs:", dirs, "chosen :", chosenDir);
             }
-
-            // optim. ?
-            //if(frame % 1000 == 0) {
-                player.show(); // update a snake
-            //}
-
+            // this player has just loose ?
             if(!ok) {
-                hasLoser = true;
+                hasLoser = true; // we have a loser => ?
+
+                player.dead = true;
+                //console.log(player.name + " is dead !");
 
                 if(board.players.length - losers.length > 1) {
                     losers.push(player); // to keep track of them (as their are removed from the board..)
@@ -467,10 +487,20 @@ function run() {
                 });*/
 
             } else {
-                if(!hasLoser && SHOW_LEADERBOARD) {
+                if(!hasLoser && SHOW_LEADERBOARD) { // ???
                     showLeaderboard(board);
                 }
             }
+
+
+
+            //
+            // optim. ?
+            //
+
+            //if(frame % 1000 == 0) {
+                player.show(); // update a snake
+            //}
         });
 
         /*
@@ -498,7 +528,18 @@ function run() {
         //clearInterval(intervalId);
         
         frame += 1;
-    }, FRAME_RATE_MS);
+    }, 1000 / FRAME_RATE);
 }
+
+
+function modifyInterval() {
+    frameRate.innerText = FRAME_RATE;
+    clearInterval(intervalId);
+    run()
+}
+
+
+
+
 
 main();

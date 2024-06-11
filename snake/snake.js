@@ -13,6 +13,7 @@ export class Snake {
     method; // control method
     
     eaten;
+    dead = false;
 
     body = [];
 
@@ -22,6 +23,7 @@ export class Snake {
         this.name = name;
         this.method = method;
         this.eaten = 0;
+        this.dead = false;
         //console.log("snake created at", posX, posY);
         this.body.push([posX, posY]);
     }
@@ -44,7 +46,8 @@ export class Snake {
             //const l = Math.ceil((bodySize - i) / bodySize * 55); // dark to mid-color...
             //const l = Math.ceil(i / bodySize * 50 + 50); // white to mid-color
             const l = Math.ceil(100 - i / bodySize * 50 - 20); // mid-color to almost white
-            const color = `hsl(${h},${s}%,${l}%)`;
+            const sat = this.dead ? 5 : s;
+            const color = `hsl(${h},${sat}%,${l}%)`;
             //console.log("color:", color);
 
             fillShape(this.board.ctx, pos[0], pos[1], 'square', 'lightgrey', this.board.squareSize, 1)

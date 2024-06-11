@@ -3,7 +3,7 @@
     width: 500px;
 }
 
-#restart {
+#restart_training {
     width: 100%;
     height: 30px;
 }
@@ -61,6 +61,12 @@
 #nb_dags,
 #mean_fitness,
 #min_fitness,
-#max_fitness {
+#max_fitness,
+#frame_rate,
+#population {
     font-weight: bold;
+}
+
+#frame_rate_value {
+    height: 10px;
 }

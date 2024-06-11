@@ -11,9 +11,11 @@
                 Code : <a href="https://github.com/yannick42/dsa-tests/" target="_blank">https://github.com/yannick42/dsa-tests/</a><br/><br/>
                 Number of winner DAGs (elite pruned to <span id="min_pool"></span> at <span id="prune_at"></span>) : <span id="nb_dags"></span><br/>
                 Fitness : min=<span id="min_fitness"></span> / mean=<span id="mean_fitness"></span> / max=<span id="max_fitness"></span><br/>
-                Population size : <span id="population"></span>
+                Population size : <span id="population">0</span><br/>
+
+                Frame rate : <span id="frame_rate"></span> <input type="range" id="frame_rate_value" min=1 max=150 />
             </div>
-            <button id="restart">Restart</button>
+            <button id="restart_training">Train snakes !</button>
             <br/>
 
             <canvas id="board" width="500" height="500"></canvas>
@@ -26,7 +28,7 @@
                 You can control "python" snake using the keyboard arrows.<br/>
             </div>
 
-            <label><input type="checkbox" id="show_leaderboard" /> Leaderboard </label>
+            <label><input type="checkbox" id="show_leaderboard" checked /> Leaderboard </label>
             <br/>
             <label><input type="checkbox" id="show_debug" /> Show debug window </label>
 
