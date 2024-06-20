@@ -124,7 +124,7 @@ function onValueClick(e) {
     document.querySelector('#' + colrow + '_desc').style.display = 'none';
     // show the input box & focus into it
     document.querySelector('#' + colrow).style.display = 'inline';
-    document.querySelector('#' + colrow).focus();
+    document.querySelector('#' + colrow).select(); // select all by default !
 }
 
 function onEnterPressed(e) {
