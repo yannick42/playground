@@ -1,10 +1,10 @@
-import { Graph, dfs, toposort } from './common/graph.js';
+import { Graph, dfs } from './common/graph.js';
 
 //
 // MAIN entrypoint..
 //
 
-const formulas = {}; // to keep track of formulas
+let formulas = {}; // to keep track of formulas
 const vertices = [], adjacency = {};
 const g = new Graph(vertices, adjacency);
 
@@ -24,13 +24,62 @@ function main() {
     //
     // init table
     //
-    const rows = [
-        ['Test:', '12', '#B1 * 2'],
-        ['Test 2:', '5', '#B1 * #B2 + #C1']
-    ]
-    for(let i = 0; i < 6; i++) {
-        addRow(rows[i]??[]);
+    const localData = JSON.parse(localStorage.getItem("formulas") ?? 'null');
+    console.log("localData:", localData);
+
+    const rows = [];
+    if(localData) {
+        formulas = localData; // reinit formulas
+        // { A1: 'Test:', ... }
+        let maxCol, maxRow;
+        Object.keys(localData).forEach(cell => {
+					  if(! localData[cell]) return; // next...
+					
+            const letter = cell[0];
+            const rowNum = Number(cell.substring(1));
+            if(!maxRow || rowNum > maxRow) maxRow = rowNum;
+            if(!maxCol || letter.codePointAt(0) - 64 > maxCol) maxCol = letter.codePointAt(0) - 64;
+        });
+        
+				console.log("create table of size:", maxRow, "x", maxCol, "from localStorage data");
+			
+			  for(let row = 0; row < maxRow; row++) {
+					rows.push([]); // new line
+					for(let col = 0; col < maxCol; col++) {
+						const letter = String.fromCharCode(65 + col);
+						const cell = letter + (row+1).toString();
+						rows[row].push(localData[cell] ?? null);
+					}
+				}
+    } else {
+        rows.push(['Test:', '12', '#B1 * 2']);
+        rows.push(['Test 2:', '5', '#B1 * #B2 + #C1']);
     }
+
+		// add rows !
+    rows.forEach(row => addRow(row, false));
+
+
+		/*
+	  dfs(g);
+		console.log(g);
+	  [...g.toposort].reverse().forEach(c => computeCell(c));
+		*/
+	
+		
+	 	Object.keys(formulas).forEach(cell => {
+			const formula = formulas[cell];
+			if(formula) {
+				const refs = listReference(formula);
+				console.log(cell, refs);
+				if(refs?.length) {
+					apply(cell, formulas[cell]);
+				} else {
+					//console.log("no need to 'apply' because", cell, "has no formula referencing other cells");
+				}
+			}
+		});
+		
 }
 
 
@@ -119,6 +168,12 @@ function onInputBlur(e) {
     e.target.style.display = 'none';
 
     apply(cell, formula);
+    
+    saveToLocalstorage(); // save locally for next page refresh..
+}
+
+function saveToLocalstorage() {
+    localStorage.setItem("formulas", JSON.stringify(formulas));
 }
 
 function apply(cell, formula) {
@@ -167,9 +222,9 @@ function apply(cell, formula) {
     // do the computations sequentially (in reverse order !)
     //      as the last element has "no dependency" (so can be calculated directly, & first)
     //
-    console.log("order:", toposort);
+    console.log("order:", g.toposort);
     // /!\ .reverse() is in-place !
-    [...toposort].reverse().forEach(c => computeCell(c)); // TODO: recompute only from this cell in the graph (not everything...)
+    [...g.toposort].reverse().forEach(c => computeCell(c)); // TODO: recompute only from this cell in the graph (not everything...)
 
     // at the end, display the computed (resulting) value
     document.querySelector('#' + cell + "_value").style.display = 'inline';
@@ -177,7 +232,7 @@ function apply(cell, formula) {
 }
 
 
-function addRow(row=[]) {
+function addRow(row=[], applyFormula=true) {
     const nb_rows = document.querySelector("table").querySelectorAll('tr').length - 1;
     const nb_cols = document.querySelector("table").querySelector('tr:nth-of-type(1)').querySelectorAll('td').length - 1;
 
@@ -186,7 +241,7 @@ function addRow(row=[]) {
         const letter = String.fromCharCode(65 + i);
         const cell = letter + (nb_rows + 1).toString();
         tds += `<td>
-            <input id="${cell}" class="formula" value="${row[i] ? row[i] : '-'}"/>
+            <input id="${cell}" class="formula" value="${row[i] ? row[i] : ''}"/>
             <span id="${cell}_value" class="value">${row[i] ? row[i] : '-'}</span>
             <span id="${cell}_desc" class="small"></span>
         </td>`;
@@ -201,7 +256,9 @@ function addRow(row=[]) {
         const cell = letter + (nb_rows + 1).toString();
         console.log(cell, formula);
         formulas[cell] = formula;
-        apply(cell, formula);
+        if(applyFormula && formula) {
+           apply(cell, formula);
+				}
     });
     
     addEvents(); // add function that will handle events (click, blur (=unfocus), ...)
