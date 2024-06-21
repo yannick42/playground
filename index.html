@@ -92,7 +92,7 @@
                 </span>
                 <span>
                     <a id="correlations" href="./correlations/" target="iframe">Correlation coefficients</a><br/>
-                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity..</span>
+                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity, ...</span>
                 </span>
                 <span>
                     <a id="delaunay" href="./delaunay/" target="iframe">Delaunay triangulation</a> <span class="info">slow</span><br/>
@@ -135,26 +135,54 @@
 
 
         <script type="text/javascript">
+            let currentHash = '';
+
             function onHashChange() {
-                console.log('Hash changed to:', window.location.hash);
-                if(window.location.hash) {
+                console.log("hash changed to", window.location.hash);
+                if(window.location.hash) { // changed to this
                     const aLink = document.querySelector(window.location.hash);
                     aLink?.click();
+                    changeSelected(currentHash, window.location.hash);
+                    currentHash = window.location.hash;
                 }
             }
 
-            // Add an event listener for the hashchange event
             window.addEventListener('hashchange', onHashChange, false);
 
-            // Optionally, you can also handle the initial hash if needed
+            // handle the initial hash if needed
             onHashChange();
 
             const menu = document.querySelector("#menu");
             menu.addEventListener('click', (e) => {
                 console.log("e:", e);
                 console.log("clicked on ", e.target.id)
-                history.pushState(null, null, '#' + e.target.id);
-            })
+
+                if(e.target.id) {
+                    history.pushState(null, null, '#' + e.target.id);
+                    changeSelected(currentHash, '#' + e.target.id)
+
+                    // new
+                    currentHash = '#' + e.target.id;
+                }
+            });
+
+            function changeSelected(fromHash, toHash) {
+                console.log("from", fromHash, "to", toHash);
+                if(fromHash) {
+                    const from = document.querySelector(fromHash);
+                    if(from) {
+                        console.log(from);
+                        from.parentNode.style.backgroundColor = 'transparent';
+                    }
+                }
+                if(toHash) {
+                    const to = document.querySelector(toHash);
+                    if(to) {
+                        console.log(to);
+                        to.parentNode.style.backgroundColor = 'lightsalmon';
+                    }
+                }
+            }
         </script>
 
     </body>

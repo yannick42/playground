@@ -100,6 +100,14 @@ function main() {
 	const ctx = canvas.getContext('2d');
 	
 	drawAxis(ctx);
+
+	const initPoints = [[4, 4], [5, 5], [6, 6]];
+	initPoints.forEach(point => {
+		const [x_, y_] = convertToCanvasCoords(point[0], point[1]);
+		drawPointAt(ctx, x_, y_, 5, "black");
+		points.push(point);
+	})
+	evaluateCoefficients(points);
 	
 	// listen to click on canvas to add points manually
 	canvas.addEventListener('click', function(evt) {
@@ -111,22 +119,27 @@ function main() {
 		drawPointAt(ctx, x, y, 5, "black");
 		points.push([x_pos, y_pos]);
 		
-		// calculate Pearson Correlation Coefficient
-		const pearsonValue = pearson(points);
-		document.querySelector("#pearson").innerHTML = isNaN(pearsonValue) ? '-' : Math.round(pearsonValue * 1e5) / 1e5;
-		
-		// calculate Spearman's rho
-		const spearmanValue = spearman(points);
-		document.querySelector("#spearman").innerHTML = isNaN(spearmanValue) ? '-' : Math.round(spearmanValue * 1e5) / 1e5;
-		
-		// calculate Kendall's tau
-		const kendallValue = kendall(points);
-		document.querySelector("#kendall").innerHTML = isNaN(kendallValue) ? '-' : Math.round(kendallValue * 1e5) / 1e5;
-		
-		// calculate Cosine Similarity
-		document.querySelector("#cosine_similarity").innerHTML = Math.round(cosine_similarity(points) * 1e5) / 1e5;
-		
+		evaluateCoefficients(points);
 	});
+}
+
+function evaluateCoefficients(points) {
+
+	// calculate Pearson Correlation Coefficient
+	const pearsonValue = pearson(points);
+	document.querySelector("#pearson").innerHTML = isNaN(pearsonValue) ? '-' : Math.round(pearsonValue * 1e5) / 1e5;
+	
+	// calculate Spearman's rho
+	const spearmanValue = spearman(points);
+	document.querySelector("#spearman").innerHTML = isNaN(spearmanValue) ? '-' : Math.round(spearmanValue * 1e5) / 1e5;
+	
+	// calculate Kendall's tau
+	const kendallValue = kendall(points);
+	document.querySelector("#kendall").innerHTML = isNaN(kendallValue) ? '-' : Math.round(kendallValue * 1e5) / 1e5;
+	
+	// calculate Cosine Similarity
+	document.querySelector("#cosine_similarity").innerHTML = Math.round(cosine_similarity(points) * 1e5) / 1e5;
+	
 }
 
 main();
