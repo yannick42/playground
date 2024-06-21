@@ -16,6 +16,7 @@ body {
     margin: 5px;
     border-right: 1px solid salmon;
     padding-right: 5px;
+    overflow: scroll;
 }
 #main-panel {
     width: calc(100% - var(--menu-width));
