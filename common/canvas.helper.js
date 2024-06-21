@@ -125,3 +125,61 @@ export function drawRectangle(context, x, y, x2, y2, width=1) {
 	context.rect(x, y, x2 - x, y2 - y);
 	context.stroke();
 }
+
+export function addHorizontalAt(canvas, canvasXPos, width=0.25) {
+  const context = canvas.getContext("2d");
+	context.beginPath();
+	context.moveTo(0, canvasXPos);
+  context.lineTo(canvas.width, canvasXPos);
+	context.lineWidth = width;
+	context.strokeStyle = "black";
+	context.closePath();
+  context.stroke();
+}
+
+export function addVerticalAt(canvas, canvasYPos, width=0.25) {
+  const context = canvas.getContext("2d");
+	context.beginPath();
+	context.moveTo(canvasYPos, 0);
+  context.lineTo(canvasYPos, canvas.height);
+	context.lineWidth = width;
+	context.strokeStyle = "black";
+	context.closePath();
+  context.stroke();
+}
+
+// function to convert from canvas coordinate to graph coordinates
+export function convertToGraphCoords(canvas, x, y, canvasSquareSize=25) {
+	return [((x - canvas.width * 0.25)) / canvasSquareSize, -((y - canvas.height * 0.75)) / canvasSquareSize];
+}
+
+export function convertToCanvasCoords(canvas, x, y, canvasSquareSize=25) {
+	return [
+		x * canvasSquareSize + canvas.width * 0.25, 
+		-(y * canvasSquareSize) + canvas.height * 0.75
+	]
+}
+
+export function drawAxis(canvas, canvasSquareSize=25) {
+  const context = canvas.getContext("2d");
+
+	// add (xy)-axis
+	addHorizontalAt(canvas, canvas.height * 0.75, 2) // from top
+	addVerticalAt(canvas, canvas.width * 0.25, 2) // from left
+	
+	// add a grid (lighter)
+		// horizontal
+	for(let i = 0; (canvas.height * 0.75) + canvasSquareSize * i <= canvas.height; i++) {
+		addHorizontalAt(canvas, (canvas.height * 0.75) + canvasSquareSize * i);
+	}
+	for(let i = 0; (canvas.height * 0.75) - canvasSquareSize * i >= 0; i++) {
+		addHorizontalAt(canvas, (canvas.height * 0.75) - canvasSquareSize * i);
+	}
+		// vertical
+	for(let i = 0; (canvas.width * 0.25) + canvasSquareSize * i <= canvas.width; i++) {
+		addVerticalAt(canvas, (canvas.width * 0.25) + canvasSquareSize * i);
+	}
+	for(let i = 0; (canvas.width * 0.25) - canvasSquareSize * i >= 0; i++) {
+		addVerticalAt(canvas, (canvas.width * 0.25) - canvasSquareSize * i);
+	}
+}

@@ -7,7 +7,9 @@ TODO:
  - counter of the number of points
 */
 
-import { drawAxis, drawPointAt, convertToCanvasCoords, convertToGraphCoords } from './helper.js';
+import { drawPointAt } from './helper.js';
+import { drawAxis, convertToCanvasCoords, convertToGraphCoords } from '../common/canvas.helper.js';
+
 
 const CANVAS_WIDTH = 600,
 			CANVAS_HEIGHT = 600,
@@ -99,11 +101,11 @@ function main() {
 	canvas.height = CANVAS_HEIGHT;
 	const ctx = canvas.getContext('2d');
 	
-	drawAxis(ctx);
+	drawAxis(canvas);
 
 	const initPoints = [[4, 4], [5, 5], [6, 6]];
 	initPoints.forEach(point => {
-		const [x_, y_] = convertToCanvasCoords(point[0], point[1]);
+		const [x_, y_] = convertToCanvasCoords(canvas, point[0], point[1]);
 		drawPointAt(ctx, x_, y_, 5, "black");
 		points.push(point);
 	})
@@ -114,7 +116,7 @@ function main() {
 		const rect = canvas.getBoundingClientRect();
 		const x = evt.clientX - rect.left;
 		const y = evt.clientY - rect.top;
-		const [x_pos, y_pos] = convertToGraphCoords(x, y);
+		const [x_pos, y_pos] = convertToGraphCoords(canvas, x, y);
 		
 		drawPointAt(ctx, x, y, 5, "black");
 		points.push([x_pos, y_pos]);
