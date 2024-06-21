@@ -1,9 +1,10 @@
 :root {
     --menu-width: 20%;
-    --theme-color: #658fcd; /* = blue; red/salmon = #ff6857 */
+    --theme-color: #68889e; /* = blue; red/salmon = #ff6857 */
 }
 body {
     font-family: sans-serif;
+    margin: 0; /* !!! */
 }
 #main {
     display: flex;
@@ -14,9 +15,7 @@ body {
     flex-direction: column;
     width: var(--menu-width);
     font-size: medium;
-    margin: 5px;
     border-right: 1px solid var(--theme-color);
-    padding-right: 5px;
     overflow: scroll;
 }
 #main-panel {
@@ -32,20 +31,32 @@ a:visited, a {
 }
 
 iframe {
-    height: 100%;
-    width: 100%;
+    height: 97.5%;
+    width: calc(100% - 2 * 10px);
     border: 0;
-}
-#menu > span {
-    padding: 5px 0;
-    border-bottom: 1px solid lightgray;
-}
-.desc {
-    font-size: 8.8pt;
-    padding-left: 5px;
-    font-style: italic;
+    margin: 10px;
 }
 
+/* demo entry */
+#menu > span {
+    padding: 6px 5px 6px 10px;
+    border-bottom: 1px solid var(--theme-color);
+}
+
+/* Small demo description */
+.desc {
+    font-size: 8.8pt;
+    padding-left: 4px; /* to add indentation */
+    font-style: italic;
+}
+.desc::before {
+    content: '...';
+    padding-right: 1px; /* between ... and the description */
+}
+
+/**
+ * Chips : warning / info / buggy
+ */
 .chip {
     padding: 1px 4px;
     border-radius: 6px;
@@ -56,13 +67,16 @@ iframe {
     bottom: 3px;
     opacity: 0.6;
 }
+
 .warning {
     background-color: yellow;
 }
+
 .info {
     color: white;
     background-color: blue;
 }
+
 .buggy {
     color: white;
     background-color: orange;
