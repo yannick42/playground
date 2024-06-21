@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- for latex -->
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Lagrange interpolation</div>
+			<div id="subtitle">An interpolating polynomial with the form of a linear combinaison:</div>
+
+			<div>$$L(x)=\sum\limits_{j=0}^k y_j \ell_j(x) \ \text{with coef.} \ \ell_j(x) = \prod_{\begin{smallmatrix}0\le m\le k\\ m\neq j\end{smallmatrix}} \frac{x-x_m}{x_j-x_m} \text{  and k given points } (x, y)$$</div>
+
+			<div id="desc">
+				<ul>
+					<li>
+						First discovered in <b>1779</b> by Edward Warring <sub>(1736-1798)</sub>, rediscovered later by Leonhard Euler <sub>(1707-1783)</sub> as an easy consequence of a formula, published in <b>1783</b>. And also published in <b>1795</b> by Joseph-Louis Lagrange <sub>(1736-1813)</sub>.
+					</li>
+					<li>
+						The <b>degree</b> of the polynomial is 1 less than the number of points.
+					</li>
+					<li>
+						<b>Drawbacks:</b> if a new point is added then everything must be recalculated. If points are equally-spaced, it can produce large oscillations (Runge's phenomenon) that can be eliminated by using the Chebyshev nodes instead.
+					</li>
+					<li>
+						<b>Used in:</b> Newton-Cotes Formulas for numerical integration, cryptography (<a href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing" target="_blank">Shamir's secret sharing</a> (<b>1979</b>), ...), error correction (Reed–Solomon in <b>1960</b>), ...
+					</li>
+					<li>
+						<a href="https://en.wikipedia.org/wiki/Lagrange_polynomial" target="_blank">Lagrange polynomial (wikipedia)</a>
+					</li>
+				</ul>
+			</div>
+			
+			<button id="clear_points">Clear points</button>
+			
+			<!-- colored formula -->
+			<div id="formula"></div>
+			
+			<canvas id="graph" width=550 height=550></canvas>
+			
+			<div id="debug"></div>
+			
+			<!--span id="number_of_points"></span> points -->
+		</div>
+		
+		<script type="module" src="./interp.js"></script>
+	</body>
+</html>

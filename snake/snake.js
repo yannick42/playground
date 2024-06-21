@@ -1,4 +1,4 @@
-import { fillShape } from './canvas.helper.js';
+import { fillShape } from '../common/canvas.helper.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { convertToRGB, RGBToHSL } from './color.js';
 

@@ -1,6 +1,4 @@
 
-export const toposort = [];
-
 export class Graph {
     V = {} // vertices
     adj = {} // adjacency list
@@ -12,6 +10,7 @@ export class Graph {
     constructor(V, adj) {
         this.V = Object.assign({}, ...V.map(vertex => ({ [vertex]: DEFAULT})));
         this.adj = adj;
+        this.toposort = [];
     }
 
     reinit() {
@@ -61,7 +60,7 @@ let TIME;
 export function dfs(g) {
 
     TIME = 0; // reinit
-    toposort.splice(0, toposort.length); // erase array
+    g.toposort.splice(0, g.toposort.length); // erase array
 
     Object.keys(g.V).forEach(vertex => {
         if(g.V[vertex].color === WHITE) {
@@ -70,7 +69,6 @@ export function dfs(g) {
     });
 
     //console.log("end ?");
-    g.toposort = toposort;
 }
 
 function dfs_visit(g, start_vertex) {
@@ -89,7 +87,7 @@ function dfs_visit(g, start_vertex) {
     g.V[start_vertex].f = TIME; // finish time
     g.V[start_vertex].color = BLACK;
 
-    toposort.unshift(start_vertex); // add this vertex at the front of the list
+    g.toposort.unshift(start_vertex); // add this vertex at the front of the list
 }
 
 export let nb_params = 0;

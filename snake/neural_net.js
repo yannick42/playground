@@ -24,6 +24,7 @@ export function computeOutput(g, inputs) {
     const activationDone = [];
 
     // in topological order
+    console.log("computeOutput:", g);
     g.toposort.forEach((neuron) => {
         //console.log(`Calculating ${neuron} linked to ${g.adj[neuron] ?? 'no'} neurons`);
 

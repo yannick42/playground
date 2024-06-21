@@ -1,0 +1,50 @@
+<html>
+    <style>
+        .formula {
+            display: none;
+            width: 90%;
+        }
+        .value {
+            display: inline-block;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td:nth-of-type(1) {
+            width: 20px;
+        }
+        td {
+            border: 1px solid black;
+            width: 150px;
+            text-align: center;
+        }
+        .small {
+            font-size: 8pt;
+            color: brown;
+        }
+    </style>
+    <body>
+
+				<pre>Basic spreadsheet app, allowing to use referenced cells in formulas (eg. #B2 * 2) :
+- using topological sort algorithm to order computation dependencies</pre>
+			
+        <button id="add_row">Add 1 row</button>
+        <button id="add_col">Add 1 column</button>
+
+        <table>
+            <tr>
+                <td></td>
+                <td>A</td>
+                <td>B</td>
+                <td>C</td>
+            </tr>
+        </table>
+    </body>
+
+    <script src="index.js" type="module"></script>
+
+</html>

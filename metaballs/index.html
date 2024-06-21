@@ -1,0 +1,43 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="metaballs.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex -->
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+
+	<body>
+
+		<section id="content">
+
+			<div id="title">Metaballs</div>
+			<div id="subtitle"></div>
+
+			<div id="desc">
+				<ul>
+					<li>Based on this <a target="_blank" href="https://www.youtube.com/watch?v=6oMZb3yP_H8">Youtube video</a> by Reducible</li>
+					<li>Invented in <b>1982</b> by James Blinn (1949-...) for a TV documentary (to model atoms/DNA, in 3D)</li>
+					<li>Can be used with <span class="highlight">Marching squares/cubes</span> algorithm (originally, 3D ray tracing?), it's a sum of <span class="highlight">implicit functions</span> of multiple circles (or eventually, surfaces \(f(x,y,z)=0\)), the curve represents where this function crosses 0. &rightarrow; \(\sum\limits_i \text{metaball}_i = \text{threshold}\)</li>
+					<li>The curve is drawn using linear interpolation of this function over a grid</li>
+					<li><a target="_blank" href="https://en.wikipedia.org/wiki/Metaballs">https://en.wikipedia.org/wiki/Metaballs</a></li>
+				</ul>
+			</div>
+
+			<canvas id="myCanvas">
+			  Sorry, your browser doesn't know canvas
+			</canvas>
+			
+			<button id="reload">Reload</button>
+		</section>
+	
+		<script type="module" src="metaballs.js"></script>
+	</body>
+	
+</html>

@@ -1,0 +1,378 @@
+<html>
+    <head>
+
+<script id="vertex-shader-flat" type="notjs" src="shaders/vertex-shader.glsl">
+
+// an attribute will receive data from a buffer
+attribute vec4 a_position;
+attribute vec3 a_normal;
+
+uniform mat4 u_matrix; // projection only ...
+uniform vec3 u_translation;
+uniform mat4 u_rotation;
+
+uniform vec3 u_reverseLightDirection;
+
+varying float light;
+
+// all shaders have a main function
+void main() {
+    
+    vec4 rotatedPosition = u_rotation * a_position;
+    vec4 translatedPosition = rotatedPosition + vec4(u_translation, 0);
+    vec4 position = u_matrix * translatedPosition;
+
+    gl_Position = position;
+
+    light = max(dot(a_normal, normalize(u_reverseLightDirection)), 0.0);
+}
+</script>
+
+<script id="fragment-shader-flat" type="notjs" src="shaders/vertex-shader.glsl">
+
+// fragment shaders don't have a default precision so we need
+// to pick one. mediump is a good default
+precision mediump float;
+
+uniform vec4 u_color;
+
+varying float light;
+
+void main() {
+    gl_FragColor = u_color;
+    
+    // Lets multiply just the color portion (not the alpha) by the light
+    gl_FragColor.rgb *= light;
+}
+</script>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="vertex-shader-gouraud" type="notjs" src="shaders/vertex-shader.glsl">
+
+// an attribute will receive data from a buffer
+attribute vec4 a_position;
+attribute vec3 a_normal;
+
+uniform mat4 u_matrix; // projection only ...
+uniform vec3 u_translation;
+uniform mat4 u_rotation;
+uniform vec2 u_resolution;
+uniform vec4 u_color;
+
+//varying vec4 v_color; // output to fragment shader
+//varying vec3 v_normal;
+varying vec3 vertex_color;
+
+uniform vec3 u_reverseLightDirection;
+
+
+mat3 transpose(mat3 matrix) {
+    vec3 row0 = matrix[0];
+    vec3 row1 = matrix[1];
+    vec3 row2 = matrix[2];
+    mat3 result = mat3(
+        vec3(row0.x, row1.x, row2.x),
+        vec3(row0.y, row1.y, row2.y),
+        vec3(row0.z, row1.z, row2.z)
+    );
+    return result;
+}
+
+float det(mat2 matrix) {
+    return matrix[0].x * matrix[1].y - matrix[0].y * matrix[1].x;
+}
+
+mat3 inverse(mat3 matrix) {
+    vec3 row0 = matrix[0];
+    vec3 row1 = matrix[1];
+    vec3 row2 = matrix[2];
+
+    vec3 minors0 = vec3(
+        det(mat2(row1.y, row1.z, row2.y, row2.z)),
+        det(mat2(row1.z, row1.x, row2.z, row2.x)),
+        det(mat2(row1.x, row1.y, row2.x, row2.y))
+    );
+    vec3 minors1 = vec3(
+        det(mat2(row2.y, row2.z, row0.y, row0.z)),
+        det(mat2(row2.z, row2.x, row0.z, row0.x)),
+        det(mat2(row2.x, row2.y, row0.x, row0.y))
+    );
+    vec3 minors2 = vec3(
+        det(mat2(row0.y, row0.z, row1.y, row1.z)),
+        det(mat2(row0.z, row0.x, row1.z, row1.x)),
+        det(mat2(row0.x, row0.y, row1.x, row1.y))
+    );
+
+    mat3 adj = transpose(mat3(minors0, minors1, minors2));
+
+    return (1.0 / dot(row0, minors0)) * adj;
+}
+
+
+
+// all shaders have a main function
+void main() {
+    
+    vec4 rotatedPosition = u_rotation * a_position;
+    vec4 translatedPosition = rotatedPosition + vec4(u_translation, 0);
+    vec4 position = u_matrix * translatedPosition;
+
+    gl_Position = position;
+
+
+    // convert the position from pixels to 0.0 to 1.0
+    //vec4 zeroToOne = position / vec4(u_resolution, 1, 1);
+    // convert from 0->1 to 0->2
+    //vec4 zeroToTwo = zeroToOne * 2.0;
+    // convert from 0->2 to -1->+1 (clip space)
+    //vec4 clipSpace = zeroToTwo - 1.0;
+    // gl_Position is a special variable a vertex shader
+    // is responsible for setting
+    //gl_Position = clipSpace;
+
+    //v_color = vec4(vec3(gl_Position) * 0.5 + 0.5, 1);
+    // Pass the normal to the fragment shader
+    //v_normal = a_normal;
+
+    vec4 lightPosition = u_matrix * vec4(100, 100, 100, 1) + vec4(u_translation, 0);
+
+
+    mat3 NormalMatrix = transpose(inverse(mat3(u_matrix)));
+
+    vec3 v = vec3(position); // surface position
+    vec3 N = normalize(NormalMatrix * v); // if a_normal -> flat shading ?!?
+    vec3 L = normalize(vec3(lightPosition) - v);
+    vec3 E = normalize(-v); // we are in Eye Coordinates, so EyePos is (0,0,0)  
+    vec3 R = normalize(reflect(-L,N));
+
+    float shininess = 5.0;
+
+    float k_a = 0.3;
+    float k_d = 0.4;
+    float k_s = 0.3;
+
+    // Ambient + Diffuse + Specular
+    vertex_color = vec3(u_color * vec4(
+            0.4 * vec3(k_a, k_a, k_a)
+        +   4.0 * vec3(k_d, k_d, k_d) * max(dot(N,L), 0.0)
+        +   1.0 * vec3(k_s, k_s, k_s) * pow(max(dot(R,E), 0.0), 0.3*shininess),
+        0
+        )
+    );
+}
+
+</script>
+
+<script id="fragment-shader-gouraud" type="notjs" src="shaders/fragment-shader.glsl">
+
+precision mediump float;
+
+varying vec3 vertex_color;
+
+void main() {   
+    gl_FragColor = vec4(vertex_color, 1);
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="vertex-shader-phong" type="notjs" src="shaders/vertex-shader.glsl">
+
+    // from buffer
+    attribute vec4 a_position;
+    attribute vec3 a_normal;
+    
+    uniform mat4 u_matrix; // a projection only ...
+    uniform vec3 u_translation;
+    uniform mat4 u_rotation;
+    uniform vec3 u_reverseLightDirection;
+    
+    varying vec3 worldPosition;
+    varying vec3 positionToLight;
+    varying vec3 positionToEye;
+    
+    void main() {
+        
+        vec4 rotatedPosition = u_rotation * a_position;
+        vec4 translatedPosition = rotatedPosition + vec4(u_translation, 0);
+        vec4 position = u_matrix * translatedPosition;
+
+        gl_Position = position;
+    
+        worldPosition = position.xyz;
+        
+        positionToLight = vec3(
+            u_reverseLightDirection.x * 50.0,
+            u_reverseLightDirection.y * 50.0,
+            u_reverseLightDirection.z * 50.0
+        ) - worldPosition;
+        
+        positionToEye = - worldPosition;
+    }
+    </script>
+    
+    <script id="fragment-shader-phong" type="notjs" src="shaders/vertex-shader.glsl">
+    
+    // fragment shaders don't have a default precision so we need
+    // to pick one. mediump is a good default
+    precision mediump float;
+    
+    varying vec3 worldPosition;
+    varying vec3 positionToLight;
+    varying vec3 positionToEye;
+    
+    uniform vec4 u_color; // a fixed random color
+    
+    float lightIntensity(vec3 normal, vec3 toLight, vec3 toEye) {
+        vec3 toReflectedLight = reflect(-toLight, normal);
+    
+        float diffuse = max(dot(toLight, normal), 0.0);
+        float specular = max(dot(toReflectedLight, toEye), 0.0);
+        specular = pow(specular, 5.0);
+    
+        return 0.3 * diffuse + 0.3 * specular + 0.3;
+    }
+    
+    void main() {
+        vec3 normal = normalize(worldPosition);
+        float intensity = lightIntensity(normal, normalize(positionToLight), normalize(positionToEye));
+    
+        gl_FragColor = vec4(intensity, intensity, intensity, 1);
+    }
+    
+    
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+<!-- PICKER -->
+<script id="vertex-shader-picker" type="notjs">
+
+    attribute vec4 a_position;
+    
+    uniform mat4 u_matrix; // projection only ...
+    uniform vec3 u_translation;
+    uniform mat4 u_rotation;
+    
+    void main() {
+        vec4 rotatedPosition = u_rotation * a_position;
+        vec4 translatedPosition = rotatedPosition + vec4(u_translation, 0);
+    
+        // Multiply the position by the matrix.
+        gl_Position = u_matrix * translatedPosition;
+    }
+    
+</script>
+    
+<script id="fragment-shader-picker" type="notjs">
+
+    precision mediump float;
+
+    uniform vec4 u_id;
+
+    void main() {
+        gl_FragColor = u_id;
+    }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="index.js"></script>
+
+        <style>
+
+            body {
+                background-color: beige;
+            }
+
+            #canvas {
+                width: 500px;
+                height: 500px;
+            }
+
+            #myRange {
+                width: 500px;
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <br/>
+        <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+        
+        <div>
+            <button id="go_left">←</button>
+            <button id="go_up">↑</button>
+            <button id="go_right">→</button>
+            <button id="go_down">↓</button>
+        </div>
+
+        <div>
+            <input type="radio" name="shading" id="flat" value="flat" checked /> <label for="flat">Flat shading</label>
+            <input type="radio" name="shading" id="gouraud" value="gouraud" /> <label for="gouraud">Gouraud (smooth) shading</label>
+            <input type="radio" name="shading" id="phong" value="phong" /> <label for="phong">Phong shading</label>
+        </div>
+
+    </body>
+</html>

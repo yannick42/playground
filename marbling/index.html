@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+    </head>
+    <body>
+        <div id="content">
+
+            <div>Following "The Coding Train" YT video : <a target="_blank" href="https://www.youtube.com/watch?v=p7IGZTjC008">Coding Challenge 183</a></div>
+
+            <!-- where the drops are drawn -->
+            <canvas></canvas>
+
+            <div>
+                <select id="color" onchange="changeColor()">
+                    <option value="greens">Greens</option>
+                    <option value="reds">Reds</option>
+                    <option value="blues">Blues</option>
+                </select>
+
+                <button onclick="refresh()"">refresh</button>
+                
+                <span><span id="nb_drops">0</span> drops. <span id="time"></span></span>
+            </div>
+        </div>
+
+        <!-- code -->
+        <script src="index.js" type="module"></script>
+    </body>
+</html>

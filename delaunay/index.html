@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./style.css"/>
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Delaunay triangulation</div>
+			<div id="subtitle">Subdivide the point set into triangles whose circumcircles do not contain any of the points.</div>
+			<div id="desc">
+				<ul>
+					<li>studied by Boris Delaunay in <b>1934</b></li>
+					<li>
+						coded using "winged-edge" data structure to quickly find neighboring faces
+					</li>
+				</ul>
+			</div>
+
+			<span class="info">The points can be moved.</span><br/>
+			
+			<div id="canvas"></div>
+			
+			<div id="controls">
+				<div>
+					
+					<button id="backward" disabled>&lt;&lt;</button>
+					<button id="start">▶</button>
+					<button id="forward">&gt;&gt;</button>
+					<button id="save">Save points</button>
+					<button id="restore">Restore saved points</button>
+
+					<br/><br/>
+					
+					<button id="restart">Redraw random points</button>
+					<input id="retry" type="number" value=0 min=0 max=5 /> "retry"<br/>
+					<input id="num_of_points" type="number" min=3 max=26 /> number of points<br/>
+					- Find neighboring faces by edge name : <input type="text" autofocus id="edge" maxlength=2 />
+				</div>
+				<div>
+					<label><input id="circumcircles" type="checkbox" />circumcircles</label><br/>
+					<label><input id="triangle_centers" type="checkbox" />triangles info.</label><br/>
+					<label><input id="show_debug" type="checkbox" checked/>show debug</label><br/>
+					<label><input id="delaunay" type="checkbox" checked/>apply delaunay</label><br/>
+					<br/>
+				</div>
+			</div>
+		</div>
+		
+		<br/>
+		<div id="debug"></div>
+		
+		<script type="module" src="delaunay.js"></script>
+	</body>
+</html>

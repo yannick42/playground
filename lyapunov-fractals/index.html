@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./style.css" />
+
+		<script type="text/javascript" src="LZWEncoder.js"></script>
+		<script type="text/javascript" src="NeuQuant.js"></script>
+		<script type="text/javascript" src="GIFEncoder.js"></script>
+		<script type="text/javascript" src="b64.js"></script>
+
+		<!-- for latex -->
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+
+		<div id="content">
+			<div id="title"><span>Markus-Lyapunov fractals</span>
+				&nbsp;<a title="Home" href="https://page-tests-yannick.vercel.app/">🏠</a>
+			</div>
+			<div id="subtitle">
+				<br/>
+				<div id="desc">Page based on Desdenova's <a href="https://www.youtube.com/watch?v=yGwy2WyQCQE" target="_blank">Youtube video</a> (Aug. 16th 2022) contribution to <a href="https://www.3blue1brown.com/blog/some2" target="_blank">SoME2</a></div>
+				<ul>
+					<li>Invented in <b>1989</b> by Mario Markus, and appeared in the <i>Scientific American</i> (popular science) as a recreational math. topic in 1991.</li>
+					<li>Derived from the <b>logistic map</b> (an iterated function) : \[ x_{n+1}=r x_n (1 - x_n) \]</li>
+					<li>Where \(r\) values vary between A, B and C following a selected schema</li>
+					<li>The lyapunov characteristic exponent (<b>1892</b>) is calculated to fill each colored pixels, it's a rate of separation of infinitesimally close trajectories (some colors represent stability, superstability or chaos)<br/>
+					\[ \lambda(x_0)=\lim\limits_{n\rightarrow \infty}\dfrac{1}{n}\sum_{i=0}^{n-1}\ln |f'(x_i)| \]</li>
+					<li><a href="https://en.wikipedia.org/wiki/Lyapunov_fractal" target="_blank">https://en.wikipedia.org/wiki/Lyapunov_fractal</a></li>
+				</ul>
+			</div>
+
+			<i>You can drag-&-drop to zoom in an area / <button id="zoom-out">Zoom out</button></i>
+			<br/>
+			
+			<div id="nav">
+				<div><button id="button-up">↑</button></div>
+				<div id="center">
+					<button id="button-left">←</button>
+					<canvas id="canvas"></canvas>
+					<button id="button-right">→</button>
+				</div>
+				<div><button id="button-down">↓</button></div>
+			</div>
+
+			<br/>
+			<div id="controls">
+				<button id="prev">Previous C</button>
+				<button id="next">Next C</button>
+				<button id="save">Save animation to GIF</button>
+			</div>
+
+			Schema : <select id="schemaIndex">
+				<option value=0>ABBACC</option>
+				<option value=1>AB</option>
+				<option value=2>BABAAAA</option>
+				<option value=3>BBBCCAABBABBC</option>
+				<option value=4>BBBBBBAAAAAA</option>
+			</select>
+			<div id="resolution"></div>
+		</div>
+		<script type="module" src="index.js"></script>
+	</body>
+</html>

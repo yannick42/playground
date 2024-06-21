@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<style>
+			:root {
+				--canvas-size: 550px;
+			}
+			body {
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			#content {
+				margin-left: calc(50vw - (var(--canvas-size) + 50px)/2);
+    		margin-top: 15px;
+				width: calc(var(--canvas-size) + 50px);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			#title {
+				font-size: 15pt;
+				text-align: center;
+				padding-bottom: 20px;
+				text-decoration: underline;
+			}
+			#subtitle {
+				align-self: start;	
+			}
+			#canvas {
+				border: 1px solid black;
+			}
+			
+			#pearson, #spearman, #cosine_similarity {
+				font-weight: bold;
+			}
+
+			footer {
+				
+			}
+
+			.todo {
+				color: lightgrey;
+			}
+
+			.info {
+				color: blue;
+			}
+			
+			#desc {
+				color: grey;
+				font-style: italic;
+				font-size: 11pt;
+				padding-bottom: 5px;
+			}
+		</style>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Correlation coefficients</div>
+			<div id="subtitle">
+				<ul id="desc">
+					<li>Pearson's r (product-moment) correlation coefficient (<b>1896</b>) :</li>
+					<li>Spearman's &rho; rank correlation (<b>1904</b>) <sup><a href="https://personal-math-notes.vercel.app/Topics/Mathematics/Statistics-and-probability/Statistics/Spearman's-rank-correlation" target="_blank">[my note]</a></sup></li>
+					<li>Kendall's &tau;<sub>&alpha;</sub> rank correlation (<b>1938</b>) : non parametric method, preferred to Spearman's rank correlation when small number of data, can also detect monotonic relationships</li>
+					<li>(<mark>TODO</mark>) Goodman and Kruskal's gamma coefficient (<b>1954/1972</b>)</li>
+					<li>(<mark>TODO</mark>) Cosine similarity</li>
+				</ul>
+				<i class="info">Click on the grid to add (x, y) points :</i>
+			</div>
+
+			<canvas id="canvas"></canvas>
+
+			<footer>
+				<br/>Pearson's r correlation coefficient : <span id="pearson">-</span>
+				<br/>Spearman's &rho; : <span id="spearman">-</span>
+				<br/>Kendall's &tau; : <span id="kendall">-</span>
+				<br/><span class="todo">Cosine Similarity : <span id="cosine_similarity">-</span></span>
+			</footer>
+		</div>
+		
+		<script type="module" src="./correlations.js"></script>
+	</body>
+</html>

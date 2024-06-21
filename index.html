@@ -1,50 +1,161 @@
 <html>
-    <style>
-        .formula {
-            display: none;
-            width: 90%;
-        }
-        .value {
-            display: inline-block;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        td:nth-of-type(1) {
-            width: 20px;
-        }
-        td {
-            border: 1px solid black;
-            width: 150px;
-            text-align: center;
-        }
-        .small {
-            font-size: 8pt;
-            color: brown;
-        }
-    </style>
+    <head>
+		<meta charset="utf-8">
+        <style>
+            :root {
+                --menu-width: 20%;
+            }
+            body {
+                font-family: sans-serif;
+            }
+            #main {
+                display: flex;
+                height: 100%;
+            }
+            #menu {
+                display: flex;
+                flex-direction: column;
+                width: var(--menu-width);
+                font-size: medium;
+                margin: 5px;
+                border-right: 1px solid salmon;
+                padding-right: 5px;
+            }
+            #main-panel {
+                width: calc(100% - var(--menu-width));
+            }
+            iframe {
+                height: 100%;
+                width: 100%;
+                border: 0;
+            }
+            #menu > span {
+                padding: 5px 0;
+                border-bottom: 1px solid lightgray;
+            }
+            .desc {
+                font-size: 8.8pt;
+                padding-left: 5px;
+                font-style: italic;
+            }
+            .warning {
+                padding: 2px 5px;
+                border-radius: 5px;
+                background-color: yellow;
+                font-weight: bold;
+                font-size: x-small;
+                user-select: none;
+            }
+            .info {
+                padding: 2px 5px;
+                border-radius: 5px;
+                color: white;
+                background-color: blue;
+                font-weight: bold;
+                font-size: x-small;
+                user-select: none;
+            }
+            .buggy {
+                padding: 2px 5px;
+                border-radius: 5px;
+                color: white;
+                background-color: orange;
+                font-weight: bold;
+                font-size: x-small;
+                user-select: none;
+            }
+        </style>
+    </head>
     <body>
 
-				<pre>Basic spreadsheet app, allowing to use referenced cells in formulas (eg. #B2 * 2) :
-- using topological sort algorithm</pre>
-			
-        <button id="add_row">Add 1 row</button>
-        <button id="add_col">Add 1 column</button>
+        <div id="main">
+            <section id="menu">
+                <span>
+                    <a id="snake" href="./snake/" target="iframe">Snake game</a><br/>
+                    <span class="desc">neural net + genetic algo.</span>
+                </span>
+                <span>
+                    <a id="spreadsheet" href="./spreadsheet/" target="iframe">Spreadsheet</a><br/>
+                    <span class="desc">application of topological sort.</span>
+                </span>
+                <span>
+                    <a id="gray-scott" href="./gray-scott/" target="iframe">Gray-Scott model</a><br/>
+                    <span class="desc">Reaction-diffusion model.</span>
+                </span>
+                <span>
+                    <a id="marbling" href="./marbling/" target="iframe">Marbling</a><br/>
+                    <span class="desc">simulate painting drops technique.</span>
+                </span>
+                <span>
+                    <a id="lagrange" href="./lagrange-interp/" target="iframe">Lagrange interpolation</a><br/>
+                    <span class="desc">draw a polynomial interpolation curve between n given points.</span>
+                </span>
+                <span>
+                    <a id="correlations" href="./correlations/" target="iframe">Correlation coefficients</a><br/>
+                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity..</span>
+                </span>
+                <span>
+                    <a id="delaunay" href="./delaunay/" target="iframe">Delaunay triangulation</a> <span class="info">slow</span><br/>
+                    <span class="desc">method that maximizes triangles' minimal angle over a set of points.</span>
+                </span>
+                <span>
+                    <a id="newton-fractals" href="./newton-fractals/dist/newton-fractals/browser/" target="iframe">Newton fractals</a> <span class="info">slow startup</span><br/>
+                    <span class="desc">based on Newton-Raphson root finding method (over a complex function).</span>
+                </span>
+                <span>
+                    <a id="lyapunov" href="./lyapunov-fractals/" target="iframe">Markus-Lyapunov fractals</a> <span class="info">slow startup</span><br/>
+                    <span class="desc">using Lyapunov exponent λ.</span>
+                </span>
+                <span>
+                    <a id="minimax" href="./minimax/dist/minimax/browser/" target="iframe">Minimax algorithm (with α-β pruning)</a><br/>
+                    <span class="desc">on Tic-tac-toe & Connect4 games.</span>
+                </span>
+                <span>
+                    <a id="metaballs" href="./metaballs/" target="iframe">Metaballs</a> <span class="buggy">buggy</span><br/>
+                    <span class="desc">moving "blob" shapes using implicit function, marching square algorithm and linear interpolation.</span>
+                </span>
+                <span>
+                    <a id="shading" href="./shading-methods/" target="iframe">Shading methods (WebGL)</a> <span class="warning">WIP</span><br/>
+                    <span class="desc">flat, Gouraud and Phong shading.</span>
+                </span>
+                <span>
+                    <a id="sph" href="./sph/" target="iframe">Smoothed-particles hydrodynamics</a> <span class="warning">WIP</span><br/>
+                    <span class="desc">to simulate water with SPH.</span>
+                </span>
+                <span>
+                    <a id="traffic" href="./traffic/public/" target="iframe">Traffic jam</a> <span class="warning">WIP</span><br/>
+                    <span class="desc">to control traffic lights.</span>
+                </span>
+            </section>
 
-        <table>
-            <tr>
-                <td></td>
-                <td>A</td>
-                <td>B</td>
-                <td>C</td>
-            </tr>
-        </table>
+            <section id="main-panel">
+                <iframe name="iframe"></iframe>
+            </section>
+        </div>
+
+
+        <script type="text/javascript">
+            function onHashChange() {
+                console.log('Hash changed to:', window.location.hash);
+                if(window.location.hash) {
+                    const aLink = document.querySelector(window.location.hash);
+                    aLink?.click();
+                }
+            }
+
+            // Add an event listener for the hashchange event
+            window.addEventListener('hashchange', onHashChange, false);
+
+            // Optionally, you can also handle the initial hash if needed
+            onHashChange();
+
+            const menu = document.querySelector("#menu");
+            menu.addEventListener('click', (e) => {
+                console.log("e:", e);
+                console.log("clicked on ", e.target.id)
+                history.pushState(null, null, '#' + e.target.id);
+            })
+        </script>
+
     </body>
-
-    <script src="index.js" type="module"></script>
-
 </html>

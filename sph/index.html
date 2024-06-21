@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<link rel="stylesheet" href="index.css" />
+	</head>
+	<body>
+	
+		<!-- auto generated canvas -->
+		
+		<div id="content">
+			
+			<div id="title">⚠️ UNDER CONSTRUCTION ⚠️</div>
+			<div id="desc">
+				A <b>test page</b> (<mark>not working at all, yet...</mark>) to understand Smoothed-particle hydro-dynamics (based on video by Youtuber <a href="https://www.youtube.com/watch?v=rSKMYc1CQHE">Sebastian Lague</a>)
+			</div>
+			<div>
+				Mean density : <span id="mean_density"></span><br/>
+				Max density : <span id="max_density"></span><br/>
+				Target density : <span id="target_density"></span><br/>
+				Optimized interactions : <b>mean=<span id="mean_used_particles"></span></b> / <span id="number_of_particles"></span> particles</br/>
+				Number of collisions : <span id="nb_collisions"></span><br/>
+				<span id="pressure">Pressure = <span id="pressure_value"></span> :
+					<input type="range" min="-1000" step=10 max=1000 id="pressure_slider"></span><br/>
+				<span id="gravity">Gravity = <span id="gravity_value"></span> :
+					<input type="range" min="0" step=0.5 max="10" id="gravity_slider"></span><br/>
+			</div>
+
+			<div id="canvas"></div>
+			
+			<div id="controls">
+				<button id="pause_button">Pause</button>
+			</div>
+			<i>Move mouse over particles to see details</i>
+
+			<div>
+				<label><input type="checkbox" id="show_color_gradient" checked/> show particle density</label><br/>
+				<label><input type="checkbox" id="show_arrows" checked/> show direction field (over a fixed grid)</label>
+			</div>
+
+			<div id="debug"></div>
+		</div>
+											
+		<script type="module" src="sph.js"></script>
+	</body>
+</html>

@@ -1,0 +1,69 @@
+
+<div id="board">
+
+	<div>
+		<div id="warning">🚧 UNDER CONSTRUCTION 🚧</div>
+		<div class="title">Tic-tac-toe</div>
+		<div id="subtitle">
+			Using <b>minimax algorithm</b> with <b>alpha-beta pruning</b> to accelerate tree search<br/>
+			for algorithm details, see <a href="https://www.youtube.com/watch?v=l-hh51ncgDI" target="_blank">https://www.youtube.com/watch?v=l-hh51ncgDI</a><br/>
+
+			<br/><mark>TODO:</mark> re-check move counts
+		</div>
+	</div>
+
+	<table id="tictactoe_board">
+		<tr>
+			<td (click)="selectTicTacToe(1, 1)"> {{ this.game.board[0][0] }} </td>
+			<td (click)="selectTicTacToe(1, 2)"> {{ this.game.board[0][1] }} </td>
+			<td (click)="selectTicTacToe(1, 3)"> {{ this.game.board[0][2] }} </td>
+		</tr>
+		<tr>
+			<td (click)="selectTicTacToe(2, 1)"> {{ this.game.board[1][0] }} </td>
+			<td (click)="selectTicTacToe(2, 2)"> {{ this.game.board[1][1] }} </td>
+			<td (click)="selectTicTacToe(2, 3)"> {{ this.game.board[1][2] }} </td>
+		</tr>
+		<tr>
+			<td (click)="selectTicTacToe(3, 1)"> {{ this.game.board[2][0] }} </td>
+			<td (click)="selectTicTacToe(3, 2)"> {{ this.game.board[2][1] }} </td>
+			<td (click)="selectTicTacToe(3, 3)"> {{ this.game.board[2][2] }} </td>
+		</tr>
+	</table>
+
+	<label for="use_alpha_beta">use alpha-beta pruning <input type="checkbox" name="use_alpha_beta" [(ngModel)]="use_alpha_beta" /></label><br/>
+	<label for="start_with_ai">AI starts <input type="checkbox" name="start_with_ai" [(ngModel)]="start_with_ai" /></label>
+	<br/>
+	<br/>
+
+	<div id="message" [innerHTML]="message"></div>
+
+	<br/>
+	<button (click)="restart()">restart</button>
+
+	<br/>
+	<br/>
+	<div id="debug2" [innerHTML]="debug2"></div>
+
+	<hr/>
+
+	<div class="title">Connect4</div>
+	<div class="description">You should align <b>{{ this.game2.winningSize }}</b> yellow pieces to win !</div>
+	<!--div> {{ this.game2.totalMoves | number }} moves </div-->
+	
+	<table id="connect4_board">
+		<tr *ngFor="let rows of [].constructor(this.game2.nbRows); let i = index">
+			<td *ngFor="let cols of [].constructor(this.game2.nbCols); let j = index" (click)="selectColumn(j)">
+				<span class="piece ai" *ngIf="this.game2.board[this.game2.nbRows - i - 1][j] === 'x'"></span>
+				<span class="piece human" *ngIf="this.game2.board[this.game2.nbRows - i - 1][j] === 'o'"></span>
+				<span class="piece empty" *ngIf="this.game2.board[this.game2.nbRows - i - 1][j] === '-'"></span>
+			</td>
+		</tr>
+	</table>
+
+	<br/>
+	<br/>
+	<br/>
+	
+</div>
+
+<router-outlet></router-outlet>

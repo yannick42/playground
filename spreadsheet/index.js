@@ -1,4 +1,4 @@
-import { Graph, dfs } from './common/graph.js';
+import { Graph, dfs } from '../common/graph.js';
 
 //
 // MAIN entrypoint..

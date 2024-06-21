@@ -1,7 +1,7 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { computeOutput, argmax } from './neural_net.js';
-import { setUpCanvas, drawGrid, fillShape } from './canvas.helper.js';
+import { setUpCanvas, drawGrid, fillShape } from '../common/canvas.helper.js';
 import { randInt, choice } from './helper.js'
 import { Graph, dfs, createDAG, nb_params } from '../common/graph.js';
 import { crossover, mutate } from './genetic_algorithm.js';
@@ -21,6 +21,7 @@ const max = document.querySelector("#max_fitness");
 const gaInfo = document.querySelector("#ga_info");
 const frameRate = document.querySelector("#frame_rate");
 const frameRateSlider = document.querySelector("#frame_rate_value");
+const population = document.querySelector("#population");
 
 //
 // Constants
@@ -32,9 +33,9 @@ const CELL_NB = 30,
     names = ['Python', 'Boa', 'Anaconda', 'Rattlesnake', 'Cobra'],
     colors = ['seagreen', 'orange', 'cyan', 'violet', 'salmon'], // hsla(${hue},${saturation}%,${lightness}%,${alpha})
     NB_PLAYERS = 5,
-    MIN_POOL = 40, // start reusing DAG at MIN_POOL
+    MIN_POOL = 50, // start reusing DAG at MIN_POOL
     NEW_DAG_PROBA = 0.2, // if enough elite, at which rate to still create new random graphs ?
-    PRUNE_AT = 400, // prune "regularly" to keep only the fittest, for the new generation
+    PRUNE_AT = 250, // prune "regularly" to keep only the fittest, for the new generation
     STOP_WHEN_ALONE = false, // to keep earning "fitness" points even if already winner ! (3x slower ?)
     meanHistory = [],
     INIT_METHOD = 'Random Walk', // | 'Random Neural Net'
@@ -50,8 +51,12 @@ const CELL_NB = 30,
     CROSSOVER_METHOD = 'two-point',
     CROSSOVER_METHOD_LIST = ['uniform', 'one-point', 'two-point'],
     PERCENT_MUTATION = 0.05, // one-point, two-point
+    MUTATION_DELTA = 0.1, // ???
+    ELITISM = 0.15,
     NORMAL_FRAME_RATE = 24,
-    FAST_FRAME_RATE = 0;
+    FAST_FRAME_RATE = 1000;
+
+const moveNames = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
 
 //
 // Variables
@@ -77,8 +82,8 @@ if(!SHOW_LEADERBOARD) { debug.innerHTML = ''; }
 document.querySelector("#prune_at").innerText = PRUNE_AT;
 document.querySelector("#min_pool").innerText = MIN_POOL;
 gaInfo.innerHTML = `&bull; crossover method : ${CROSSOVER_METHOD_LIST.map(method => method == CROSSOVER_METHOD ? `<b><u>${method}</u></b>` : method).join(", ")}`;
-gaInfo.innerHTML += `<br/> &bull; mutation percentage : <b>${PERCENT_MUTATION * 100}%</b>`;
-
+gaInfo.innerHTML += `<br/> &bull; mutation rate : <b>${PERCENT_MUTATION * 100}%</b>`;
+gaInfo.innerHTML += `<br/> &bull; elitism rate : <b>${ELITISM * 100}%</b>`;
 
 
 
@@ -87,14 +92,28 @@ frameRateSlider.addEventListener('change', (e) => {
     modifyInterval(FRAME_RATE);
 });
 
+let populations = JSON.parse(localStorage.getItem("saved_population") ?? '[]');
+populations.map(DAG => {
+    let newDAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]);
+    newDAG.customData = DAG.customData;
+    newDAG.toposort = DAG.toposort;
+    return newDAG;
+});
+population.innerHTML = populations.length;
+console.log("init pop:", populations);
 
-let populations = [];
+
+
+
+
 
 
 // TODO: move to "board.js" -> `board.start();`
 function startNewGame(bestDAG=null, init_method='Random Neural Net') {
 
-    console.warn("startNewGame():", performance.memory.usedJSHeapSize);
+    console.warn("startNewGame(): usedJSHeapSize =", performance.memory.usedJSHeapSize);
+    console.warn("bestDAG:", bestDAG);
+    //console.warn("startNewGame(): init_method =", init_method);
 
     // creating new board
     board = new Board(ctx, CELL_SIZE, CELL_NB);
@@ -112,29 +131,38 @@ function startNewGame(bestDAG=null, init_method='Random Neural Net') {
     currentDAGs = []; // reinit. NN players (can be null if Random Walk, ...)
 
     nbDags.innerText = bestDAGs.length;
-    const meanFitness = bestDAGs.length ? bestDAGs.reduce((acc, d) => acc + d.fitness, 0) / bestDAGs.length : 0;
-    mean.innerText = Math.round(meanFitness * 100) / 100;
-    const fitnesses = bestDAGs.map(d => d.fitness);
-    //console.log("fitnesses : ", fitnesses);
     
-    const maxFitness = fitnesses.length ? Math.max(...fitnesses) : 0;
-    max.innerText = Math.round(maxFitness * 100) / 100;
-    const minFitness = fitnesses.length ? Math.min(...fitnesses) : 0;
-    min.innerText = Math.round(minFitness * 100) / 100;
-    //console.log(minFitness, maxFitness);
-
     // Prune
-    if(bestDAGs.length >= PRUNE_AT) {
+    if(bestDAGs.length >= PRUNE_AT - Math.ceil(MIN_POOL * ELITISM)) {
         bestDAGs.sort((a, b) => a.fitness > b.fitness ? -1 : 1); // in-place sort
         //console.log("PRUNE:", bestDAGs.map(d => d.fitness));
-        bestDAGs = bestDAGs.filter((dag, i) => i < MIN_POOL); // keep only the best/elite
 
-        console.log("(re)initialize the population");
+        bestDAGs = bestDAGs.filter((dag, i) => i < MIN_POOL - Math.ceil(MIN_POOL * ELITISM)); // keep only the best/elite
+
+        //console.log("(re)initialize the population");
         // save new population
-        populations = bestDAGs; // already pruned at PRUNE_AT (previous game)
+        const elite = populations.filter((pop, i) => i < Math.ceil(MIN_POOL * ELITISM));
+        //console.log("elite:", elite),
+
+        populations = bestDAGs.concat(elite).sort((a, b) => a.fitness > b.fitness ? -1 : 1); // already pruned at PRUNE_AT (previous game)
+        //console.log("elite + bestDAG =", populations);
+
+        console.log("Save best population to localStorage");
+        localStorage.setItem("saved_population", JSON.stringify(populations));
         bestDAGs = []; // ready for new winners
-        document.querySelector("#population").innerHTML = populations.length;
-    
+        population.innerHTML = populations.length;
+
+        const meanFitness = populations.length ? populations.reduce((acc, d) => acc + d.fitness, 0) / populations.length : 0;
+        mean.innerText = Math.round(meanFitness * 100) / 100;
+        const fitnesses = populations.map(d => d.fitness);
+        //console.log("fitnesses : ", fitnesses);
+
+        const maxFitness = fitnesses.length ? Math.max(...fitnesses) : 0;
+        max.innerText = Math.round(maxFitness * 100) / 100;
+        const minFitness = fitnesses.length ? Math.min(...fitnesses) : 0;
+        min.innerText = Math.round(minFitness * 100) / 100;
+        //console.log(minFitness, maxFitness);
+
         const lastMean = meanHistory[meanHistory.length - 1];
         const diff = lastMean ? Math.round((meanFitness - lastMean)*100)/100 : null;
 
@@ -168,6 +196,7 @@ function startNewGame(bestDAG=null, init_method='Random Neural Net') {
         );
         //NB_INPUTS = Object.keys(snake.getSensorData()).length;
 
+        console.log("player:", n+1, snake.name, snake.method);
         if(snake.method == 'Random Neural Net') {
 
             let DAG;
@@ -177,14 +206,14 @@ function startNewGame(bestDAG=null, init_method='Random Neural Net') {
 
                 // copy weights used by newly created player
                 DAG.customData = bestDAG.customData;
-                DAG.toposort = bestDAG.toposort;
+                DAG.toposort = bestDAG.toposort; // ???
 
                 currentDAGs.push(DAG);
             } else {
 
                 //console.log(populations.length, bestDAGs.length);
                 // if enough elite DAGs pool, reuse one of the best (modified)... **half of the time** (to allow new "genes")
-                if(populations.length) {
+                if(populations.length > 0) {
 
                     if(Math.random() < NEW_DAG_PROBA) { // for diversity
                         DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // random DAG
@@ -198,10 +227,14 @@ function startNewGame(bestDAG=null, init_method='Random Neural Net') {
                         const index2 = randInt(0, populations.length - 1);
 
                         DAG = crossover(populations[index], populations[index2], newDAG, CROSSOVER_METHOD);
-                        DAG = mutate(DAG, PERCENT_MUTATION, 0.2);
+                        DAG = mutate(DAG, PERCENT_MUTATION, MUTATION_DELTA);
+
+                        console.error(JSON.stringify(DAG));                        
                     }
                 } else { // to initialize a pool of genes
                     DAG = createDAG([NB_INPUTS, NB_HIDDEN_LAYER_1, NB_OUTPUTS]); // create a new random neural net
+
+                    console.error(JSON.stringify(DAG));
                 }
 
                 currentDAGs.push(DAG);
@@ -209,6 +242,8 @@ function startNewGame(bestDAG=null, init_method='Random Neural Net') {
         } else {
             currentDAGs.push(null);
         }
+
+        console.log("(startNewGame) currentDAGs:", currentDAGs);
 
         //
         // make it grow a bit (until 4 squares)
@@ -240,30 +275,43 @@ function addEvents() {
     document.querySelector("#reload_page").addEventListener('click', () => {
         location.reload(true);
     })
+
     document.querySelector("#restart_training").addEventListener('click', (e) => {
         clearInterval(intervalId);
         FRAME_RATE = FAST_FRAME_RATE;
         frameRate.innerText = FRAME_RATE;
         main('Random Neural Net');
     });
+
     document.querySelector("#pause").addEventListener('click', (e) => {
-        if(e.target.innerText == 'Pause') {
+        if(e.target.innerText.includes('Pause')) {
             clearInterval(intervalId);
-            document.querySelector("#pause").innerText = 'Resume';
+            document.querySelector("#pause").innerHTML = '&#9658; Resume';
+
+            // enable forward button
+            document.querySelector("#forward").disabled = false;
         } else {
             startTime = Date.now(); // reset start time ...
             run();
-            document.querySelector("#pause").innerText = 'Pause';
+            document.querySelector("#pause").innerHTML = '&#10074;&#10074; Pause';
+
+            // disable forward button
+            document.querySelector("#forward").disabled = true;
         }
     });
+
+    document.querySelector("#forward").addEventListener('click', () => {
+        setTimeout(gameLoop);
+    });
+
     document.querySelector("#use_best").addEventListener('click', () => {
         clearInterval(intervalId);
 
         FRAME_RATE = NORMAL_FRAME_RATE;
         frameRate.innerText = FRAME_RATE;
-        const bestFitness = Math.max(...bestDAGs.map(o => o.fitness));
-        const bestDAG = bestDAGs.find(d => d.fitness == bestFitness);
-        //console.log("reusing best DAG with fitness : ", bestFitness, bestDAG);
+        const bestFitness = Math.max(...populations.map(o => o.fitness));
+        const bestDAG = populations.find(d => d.fitness == bestFitness);
+        console.log("reusing best DAG with fitness : ", bestFitness, bestDAG);
 
         setUpCanvas(ctx, canvas.width, canvas.height);
         drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
@@ -308,12 +356,11 @@ function addEvents() {
     });
 
     eventsAdded = true;
-    console.log("Event listeners added !");
+    //console.log("Event listeners added !");
 }
 
 let startTime;
-function main(method=INIT_METHOD) {
-
+function main(method) {
     if(!eventsAdded) {
         addEvents();
     }
@@ -326,15 +373,20 @@ function main(method=INIT_METHOD) {
 }
 
 function finished(winner, fitness=0) {
-    if(!winner) {
-        //console.log("DRAW!");
+    //console.log("finished by winner=", winner);
+    let dag = null;
+    if(! winner) {
+        //console.log("DRAW !?");
     } else {
-        //console.log(`FINISHED ! winner is ${winner.name} (fitness=${fitness})`);
+        console.log(`FINISHED ! winner is ${winner.name} (fitness=${fitness})`);
         const index = board.players.findIndex(p => p.name == winner.name && p.method == 'Random Neural Net');
-        // keep track of this winner DAG
+        console.log(board.players, index);
+        // if winner is a NN (keep track of this)
         if(index != -1) {
-            const dag = currentDAGs.slice(index, index+1); // make a copy ?
+            console.log("currentDAGs:", currentDAGs);
+            dag = currentDAGs.slice(index, index+1); // make a copy ?
             dag[0].fitness = fitness;
+            console.log(">", dag[0]);
             bestDAGs.push(dag[0]);
         }
         //console.log("number of 'best' DAGs :", bestDAGs.length);
@@ -343,9 +395,15 @@ function finished(winner, fitness=0) {
     setUpCanvas(ctx, canvas.width, canvas.height);
     drawGrid(ctx, canvas.width, canvas.height, CELL_SIZE);
 
-    const best = currentDAGs.filter(d => d != null).length == 1 ? currentDAGs.find(d => d != null) : null;
-    //console.log("redo best:", best)
-    startNewGame(best, !best ? INIT_METHOD : best.method);
+    // LOGS
+    const test = currentDAGs.map(o => o?.fitness).filter(value => value);
+    console.log("test:", test);
+    const bestFitness = Math.max(...test);
+    console.log ("bestFitness:", bestFitness);
+    const bestDAG = currentDAGs.find(d => d?.fitness == bestFitness);
+    console.log("bestDAG:", bestDAG);
+    
+    startNewGame(null, ! dag ? INIT_METHOD : 'Random Neural Net');
 }
 
 function showLeaderboard(board) {
@@ -359,187 +417,188 @@ function showLeaderboard(board) {
     messageDiv.innerHTML = message;
 }
 
-function run() {
-    AIMoves = {};
-    losers = [];
-    frame = 0;
-    let lastFrame = 0;
-    let finish = false;
-    let totalScore = 0;
-    let frameLastScoreChange = 0;
+function computeFitness(frameNumber, player) {
+    return frameNumber + 10 * player.eaten;
+}
 
-    intervalId = setInterval(() => {
+function gameLoop() {
 
-        let hasLoser = false;
+    let hasLoser = false;
 
-        const currentTotalScore = board.players.reduce((acc, p) => acc += p.body.length, 0);
-        if(currentTotalScore !== totalScore) {
-            totalScore = currentTotalScore;
-            frameLastScoreChange = frame;
-        }
+    const currentTotalScore = board.players.reduce((acc, p) => acc += p.body.length, 0);
+    if(currentTotalScore !== totalScore) {
+        totalScore = currentTotalScore;
+        frameLastScoreChange = frame;
+    }
 
-        const remainingPlayers = board.players.filter(player => !losers.includes(player));
+    const remainingPlayers = board.players.filter(player => !losers.includes(player));
 
-        // ONLY 1 PLAYER   OR   NO APPLE EATEN !? number of moves (to detect blocks)
-        if(remainingPlayers.length <= 1 && STOP_WHEN_ALONE || (frame - frameLastScoreChange) > 50) {
-            //console.log("Too long. Loop ?");
-            clearInterval(intervalId);
+    // ONLY 1 PLAYER   OR   NO APPLE EATEN !? number of moves (to detect blocks)
+    // TODO: why "<="
+    if(remainingPlayers.length === 1 && (STOP_WHEN_ALONE || (frame - frameLastScoreChange) > 50)) {
+        //console.log("Too long. Loop ?");
+        clearInterval(intervalId);
 
-            const lengths = remainingPlayers.map((p, i) => p.body.length);
-            const bestLength = Math.max(...lengths);
-            const bestPlayer = remainingPlayers.find(p => p.body.length == bestLength);
-            
-            //
-            // FITNESS
-            //
-            const fitness = frame + bestPlayer.eaten * 10;
-            //console.log("current best is", fitness, "=", bestPlayer.name);
-            
-            finished(bestPlayer, fitness);
-        }
-
-        //console.log("number of players :", board.players.length);
-        board.players.forEach((player, i) => {
-            let ok;
-
-            if(losers.includes(player)) return; // skip dead snakes (no more moves)
-
-            if(! Object.keys(AIMoves).includes(player.name)) {
-                AIMoves[player.name] = []; // init. this NN player move list
-            }
-
-            const dirs = player.possibleDirs();
-
-            // Manual control ?
-            if(player.name == 'python' && move !== null) {
-                if(dirs.includes(move)) {
-                    ok = player.move(move);
-                } else {
-                    ok = player.move(player.currentDirection);
-                }
-            
-            // Neural net ?
-            } else if(player.method == 'Random Neural Net' && currentDAGs[i]) {
-
-                //console.log(i, player.method);
-                //console.log(i, "currentDAGs:", currentDAGs[i])
-                const g = currentDAGs[i];
-                const proba = computeOutput(g, player.getSensorData());
-                const action = argmax(proba);
-                const changeBy = [-1, 0, 1][action];
-                const move = ((player.currentDirection + changeBy) + 4) % 4;
-                const moveNames = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
-                AIMoves[player.name].push(moveNames[move]+' (Δ='+changeBy+')');
-
-                //
-                // Debug message
-                //
-
-                if(DEBUG) {
-                    debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(g.toposort)}
-                        \n\nsensor data of ${player.name} :\n ${JSON.stringify(player.getSensorData(), null, '\t')}
-                        \n\nLatest network output (after softmax, actions=[-1, 0, 1]) : ${JSON.stringify(proba, null, 2)}
-                        \n\nActions chosen by neural network from currentDirection = ${moveNames[player.currentDirection]} (${player.currentDirection}) :\n >>> ${AIMoves[player.name].join(", ")}`;
-                    
-                    debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
-                    const head = player.head();
-                    console.log(head);
-                    //fillShape(ctx, head[0], head[1], 'square', 'black'); // ??? shifted ???
-                }
-                // if possible move
-                //if(dirs.includes(move)) {
-                    ok = player.move(move);
-                //} else {
-                //    ok = player.move(player.currentDirection); // continue in same direction ?
-                //}
-            } else {
-                const chosenDir = choice(dirs);
-                ok = player.move(chosenDir);
-                //console.log("available dirs:", dirs, "chosen :", chosenDir);
-            }
-            // this player has just loose ?
-            if(!ok) {
-                hasLoser = true; // we have a loser => ?
-
-                player.dead = true;
-                //console.log(player.name + " is dead !");
-
-                if(board.players.length - losers.length > 1) {
-                    losers.push(player); // to keep track of them (as their are removed from the board..)
-                    //board.removePlayer(player.name);
-                } else {
-                    if(!finish) {
-                        lastFrame = frame;
-                    }
-                    finish = true;
-                }
-
-                if(player.name == 'python') {
-                    debug.innerHTML += '\n\nDEAD !';
-                    debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
-                }
-
-                // add to the losers list
-                /*document.querySelector("#losers").className = 'error';
-                document.querySelector("#losers").innerHTML = '';
-                losers.forEach(loser => {
-                    document.querySelector("#losers").innerHTML += `<br/><br/>-> Player <b style="color: ${loser.color}">${loser.name} (${loser.method})</b> lose with <b>${loser.body.length} points</b>!`;
-                });*/
-
-            } else {
-                if(!hasLoser && SHOW_LEADERBOARD) { // ???
-                    showLeaderboard(board);
-                }
-            }
-
-
-
-            //
-            // optim. ?
-            //
-
-            //if(frame % 1000 == 0) {
-                player.show(); // update a snake
-            //}
-        });
-
-        /*
-        if(board.players.length - losers.length === 1) { // stop if only 1 player
-            showLeaderboard(board);
-            clearInterval(intervalId);
-        }
-        */
-
-        //console.log(">", losers.length);
-
-        const nbRemainingPlayers = board.players.length - losers.length;
-        //console.error(frame - lastFrame);
-        if(nbRemainingPlayers <= 1 && (frame - lastFrame) > 15) { // BUG ??
-            //console.warn("STOP !");
-            clearInterval(intervalId);
-            const winner = board.players.filter(player => !losers.includes(player))[0];
-            //
-            // FITNESS = frame reached
-            //
-            finished(winner, frame + 10 * winner.eaten);
-        }
-
-        // STOP
-        //clearInterval(intervalId);
+        const lengths = remainingPlayers.map((p, i) => p.body.length);
+        const bestLength = Math.max(...lengths);
+        const bestPlayer = remainingPlayers.find(p => p.body.length == bestLength);
         
-        frame += 1;
-    }, 1000 / FRAME_RATE);
+        finished(bestPlayer, computeFitness(frame, bestPlayer));
+    }
+
+    //console.log("number of players :", board.players.length);
+    board.players.forEach((player, i) => {
+        let ok;
+
+        if(losers.includes(player)) return; // skip dead snakes (no more moves)
+
+        if(! Object.keys(AIMoves).includes(player.name)) {
+            AIMoves[player.name] = []; // init. this NN player move list
+        }
+
+        const dirs = player.possibleDirs();
+
+        // Manual control ?
+        if(player.name == 'python' && move !== null) {
+            if(dirs.includes(move)) {
+                ok = player.move(move);
+            } else {
+                ok = player.move(player.currentDirection);
+            }
+        
+        // Neural net ?
+        } else if(player.method == 'Random Neural Net' && currentDAGs[i]) {
+
+            console.log(i, player.method);
+            console.log(i, "currentDAGs:", currentDAGs[i])
+            const g = currentDAGs[i];
+            const proba = computeOutput(g, player.getSensorData());
+            const action = argmax(proba);
+            const changeBy = [-1, 0, 1][action];
+            const move = ((player.currentDirection + changeBy) + moveNames.length) % moveNames.length;
+            AIMoves[player.name].push(moveNames[move]+' (Δ='+changeBy+')');
+
+            //
+            // Debug message
+            //
+
+            if(DEBUG) {
+                debug.innerHTML = `${Object.keys(g.V).length} neurons (${nb_params} parameters) sorted topologically :\n  ${JSON.stringify(g.toposort)}
+                    \n\nsensor data of ${player.name} :\n ${JSON.stringify(player.getSensorData(), null, '\t')}
+                    \n\nLatest network output (after softmax, actions=[-1, 0, 1]) : ${JSON.stringify(proba, null, 2)}
+                    \n\nActions chosen by neural network from currentDirection = ${moveNames[player.currentDirection]} (${player.currentDirection}) :\n >>> ${AIMoves[player.name].join(", ")}`;
+                
+                debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
+                const head = player.head();
+                //console.log(head);
+                //fillShape(ctx, head[0], head[1], 'square', 'black'); // ??? shifted ???
+            }
+            // if possible move
+            //if(dirs.includes(move)) {
+                ok = player.move(move);
+            //} else {
+            //    ok = player.move(player.currentDirection); // continue in same direction ?
+            //}
+        } else {
+            const chosenDir = choice(dirs);
+            ok = player.move(chosenDir);
+            //console.log("available dirs:", dirs, "chosen :", chosenDir);
+        }
+
+        // this player has just loose ?
+        if(!ok) {
+            hasLoser = true; // we have a loser => ?
+
+            player.dead = true;
+            //console.log(player.name + " is dead !");
+
+            if(board.players.length - losers.length > 1) {
+                losers.push(player); // to keep track of them (as their are removed from the board..)
+                //board.removePlayer(player.name);
+            } else {
+                if(!finish) {
+                    lastFrame = frame;
+                }
+                finish = true;
+            }
+
+            if(player.name == 'python') {
+                debug.innerHTML += '\n\nDEAD !';
+                debug.scrollTop = debug.scrollHeight; // auto-scroll to bottom of div
+            }
+
+            // add to the losers list
+            /*document.querySelector("#losers").className = 'error';
+            document.querySelector("#losers").innerHTML = '';
+            losers.forEach(loser => {
+                document.querySelector("#losers").innerHTML += `<br/><br/>-> Player <b style="color: ${loser.color}">${loser.name} (${loser.method})</b> lose with <b>${loser.body.length} points</b>!`;
+            });*/
+
+        } else {
+            if(!hasLoser && SHOW_LEADERBOARD) { // ???
+                showLeaderboard(board);
+            }
+        }
+
+
+
+        //
+        // optim. ?
+        //
+
+        //if(frame % 1000 == 0) {
+            player.show(); // update a snake
+        //}
+    });
+
+    /*
+    if(board.players.length - losers.length === 1) { // stop if only 1 player
+        showLeaderboard(board);
+        clearInterval(intervalId);
+    }
+    */
+
+    //console.log(">", losers.length);
+
+    const nbRemainingPlayers = board.players.length - losers.length;
+    //console.error(frame - lastFrame);
+    if(nbRemainingPlayers <= 1 && (frame - lastFrame) > 15) { // BUG ??
+        //console.warn("STOP !");
+        clearInterval(intervalId);
+        const winner = board.players.filter(player => !losers.includes(player))[0];
+        //
+        // FITNESS = frame reached
+        //
+        finished(winner, computeFitness(frame, winner));
+    }
+
+    // STOP
+    //clearInterval(intervalId);
+    
+    frame += 1;
+}
+
+let lastFrame, finish, totalScore, frameLastScoreChange;
+
+function run() {
+    AIMoves = {}; // empty previous moves
+    losers = []; // no more losers
+    frame = 0; // reinit frame count
+    lastFrame = 0;
+    finish = false;
+    totalScore = 0;
+    frameLastScoreChange = 0;
+
+    intervalId = setInterval(gameLoop, 1000 / FRAME_RATE);
 }
 
 
 function modifyInterval() {
     frameRate.innerText = FRAME_RATE;
+    frameRateSlider.value = FRAME_RATE;
     clearInterval(intervalId);
-    run()
+    run();
 }
 
 
-
-
-
-main();
+main(INIT_METHOD);

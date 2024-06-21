@@ -1,0 +1,58 @@
+
+:root {
+	--canvas-size: 800px;
+}
+
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+}
+
+section {
+  margin: 15px auto;
+	width: var(--canvas-size);
+}
+
+#myCanvas {
+  border: 1px solid grey;
+	display: block;
+}
+
+button {
+	margin: 5px;
+}
+
+.highlight {
+	background-color: yellow;
+	color: black;
+	opacity: 0.4;
+}
+
+#content {
+	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
+  margin-top: 15px;
+	width: calc(var(--canvas-size) + 150px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#title {
+	font-size: 15pt;
+	text-align: center;
+	padding-bottom: 0;
+	text-decoration: underline;
+}
+
+#subtitle {
+	align-self: start;	
+}
+
+#desc {
+	width: 600px;
+	color: grey;
+	font-style: italic;
+	font-size: 11pt;
+	padding-bottom: 5px;
+}

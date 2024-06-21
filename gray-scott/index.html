@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex -->
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Gray-Scott reaction-diffusion model</div>
+			<div id="subtitle">
+				Following "The Coding Train" YT video : <a target="_blank" href="https://www.youtube.com/watch?v=BV9ny785UNc">Coding Challenge 13</a>
+				
+				<br/>
+				<b>slow to propagate !</b>
+			</div>
+
+			<div>$$A = A+(D_A \nabla^2A - AB^2 + feed (1 - A)) \Delta t$$</div>
+			<div>$$B = B+(D_B \nabla^2B + AB^2 - (kill + feed) B) \Delta t$$</div>
+
+			<div id="desc">
+				<ul>
+					<li>Using the discrete Laplacian 2D operator over the pixel grid</li>
+				</ul>
+			</div>
+			
+			<canvas id="canvas_2d" width=550 height=550></canvas>
+			<canvas id="canvas_3d" width=550 height=550></canvas>
+			
+			<label for="3D"><input type="radio" name="context" id="webgl" />3D</label>
+			<label for="2D"><input type="radio" name="context" id="2d" checked />2D</label> 
+			
+			<div id="debug"></div>
+			
+		</div>
+		
+		<script type="module" src="./gray_scott.js"></script>
+	</body>
+</html>

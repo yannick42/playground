@@ -1,0 +1,17 @@
+
+#content {
+    width: 800px;
+    margin: auto;
+}
+
+canvas {
+    /*width: 640px;
+    height: 480px;*/
+    border: 1px solid black;
+}
+
+select {
+    padding: 5px;
+    margin: 5px;
+    width: 125px;
+}

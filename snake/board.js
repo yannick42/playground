@@ -1,5 +1,5 @@
 import { randInt } from './helper.js';
-import { fillShape } from './canvas.helper.js';
+import { fillShape } from '../common/canvas.helper.js';
 
 export const LEFT = 0;
 export const UP = 1;
@@ -38,7 +38,7 @@ export class Board {
 
     isEmpty(posX, posY) {
         const isInsideBoard = posX >= 0 && posX < this.nbCells && posY >= 0 && posY < this.nbCells;
-        const noPlayerHere = this.players.every(player => !player.body.map(p => p[0]+"-"+p[1]).includes(posX+'-'+posY));
+        const noPlayerHere = this.players.every(player => !player.body.map(p => `${p[0]}-${p[1]}`).includes(`${posX}-${posY}`));
         //console.log("noPlayerHere:", noPlayerHere);
         return isInsideBoard && noPlayerHere;
     }

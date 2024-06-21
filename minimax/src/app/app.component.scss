@@ -1,0 +1,89 @@
+
+.title {
+	font-size: 16pt;
+	text-decoration: underline;
+	font-family: sans-serif;
+	margin-bottom: 10px;
+}
+
+#subtitle {
+	text-align: left;
+	font-size: 12pt;
+	color: grey;
+	margin-bottom: 15px;
+}
+
+#warning {
+	text-align: center;
+	width: 100%;
+	font-weight: bold;
+	font-size: 16pt;
+	padding: 15px;
+}
+
+#debug2 {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 400px;
+}
+
+#message {
+	color: red;
+	font-size: 20pt;
+}
+
+#board {
+	margin-top: 100px;
+	margin: auto;
+	width: 550px;
+	height: 250px;
+	text-align: center;
+}
+
+#tictactoe_board {
+	margin-left: 150px;
+	td {
+		cursor: pointer;
+		border: 1px solid black;
+		text-align: center;
+		width: 75px;
+		height: 75px;
+	}
+}
+
+#connect4_board {
+	margin: 15px auto;
+	border-collapse: collapse;
+	td {
+		cursor: pointer;
+		text-align: center;
+		width: 75px;
+		height: 75px;
+    background-color: #006AB3;
+	}
+}
+
+.piece {
+	display: block;
+	width: calc(100% - 2 * 7px - 2 * 6px);
+	height: calc(100% - 2 * 7px - 2 * 6px);
+  border-radius: 50%;
+	outline: 7px solid #2e5a6e;
+	margin: 7px;
+}
+
+.ai {
+	background: radial-gradient(red, #a13535);
+	border: 6px double #a13535;
+}
+
+.human {
+	background: radial-gradient(yellow, #caca1e);
+	border: 6px double #caca1e;
+}
+
+.empty {
+	background-color: white;
+	border: 6px solid white;
+}
