@@ -45,14 +45,41 @@ function redraw() {
         arrows.push(arrow);
     })
 
-    const STEP_SIZE = 1 / 100;
+    const STEP_SIZE = 1 / 40;
+
+    const t0 = performance.now();
+    const curvePoints = computeCurve(points, arrows, STEP_SIZE);
+    
+    //
+    // draw curve
+    //
+    const nbCurvePoints = curvePoints.length;
+    curvePoints.forEach((point, i) => {
+        if(i + 1 === nbCurvePoints) return; // last point
+
+        drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], LINE_WIDTH, LINE_COLOR);
+    });
+
+    const t1 = performance.now();
+    document.querySelector("#timing").innerText = '...computed and drawn in ' + Math.round((t1 - t0) * 1000)/1000 + ' milliseconds';
+
+    // draw the 2 points (last = above)
+    points.forEach(point => {
+        const x = point[0], y = point[1];
+        drawPointAt(ctx, x, y, POINT_RADIUS, POINT_COLOR);
+        drawPointAt(ctx, x, y, POINT_RADIUS, POINT_COLOR);
+    });
+
+}
+
+function computeCurve(points, arrows, STEP_SIZE) {
+
     const curvePoints = [points[0][0], points[0][1]]; // add starting point
     for (let i = 0; i < 1; i += STEP_SIZE) {
 
         // LERP along the 1st arrow
         const x1 = lerp(arrows[0][0], arrows[0][2], i);
         const y1 = lerp(arrows[0][1], arrows[0][3], i);
-        //drawPointAt(ctx, x1, y1, POINT_RADIUS, "green");
 
         // mid "arrow" ...
         const x_mid = lerp(arrows[0][2], arrows[1][2], i);
@@ -61,7 +88,6 @@ function redraw() {
         // LERP along the 2nd arrow (in reverse)
         const x2 = lerp(arrows[1][2], arrows[1][0], i);
         const y2 = lerp(arrows[1][3], arrows[1][1], i);
-        //drawPointAt(ctx, x2, y2, POINT_RADIUS, "orange");
 
         // mid LERP
         const x1_ = lerp(x1, x_mid, i);
@@ -77,20 +103,7 @@ function redraw() {
     }
     curvePoints.push([points[1][0], points[1][1]]);
 
-    const nbCurvePoints = curvePoints.length;
-    curvePoints.forEach((point, i) => {
-        if(i + 1 === nbCurvePoints) return; // last point
-
-        drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], LINE_WIDTH, LINE_COLOR);
-    });
-
-    // draw the 2 points (last = above)
-    points.forEach(point => {
-        const x = point[0], y = point[1];
-        drawPointAt(ctx, x, y, POINT_RADIUS, POINT_COLOR);
-        drawPointAt(ctx, x, y, POINT_RADIUS, POINT_COLOR);
-    });
-
+    return curvePoints;
 }
 
 main();
