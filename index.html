@@ -1,70 +1,8 @@
 <html>
     <head>
 		<meta charset="utf-8">
-        <style>
-            :root {
-                --menu-width: 20%;
-            }
-            body {
-                font-family: sans-serif;
-            }
-            #main {
-                display: flex;
-                height: 100%;
-            }
-            #menu {
-                display: flex;
-                flex-direction: column;
-                width: var(--menu-width);
-                font-size: medium;
-                margin: 5px;
-                border-right: 1px solid salmon;
-                padding-right: 5px;
-            }
-            #main-panel {
-                width: calc(100% - var(--menu-width));
-            }
-            iframe {
-                height: 100%;
-                width: 100%;
-                border: 0;
-            }
-            #menu > span {
-                padding: 5px 0;
-                border-bottom: 1px solid lightgray;
-            }
-            .desc {
-                font-size: 8.8pt;
-                padding-left: 5px;
-                font-style: italic;
-            }
-            .warning {
-                padding: 2px 5px;
-                border-radius: 5px;
-                background-color: yellow;
-                font-weight: bold;
-                font-size: x-small;
-                user-select: none;
-            }
-            .info {
-                padding: 2px 5px;
-                border-radius: 5px;
-                color: white;
-                background-color: blue;
-                font-weight: bold;
-                font-size: x-small;
-                user-select: none;
-            }
-            .buggy {
-                padding: 2px 5px;
-                border-radius: 5px;
-                color: white;
-                background-color: orange;
-                font-weight: bold;
-                font-size: x-small;
-                user-select: none;
-            }
-        </style>
+
+        <link rel="stylesheet" href="index.css" />
     </head>
     <body>
 
@@ -72,7 +10,7 @@
             <section id="menu">
                 <span>
                     <a id="snake" href="./snake/" target="iframe">Snake game</a><br/>
-                    <span class="desc">neural net + genetic algo.</span>
+                    <span class="desc">neural net/DAG + genetic algo.</span>
                 </span>
                 <span>
                     <a id="spreadsheet" href="./spreadsheet/" target="iframe">Spreadsheet</a><br/>
@@ -92,38 +30,38 @@
                 </span>
                 <span>
                     <a id="correlations" href="./correlations/" target="iframe">Correlation coefficients</a><br/>
-                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity, ...</span>
+                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity</span>
                 </span>
                 <span>
-                    <a id="delaunay" href="./delaunay/" target="iframe">Delaunay triangulation</a> <span class="info">slow</span><br/>
+                    <a id="delaunay" href="./delaunay/" target="iframe">Delaunay triangulation</a> <span class="chip info">slow</span><br/>
                     <span class="desc">method that maximizes triangles' minimal angle over a set of points.</span>
                 </span>
                 <span>
-                    <a id="newton-fractals" href="./newton-fractals/dist/newton-fractals/browser/" target="iframe">Newton fractals</a> <span class="info">slow startup</span><br/>
+                    <a id="newton-fractals" href="./newton-fractals/dist/newton-fractals/browser/" target="iframe">Newton fractals</a> <span class="chip info">slow startup</span><br/>
                     <span class="desc">based on Newton-Raphson root finding method (over a complex function).</span>
                 </span>
                 <span>
-                    <a id="lyapunov" href="./lyapunov-fractals/" target="iframe">Markus-Lyapunov fractals</a> <span class="info">slow startup</span><br/>
+                    <a id="lyapunov" href="./lyapunov-fractals/" target="iframe">Markus-Lyapunov fractals</a> <span class="chip info">slow startup</span><br/>
                     <span class="desc">using Lyapunov exponent λ.</span>
                 </span>
                 <span>
                     <a id="minimax" href="./minimax/dist/minimax/browser/" target="iframe">Minimax algorithm (with α-β pruning)</a><br/>
-                    <span class="desc">on Tic-tac-toe & Connect4 games.</span>
+                    <span class="desc">applied to Tic-tac-toe & Connect4 games.</span>
                 </span>
                 <span>
-                    <a id="metaballs" href="./metaballs/" target="iframe">Metaballs</a> <span class="buggy">buggy</span><br/>
+                    <a id="metaballs" href="./metaballs/" target="iframe">Metaballs</a> <span class="chip buggy">buggy</span><br/>
                     <span class="desc">moving "blob" shapes using implicit function, marching square algorithm and linear interpolation.</span>
                 </span>
                 <span>
-                    <a id="shading" href="./shading-methods/" target="iframe">Shading methods (WebGL)</a> <span class="warning">WIP</span><br/>
+                    <a id="shading" href="./shading-methods/" target="iframe">Shading methods (WebGL)</a> <span class="chip warning">WIP</span><br/>
                     <span class="desc">flat, Gouraud and Phong shading.</span>
                 </span>
                 <span>
-                    <a id="sph" href="./sph/" target="iframe">Smoothed-particles hydrodynamics</a> <span class="warning">WIP</span><br/>
+                    <a id="sph" href="./sph/" target="iframe">Smoothed-particle hydrodynamics</a> <span class="chip warning">WIP</span><br/>
                     <span class="desc">to simulate water with SPH.</span>
                 </span>
                 <span>
-                    <a id="traffic" href="./traffic/public/" target="iframe">Traffic jam</a> <span class="warning">WIP</span><br/>
+                    <a id="traffic" href="./traffic/public/" target="iframe">Traffic jam</a> <span class="chip warning">WIP</span><br/>
                     <span class="desc">to control traffic lights.</span>
                 </span>
             </section>
@@ -135,7 +73,7 @@
 
 
         <script type="text/javascript">
-            let currentHash = '';
+            let currentHash = ''; // current demo selected
 
             function onHashChange() {
                 console.log("hash changed to", window.location.hash);
