@@ -30,6 +30,10 @@ a:visited, a {
     color: var(--theme-color);
 }
 
+#header {
+    border-bottom: 1px solid var(--theme-color);
+}
+
 iframe {
     height: 97.5%;
     width: calc(100% - 2 * 10px);

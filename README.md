@@ -1,3 +1,10 @@
+# Development
+
+## Create new demo
+use `cp _template my-new-demo`
+then add the page inside the `/index.html` root file
+
+
 # Implementation of a spreadsheet using topological sort
 > with formulas referencing other cells, eg. `#A3*10`
 
@@ -34,3 +41,10 @@ it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculation
 
 ## TODO
 - ?
+
+
+# Logic gates
+> to visualize logic gates inner working and connect them together ?
+
+## TODO
+- [ ] Show a NAND gate
