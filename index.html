@@ -110,14 +110,14 @@
                     const from = document.querySelector(fromHash);
                     if(from) {
                         console.log(from);
-                        from.parentNode.style.backgroundColor = 'transparent';
+                        from.parentNode.classList.remove('highlighted-demo');
                     }
                 }
                 if(toHash) {
                     const to = document.querySelector(toHash);
                     if(to) {
                         console.log(to);
-                        to.parentNode.style.backgroundColor = 'lightsalmon';
+                        to.parentNode.classList.add('highlighted-demo');
                     }
                 }
             }

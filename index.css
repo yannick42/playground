@@ -1,5 +1,6 @@
 :root {
     --menu-width: 20%;
+    --theme-color: #658fcd; /* = blue; red/salmon = #ff6857 */
 }
 body {
     font-family: sans-serif;
@@ -14,13 +15,22 @@ body {
     width: var(--menu-width);
     font-size: medium;
     margin: 5px;
-    border-right: 1px solid salmon;
+    border-right: 1px solid var(--theme-color);
     padding-right: 5px;
     overflow: scroll;
 }
 #main-panel {
     width: calc(100% - var(--menu-width));
 }
+
+.highlighted-demo {
+    background: color-mix(in srgb, var(--theme-color) 20%, transparent); /* to make a lighter theme color */
+}
+
+a:visited, a {
+    color: var(--theme-color);
+}
+
 iframe {
     height: 100%;
     width: 100%;
@@ -44,6 +54,7 @@ iframe {
     user-select: none;
     position: relative;
     bottom: 3px;
+    opacity: 0.6;
 }
 .warning {
     background-color: yellow;
