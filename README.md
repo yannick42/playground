@@ -1,10 +1,10 @@
 # Implementation of a spreadsheet using topological sort
 > with formulas referencing other cells, eg. `#A3*10`
 
-see example here : https://yannick42.github.io/dsa-tests/spreadsheet/
+see example here : https://yannick42.github.io/playground/spreadsheet/
 
 # Snake game in JS
-> https://yannick42.github.io/dsa-tests/snake/
+> https://yannick42.github.io/playground/snake/
 
 it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculations
 
