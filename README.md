@@ -41,10 +41,3 @@ it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculation
 
 ## TODO
 - ?
-
-
-# Logic gates
-> to visualize logic gates inner working and connect them together ?
-
-## TODO
-- [ ] Show a NAND gate

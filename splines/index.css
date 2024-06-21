@@ -30,3 +30,8 @@ body {
 canvas {
 	border: 1px solid black;
 }
+
+.info {
+	color: blue;
+	font-size: smaller;
+}
