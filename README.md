@@ -26,7 +26,7 @@ it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculation
 
 ## TODO
 - [ ] make the 2 points movable !
-- [ ] same with the 2 arrows
+- [ ] same with the 2 arrows' head
 
 
 # Book progress (TODO)
