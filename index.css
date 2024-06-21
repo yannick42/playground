@@ -63,7 +63,7 @@ iframe {
  * Chips : warning / info / buggy / todo
  */
 .chip {
-    padding: 1px 4px;
+    padding: 2px 4px;
     border-radius: 6px;
     font-size: xx-small;
     font-weight: bold;
@@ -90,4 +90,9 @@ iframe {
 .todo {
     color: white;
     background-color: red;
+}
+
+.draft {
+    color: white;
+    background-color: gray;
 }
