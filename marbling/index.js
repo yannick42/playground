@@ -5,8 +5,8 @@ import { NB_VERTICES, Drop } from './drop.js';
 //
 // Constants / parameters
 //
-const CANVAS_WIDTH = 800;
-const CANVAS_HEIGHT = 800;
+const CANVAS_WIDTH = 750;
+const CANVAS_HEIGHT = 750;
 const MARGIN = 20;
 
 const NB_DROPS = 100;
