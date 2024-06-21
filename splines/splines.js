@@ -17,7 +17,8 @@ const POINT_COLOR = 'black',
     LINE_COLOR = 'orange',
     BG_COLOR = 'white',
     points = [],
-    arrows = [];
+    arrows = [],
+    NB_CURVE_POINTS = 30;
 
 let POINT_RADIUS = POINT_RADIUS_NORMAL,
     ARROW_HEAD = 4;
@@ -168,7 +169,7 @@ function redraw() {
         drawArrow(ctx, arrow[0], arrow[1], arrow[2], arrow[3], ARROW_COLOR, ARROW_WIDTH, ARROW_HEAD);
     });
 
-    const STEP_SIZE = 1 / 40;
+    const STEP_SIZE = 1 / NB_CURVE_POINTS;
 
     const t0 = performance.now();
     const curvePoints = computeCurve(points, arrows, STEP_SIZE);
@@ -204,23 +205,33 @@ function computeCurve(points, arrows, STEP_SIZE) {
         const x1 = lerp(arrows[0][0], arrows[0][2], i);
         const y1 = lerp(arrows[0][1], arrows[0][3], i);
 
-        // mid "arrow" ...
+        // mid "arrow" ... from the end of the first one to the head of the other
         const x_mid = lerp(arrows[0][2], arrows[1][2], i);
         const y_mid = lerp(arrows[0][3], arrows[1][3], i);
 
-        // LERP along the 2nd arrow (in reverse)
+        // LERP along the 2nd arrow (in reverse : from head to tail)
         const x2 = lerp(arrows[1][2], arrows[1][0], i);
         const y2 = lerp(arrows[1][3], arrows[1][1], i);
 
         // mid LERP
         const x1_ = lerp(x1, x_mid, i);
         const y1_ = lerp(y1, y_mid, i);
+        
         const x2_ = lerp(x_mid, x2, i);
         const y2_ = lerp(y_mid, y2, i);
 
         // final LERP
         const x = lerp(x1_, x2_, i);
-        const y = lerp(y1, y2_, i);
+        const y = lerp(y1_, y2_, i);
+
+
+        if(selectedPointIndex !== null || selectedArrowIndex !== null) {
+            drawLine(ctx, x1, y1, x_mid, y_mid, 0.25, 'green');
+            drawLine(ctx, x_mid, y_mid, x2, y2, 0.25, 'yellowgreen');
+            //
+            drawLine(ctx, x1_, y1_, x2_, y2_, 1, 'darkorange');
+        }
+
 
         curvePoints.push([x, y]);
     }
