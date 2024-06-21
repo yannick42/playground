@@ -155,9 +155,9 @@
             const menu = document.querySelector("#menu");
             menu.addEventListener('click', (e) => {
                 console.log("e:", e);
-                console.log("clicked on ", e.target.id)
+                console.log("clicked on ", e.target.id, e.target.tagName)
 
-                if(e.target.id) {
+                if(e.target.tagName === 'A' && e.target.id) {
                     history.pushState(null, null, '#' + e.target.id);
                     changeSelected(currentHash, '#' + e.target.id)
 
