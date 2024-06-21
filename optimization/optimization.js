@@ -2,7 +2,7 @@
 import { drawPointAt, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
 
-const SQUARE_SIZE = 10,
+const SQUARE_SIZE = 25,
     dataPoints = [];
 
 const canvas = document.querySelector("canvas");
@@ -28,8 +28,9 @@ function gaussian(x, sigma=1, mean=0) {
 function rejectionSampling(proposalDist, targetDist) {
     let reject = true; // init.
 
-    let randomX = proposalDist(); // uniform: 0 to 1 along the x-axis
-    let randomY = proposalDist(); // uniform: 0 to 1 along the y-axis
+    let randomX = proposalDist(); // uniform: -0.5 to 0.5 along the x-axis
+    let randomY = proposalDist(); // uniform: -0.5 to 0.5 along the y-axis
+    //console.log("at:", randomX);
     let y = targetDist(randomX); // true y-value of the target p(x)
 
     let i = 0;
@@ -49,34 +50,187 @@ function rejectionSampling(proposalDist, targetDist) {
     return randomY;
 }
 
+// standard matrix multiplication
+function matMul(A, B) {
+    //console.log("matMul:", A, B);
+
+    // the matrices dimensions
+    const aRows = A.length;
+    const aCols = A[0].length;
+    const bCols = B[0].length;
+
+    //console.log("A rows=", aRows, " cols=", aCols, "B cols:", bCols);
+
+    // Initialize the result matrix with zeros
+    let result = new Array(aRows);
+    for (let i = 0; i < aRows; i++) {
+        result[i] = new Array(bCols).fill(0);
+    }
+
+    // Perform matrix multiplication
+    for (let i = 0; i < aRows; i++) {
+        for (let j = 0; j < bCols; j++) {
+            for (let k = 0; k < aCols; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+
+    //console.log("result:", result, "rows:", result.length, "cols:", result[0].length);
+    return result;
+}
+
+function transpose(matrix) {
+    // matrix dimensions
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    // Initialize the transposed matrix with switched dimensions
+    let transposed = new Array(cols);
+    for (let i = 0; i < cols; i++) {
+        transposed[i] = new Array(rows);
+    }
+
+    // Populate the transposed matrix
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            transposed[j][i] = matrix[i][j];
+        }
+    }
+
+    return transposed;
+}
+
+/**
+ * Batch GD !
+ */
+function gradientDescent(points) {
+
+    const eta = 0.01; // learning rate
+    const NB_EPOCHS = 10;
+    const m = points.length;
+    console.log("m:", m);
+
+    console.log(points); // [[X, Y value], ...] ???!!!
+
+    const Xs = points.map(point => [point[0]]); // only one feature -> 500 x 1
+    const Ys = points.map(point => point[1]); // array size = 500
+
+    //console.log("Ys:", Ys)
+
+    let thetas = [[Math.random(), Math.random()]]; // intercept, theta_1 (slope)
+    let gradients;
+
+    for(let epoch = 1; epoch <= NB_EPOCHS; epoch++) {
+
+        gradients = matMul( // 1 x 2
+            transpose(Xs), // 1 x 500
+            matMul(
+                Xs, // 500 x 1
+                thetas // 1 x 2
+            ) // 500 x 2
+            .map(
+                (res, idx) => [res[0] - Ys[idx], res[1] - Ys[idx]]
+            ) // same : 500 x 2
+        ).map(value => value.map(v => 2 / m * v)); // same : 1 x 2 (should be transpose ?! not important..)
+
+        console.log("gradients:", JSON.stringify(gradients));
+        console.log("thetas (before):", JSON.stringify(thetas));
+
+        // update model parameters
+        thetas = thetas.map((theta, i) => ([
+            theta[0] - eta * gradients[0][0],
+            theta[1] - eta * gradients[0][1]
+        ]));
+        console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
+
+        drawSolution(thetas[0][0], thetas[0][1], epoch); // draw temporary solution !
+    }
+
+    return [thetas[0][0], thetas[0][1]]; // intercept, slope
+}
+
+
+
+
 
 function redraw() {
 
     // true parameters to retrieve...
     const a = 0.7; // ax + b (line)
-    const b = 100;
+    const b = 3;
 
     drawAxis(canvas, SQUARE_SIZE /* square size */);
 
     const MEAN = 0, SIGMA = 1;
 
-    for (let i = -130; i < 370; i++) { // 500 points
+    const nb_points = 100; // nb of points to generate
+    const step = 20 / nb_points;
+    for (let i = -5; i < 15; i = i + step) {
 
-        const randX = rejectionSampling(() => Math.random() - 0.5, (x) => gaussian(x, SIGMA, MEAN)) * 20;
-        const randY = rejectionSampling(() => Math.random() - 0.5, (x) => gaussian(x, SIGMA, MEAN)) * 200; // ???
+        const randX = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+
+        const randY = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN)) * 0.2;
+
+        console.warn(randX, randY);
 
         const valueX = i + randX;
         const valueY = a * i + b + randY;
-        
-        // draw point around the origin
-        const [zeroX, zeroY] = convertToCanvasCoords(canvas, 0, 0, SQUARE_SIZE);
-        drawPointAt(ctx, zeroX + valueX, zeroY - valueY, 2, 'black');
 
-        dataPoints.push(convertToGraphCoords(canvas, zeroX + valueX, zeroY + valueY, SQUARE_SIZE));
+        const [pixelX, pixelY] = convertToCanvasCoords(canvas, valueX, valueY, SQUARE_SIZE);
+        
+        // to draw point around the origin (in pixel coordinates)
+        //const [zeroX, zeroY] = convertToCanvasCoords(canvas, 0, 0, SQUARE_SIZE);
+        drawPointAt(ctx, pixelX, pixelY, 3, 'black');
+
+        console.error(valueX, valueY, pixelX, pixelY);
+
+        // to graph coordinates
+        dataPoints.push([valueX, valueY]);
     }
 
     console.log(dataPoints);
 
+    const [intercept, slope] = gradientDescent(dataPoints);
+
+    drawSolution(intercept, slope); // final linear model solution
+}
+
+// solution lines
+const colors = ['green', 'yellowgreen', 'orange', 'darkorange'];
+
+function drawSolution(intercept, slope, epoch=0) {
+
+    console.log("intercept:", intercept);
+    console.log("slope:", slope);
+
+    const point1X = -5;
+    const point1Y = slope * point1X + intercept;
+    const point2X = 15;
+    const point2Y = slope * point2X + intercept;
+
+    // from graph-coordinate to pixel/canvas-coordinates
+    const [pt1X , pt1Y] = convertToCanvasCoords(canvas, point1X, point1Y, SQUARE_SIZE);
+    const [pt2X , pt2Y] = convertToCanvasCoords(canvas, point2X, point2Y, SQUARE_SIZE);
+    console.log(pt1X, pt1Y, pt2X, pt2Y)
+
+    // to ?
+    //const [zeroX, zeroY] = convertToCanvasCoords(canvas, 0, 0, SQUARE_SIZE);
+    //console.log("zeros:", zeroX, zeroY);
+    //console.log(">>>>", pt1X, zeroY - pt1Y, pt2X, zeroY - pt2Y)
+
+    const size = epoch == 0 ? 1.5 : 0.5;
+    const color = epoch == 0 ? "red" : colors[epoch % colors.length];
+
+    drawLine(
+        ctx,
+        pt1X, // left point x
+        pt1Y, // left point y
+        pt2X, // right x
+        pt2Y, // right y
+        size,
+        color
+    );
 }
 
 main();
