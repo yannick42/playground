@@ -1,7 +1,6 @@
 
 import { drawPointAt, drawLine, convertToGraphCoords, convertToCanvasCoords, drawAxis } from './helper.js';
 
-
 const canvas = document.querySelector("#graph");
 const context = canvas.getContext('2d');
 
@@ -33,7 +32,12 @@ clearPointsButtonEl.addEventListener('click', function() {
 function main() {
 	
 	drawAxis(context, canvas);
-	
+
+	// add 3 fixed points
+	addPointAt(3, 10, 'ff0000');
+	addPointAt(5, 7, '00ff00');
+	addPointAt(10, 8, '0000ff');
+
 	// listen to click on canvas
 	canvas.addEventListener('click', function(evt) {
 		const rect = canvas.getBoundingClientRect();
@@ -48,30 +52,35 @@ function main() {
 		debugEl.innerHTML = 'Clicked at <b>x:' + x + ', y:' + y + '</b> (canvas position)';
 		debugEl.innerHTML += '<br/>Clicked at <b>x:' + x_pos + ', y:' + y_pos + '</b> (graph position)';
 		
-		// clear everything
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		drawAxis(context, canvas);
-		
-		// save clicked point with a new color
-		const col = () => (Math.floor(Math.random()*255)).toString(16).padStart(2, '0');
-		const randomColor =  col() + col() + col();
-		points.push([x_pos, y_pos, randomColor]);
-		
-		// update current number
-		if(numberOfPointsEl) numberOfPointsEl.innerText = points.length;
-		
-		// draw polynomial
-		lagrange(points);
-		MathJax.typesetPromise()
-		
-		// re-add points on canvas
-		points
-			.map(point => [...convertToCanvasCoords(point[0], point[1]), point[2]])
-			.forEach(([x_, y_, color]) => {
-				drawPointAt(context, x_, y_, 6, "#" + color)
-			});
+		addPointAt(x_pos, y_pos);
 		
 	});
+}
+
+function addPointAt(x_pos, y_pos, color = null) {
+
+	// clear (and redraw) everything
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	drawAxis(context, canvas);
+	
+	// save clicked point with a new color
+	const col = () => (Math.floor(Math.random()*255)).toString(16).padStart(2, '0');
+	const randomColor = col() + col() + col();
+	points.push([x_pos, y_pos, color ?? randomColor]);
+	
+	// update current number
+	if(numberOfPointsEl) numberOfPointsEl.innerText = points.length;
+	
+	// draw polynomial
+	lagrange(points);
+	MathJax.typesetPromise()
+	
+	// re-add points on canvas
+	points
+		.map(point => [...convertToCanvasCoords(point[0], point[1]), point[2]])
+		.forEach(([x_, y_, color]) => {
+			drawPointAt(context, x_, y_, 6, "#" + color)
+		});
 }
 
 // i => to skip in formula
@@ -121,7 +130,10 @@ function lagrange(pts) {
 		);
 	}
 	
-	const str = "$$\\displaylines{\\scriptsize{" + latexes.map((latex, i) => ((i>0 && i%3===0)?" \\\\ ":"") + "{\\color{#" + pts[i][2] + "}" + latex + "}").join(" + ") + "}}$$";
+	const str = "$$\\displaylines{\\scriptsize{" +
+		latexes.map((latex, i) => ((i>0 && i%3===0)?" \\\\ ":"") +
+		"{\\color{#" + pts[i][2] + "}" + latex + "}").join(" + ") +
+		"}}$$";
 	formula.innerText = str;
 	
 	// from X -> to X
@@ -161,4 +173,6 @@ function lagrange(pts) {
 	}
 }
 
-main();
+window.onload = function() {
+	main();
+}

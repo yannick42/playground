@@ -47,6 +47,7 @@
 }
 
 #debug {
+    display: none;
     padding: 5px;
     font-size: x-small;
     background-color: antiquewhite;
