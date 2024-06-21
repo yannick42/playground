@@ -1,4 +1,4 @@
-import { randInt } from './helper.js';
+import { randInt } from '../common/common.helper.js';
 import { fillShape } from '../common/canvas.helper.js';
 
 export const LEFT = 0;

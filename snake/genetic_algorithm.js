@@ -1,4 +1,4 @@
-import { randInt, randFloat } from './helper.js'
+import { randInt, randFloat } from '../common/common.helper.js'
 import { createDAG, dfs } from '../common/graph.js'
 
 export function mutate(g, perc=0.2, delta=0.1) {

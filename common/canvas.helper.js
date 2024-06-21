@@ -13,8 +13,11 @@ export function fillShape(ctx, posX, posY, shape='square', color='green', size=1
     }
 }
 
-export function setUpCanvas(ctx, width, height) {
-    ctx.fillStyle = 'lightgrey';
+/**
+ * fill with lightgrey ...
+ */
+export function setUpCanvas(ctx, width, height, color='lightgrey') {
+    ctx.fillStyle = color;
     ctx.fillRect(0, 0, width, height);
 }
 
@@ -44,6 +47,7 @@ export function drawGrid(ctx, width, height, cellSize) {
     }
 }
 
+// TODO: used where?!
 export function addCanvas(width=800, height=600) {
 	const body = document.querySelector("#canvas");
 	
@@ -64,9 +68,7 @@ export function drawPointAt(context, x, y, radius=3, color="black") {
 	context.closePath();
 }
 
-export function draw_arrow(ctx, x0, y0, x1, y1, color) {
-  const width = 0.33;
-  const head_len = 2;
+export function drawArrow(ctx, x0, y0, x1, y1, color, width = 0.33, head_len = 2) {
   const head_angle = Math.PI / 6;
   const angle = Math.atan2(y1 - y0, x1 - x0);
 
@@ -86,6 +88,7 @@ export function draw_arrow(ctx, x0, y0, x1, y1, color) {
 	// head
   ctx.beginPath();
 	ctx.strokeStyle = color;
+  ctx.fillStyle = color;
   ctx.lineTo(x1, y1);
   ctx.lineTo(x1 - head_len * Math.cos(angle - head_angle), y1 - head_len * Math.sin(angle - head_angle));
   ctx.lineTo(x1 - head_len * Math.cos(angle + head_angle), y1 - head_len * Math.sin(angle + head_angle));
@@ -94,7 +97,7 @@ export function draw_arrow(ctx, x0, y0, x1, y1, color) {
   ctx.fill();
 }
 
-export function draw_arrow_2(context, fromx, fromy, tox, toy) {
+export function drawArrow2(context, fromx, fromy, tox, toy) {
   var headlen = 10; // length of head in pixels
   var dx = tox - fromx;
   var dy = toy - fromy;
@@ -104,6 +107,16 @@ export function draw_arrow_2(context, fromx, fromy, tox, toy) {
   context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
   context.moveTo(tox, toy);
   context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+}
+
+export function drawLine(context, x, y, x2, y2, width=3, color="blue") {
+	context.beginPath();
+	context.moveTo(x, y);
+	context.lineTo(x2, y2);
+	context.strokeStyle = color;
+	context.lineWidth = width;
+	context.closePath();
+	context.stroke();
 }
 
 export function drawRectangle(context, x, y, x2, y2, width=1) {

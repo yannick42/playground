@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Splines</div>
+			<div id="subtitle">(cubic) Bézier curves (1959), ...:</div>
+
+			<div id="desc">
+                TODO: use Bernstein polynomials (1912) to draw various types of parametric curve (quadratic, cubic, ...)
+            </div>
+
+			<canvas width=500 height=500></canvas>
+
+            <button id="refresh">Refresh randomly</button>
+			
+        </div>
+
+        <script type="module" src="./splines.js"></script>
+    </body>
+</html>

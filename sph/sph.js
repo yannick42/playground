@@ -28,7 +28,7 @@ TODO:
 
  */
 
-import { addCanvas, drawPointAt, draw_arrow, draw_arrow_2, drawRectangle } from '../common/canvas.helper.js';
+import { addCanvas, drawPointAt, drawArrow, drawArrow_2, drawRectangle } from '../common/canvas.helper.js';
 import { Particle } from './particle.js';
 import { colorGradient } from './color.js';
 
@@ -629,7 +629,7 @@ function loop() {
 					} else {
 						color = ARROW_COLOR;
 					}
-					draw_arrow(context, w, h, w + grad[0] * MAGNIFY / 2, h + grad[1] * MAGNIFY / 2, ARROW_COLOR); // magnify arrows ...
+					drawArrow(context, w, h, w + grad[0] * MAGNIFY / 2, h + grad[1] * MAGNIFY / 2, ARROW_COLOR); // magnify arrows ...
 					
 				}
 			}

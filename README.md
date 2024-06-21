@@ -14,3 +14,23 @@ it reuses the toposort algorithm (DFS in `/common/`) to order neuron calculation
 - be able to play multiple games quickly
 - trace the gain / find a cost function to assess fitness
 - ... ?
+
+
+# Lagrange interpolation
+
+## TODO
+- [ ] move functions to common canvas helper
+
+
+# Splines
+
+## TODO
+- [ ] make the 2 points movable !
+- [ ] same with the 2 arrows
+
+
+# Book progress (TODO)
+> to centralize my reading and know what to read next (sections, chapters, ...)
+
+## TODO
+- ?

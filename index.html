@@ -9,6 +9,10 @@
         <div id="main">
             <section id="menu">
                 <span>
+                    <a id="splines" href="./splines/" target="iframe">Splines</a> <span class="chip todo">TODO</span><br/>
+                    <span class="desc">Bézier curves, Bernstein polynomials, ...</span>
+                </span>
+                <span>
                     <a id="snake" href="./snake/" target="iframe">Snake game</a> <span class="chip warning">WIP</span><br/>
                     <span class="desc">neural net/DAG + genetic algo.</span>
                 </span>
@@ -76,7 +80,7 @@
             let currentHash = ''; // current demo selected
 
             function onHashChange() {
-                console.log("hash changed to", window.location.hash);
+                //console.log("hash changed to", window.location.hash);
                 if(window.location.hash) { // changed to this
                     const aLink = document.querySelector(window.location.hash);
                     aLink?.click();
@@ -92,8 +96,8 @@
 
             const menu = document.querySelector("#menu");
             menu.addEventListener('click', (e) => {
-                console.log("e:", e);
-                console.log("clicked on ", e.target.id, e.target.tagName)
+                //console.log("e:", e);
+                //console.log("clicked on ", e.target.id, e.target.tagName)
 
                 if(e.target.tagName === 'A' && e.target.id) {
                     history.pushState(null, null, '#' + e.target.id);
@@ -105,18 +109,16 @@
             });
 
             function changeSelected(fromHash, toHash) {
-                console.log("from", fromHash, "to", toHash);
+                //console.log("from", fromHash, "to", toHash);
                 if(fromHash) {
                     const from = document.querySelector(fromHash);
                     if(from) {
-                        console.log(from);
                         from.parentNode.classList.remove('highlighted-demo');
                     }
                 }
                 if(toHash) {
                     const to = document.querySelector(toHash);
                     if(to) {
-                        console.log(to);
                         to.parentNode.classList.add('highlighted-demo');
                     }
                 }

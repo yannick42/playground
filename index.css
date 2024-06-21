@@ -55,7 +55,7 @@ iframe {
 }
 
 /**
- * Chips : warning / info / buggy
+ * Chips : warning / info / buggy / todo
  */
 .chip {
     padding: 1px 4px;
@@ -80,4 +80,9 @@ iframe {
 .buggy {
     color: white;
     background-color: orange;
+}
+
+.todo {
+    color: white;
+    background-color: red;
 }
