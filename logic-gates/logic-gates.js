@@ -6,7 +6,10 @@ import { getPathBoundingBox, getBoundingBox, getBBoxCenter } from '../common/geo
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const SHOW_GATED_BBOX = true;
+const SHOW_GATED_BBOX = true,
+    GATE_COLOR = 'FireBrick',
+    GATE_NAME_COLOR = 'RebeccaPurple',
+    GATE_BBOX_COLOR = 'YellowGreen';
 
 // ANSI
 const logicGatesPaths = {
@@ -58,6 +61,8 @@ function drawGate(ctx, gateName, centerX, centerY) {
             ctx.translate(path.translateX, path.translateY);
         }
 
+        ctx.fillStyle = GATE_COLOR;
+        ctx.strokeStyle = GATE_COLOR;
         if(path.strokeWidth) {
             ctx.lineWidth = path.strokeWidth;
             ctx.stroke(p);
@@ -71,12 +76,14 @@ function drawGate(ctx, gateName, centerX, centerY) {
 
     });
 
-    ctx.font = "8px sans-serif";
+    ctx.font = "bold 8px sans-serif";
+    ctx.fillStyle = GATE_NAME_COLOR;
     ctx.fillText(gateName, gateCenterX - 12, gateCenterY + 3);
 
     if(SHOW_GATED_BBOX) { // bounding box
         ctx.lineWidth = 0.25;
-        ctx.lineStyle = 'lightgrey';
+        ctx.lineStyle = GATE_BBOX_COLOR;
+        ctx.strokeStyle = GATE_BBOX_COLOR;
 
         ctx.beginPath();
         ctx.rect(bbox.x, bbox.y, bbox.width, bbox.height);
