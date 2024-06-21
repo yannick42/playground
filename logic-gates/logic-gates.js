@@ -1,6 +1,6 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { randInt, choice } from '../common/common.helper.js';
 import { getPathBoundingBox, getBoundingBox, getBBoxCenter } from '../common/geometry.helper.js';
 
 const canvas = document.querySelector("canvas");
@@ -87,15 +87,18 @@ function drawGate(ctx, gateName, centerX, centerY) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
+function getRandomGate() {
+    return choice(Object.keys(logicGatesPaths));
+}
 
 function redraw() {
 
-    drawGate(ctx, 'NOR', canvas.width / 4, canvas.height / 4);
-    drawGate(ctx, 'NAND', canvas.width / 4, canvas.height / 2);
-    drawGate(ctx, 'NAND', canvas.width / 4, 3 * canvas.height / 4);
-    drawGate(ctx, 'NAND', 3 * canvas.width / 4, canvas.height / 4);
-    drawGate(ctx, 'NAND', 3 * canvas.width / 4, canvas.height / 2);
-    drawGate(ctx, 'NAND', 3 * canvas.width / 4, 3 * canvas.height / 4);
+    drawGate(ctx, getRandomGate(), canvas.width / 4, canvas.height / 4);
+    drawGate(ctx, getRandomGate(), canvas.width / 4, canvas.height / 2);
+    drawGate(ctx, getRandomGate(), canvas.width / 4, 3 * canvas.height / 4);
+    drawGate(ctx, getRandomGate(), 3 * canvas.width / 4, canvas.height / 4);
+    drawGate(ctx, getRandomGate(), 3 * canvas.width / 4, canvas.height / 2);
+    drawGate(ctx, getRandomGate(), 3 * canvas.width / 4, 3 * canvas.height / 4);
 
 }
 
