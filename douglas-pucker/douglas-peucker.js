@@ -102,7 +102,7 @@ function douglasPeucker(points, epsilon) {
 
         const segment1 = points.slice(0, index + 1);
         const segment2 = points.slice(index);
-        console.log("points:", points, "seg1:", segment1, "seg2:", segment2);
+        //console.log("points:", points, "seg1:", segment1, "seg2:", segment2);
 
         const res1 = segment1.length > 1 ? douglasPeucker(segment1, epsilon) : segment1;
         const res2 = segment2.length > 1 ? douglasPeucker(segment2, epsilon) : segment2;
