@@ -16,12 +16,12 @@
                     <a id="optimization" href="./optimization/" target="iframe">Optimization algorithms</a> <span class="chip draft">DRAFT</span><br/>
                     <span class="desc">Gradient descent, Momentum, Adagrad, ...</span>
                 </span>
-                <span>
-                    <a id="logic-gates" href="./logic-gates/" target="iframe">Logic gates</a> <span class="chip draft">DRAFT</span><br/>
+                <span class="disabled-entry">
+                    <a id="logic-gates" href="./logic-gates/" target="iframe">Logic gates</a> <span class="chip early-draft">EARLY DRAFT</span><br/>
                     <span class="desc">NAND, Mux, Full-Adder, Memory, Program Counter, ALU, ...</span>
                 </span>
                 <span>
-                    <a id="splines" href="./splines/" target="iframe">Splines</a> <span class="chip todo">SOON</span><br/>
+                    <a id="splines" href="./splines/" target="iframe">Splines</a> <span class="chip draft">DRAFT</span><br/>
                     <span class="desc">Bézier curves, Bernstein polynomials, ...</span>
                 </span>
                 <span>
@@ -99,7 +99,8 @@
                 //console.log("hash changed to", window.location.hash);
                 if(window.location.hash) { // changed to this
                     const aLink = document.querySelector(window.location.hash);
-                    aLink?.click();
+                    aLink?.click(); // click on demo
+                    document.querySelector("iframe").focus();
                     changeSelected(currentHash, window.location.hash);
                     currentHash = window.location.hash;
                 }

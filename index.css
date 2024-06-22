@@ -88,12 +88,30 @@ iframe {
     background-color: orange;
 }
 
+/*
 .todo {
     color: white;
     background-color: red;
 }
+*/
 
 .draft {
     color: white;
     background-color: gray;
+}
+
+.early-draft {
+    color: white;
+    background-color: red;
+}
+
+.disabled-entry {
+    opacity: 0.5;
+    background: repeating-linear-gradient(
+        -45deg,
+        white,
+        white 10px,
+        lightgray 10px,
+        lightgray 20px
+    );
 }
