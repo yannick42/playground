@@ -182,10 +182,14 @@ function redraw() {
 
     //console.log(dataPoints);
 
+    const t0 = performance.now();
     const [intercept, slope] = gradientDescent(dataPoints);
+    const t1 = performance.now();
 
     document.querySelector("#intercept").innerText = round(intercept, 4);
     document.querySelector("#slope").innerText = round(slope, 4);
+
+    document.querySelector("#timings").innerText = `Finished in ${round(t1 - t0, 0)} ms.`;
 
     drawSolution(intercept, slope); // final linear model solution
 }

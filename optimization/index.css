@@ -28,5 +28,11 @@ body {
 }
 
 canvas {
-	border: 1px solid black;
+	margin: 5px;
+}
+
+#timings {
+	font-style: italic;
+	font-size: smaller;
+	color: gray;
 }
