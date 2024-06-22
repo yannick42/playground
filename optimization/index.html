@@ -29,7 +29,28 @@
 				- show learning curve & show path in the parameter space (2d)<br/>
             </div>
 
+			<br/>
+
+			<div><b>Batch gradient descent :</b></div>
+
 			<canvas width=500 height=500></canvas>
+
+			<div style="display: flex; width: 100%; justify-content: space-around;">
+				<div>
+					<b>Parameters :</b><br/>
+					number of points : <span id="nbPoints"></span><br/>
+					η (learning rate) : <span id="eta"></span><br/>
+					epochs : <span id="epochs"></span>
+				</div>
+				<div>
+					<b>Solution :</b><br/>
+					Intercept : <span id="intercept"></span>
+					<br/>
+					Slope : <span id="slope"></span>
+				</div>
+			</div>
+
+			<button id="refresh">Run batch GD</button>
 			
         </div>
 
