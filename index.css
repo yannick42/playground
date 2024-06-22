@@ -25,7 +25,7 @@ body {
     background: color-mix(in srgb, var(--theme-color) 20%, transparent); /* to make a lighter theme color */
 }
 
-a:visited, a {
+a:visited, a, #totalPages {
     color: var(--theme-color);
 }
 
