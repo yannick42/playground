@@ -151,7 +151,7 @@ export const entries = [{
     }]
 },{
     id: 'douglas-peucker',
-    href: './douglas-pucker/',
-    name: 'Douglas-Pucker algorithm (1973)',
-    desc: "path simplification, ...",
+    href: './douglas-peucker/',
+    name: 'Douglas-Peucker algorithm (1973)',
+    desc: "path simplification, divide-and-conquer...",
 }];
