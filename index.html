@@ -12,78 +12,12 @@
 
         <div id="main">
             <section id="menu">
-                <span>
-                    <a id="optimization" href="./optimization/" target="iframe">Optimization algorithms</a> <span class="chip draft">DRAFT</span><br/>
-                    <span class="desc">Gradient descent, Momentum, Adagrad, ...</span>
-                </span>
-                <span class="disabled-entry">
-                    <a id="logic-gates" href="./logic-gates/" target="iframe">Logic gates</a> <span class="chip early-draft">EARLY DRAFT</span><br/>
-                    <span class="desc">NAND, Mux, Full-Adder, Memory, Program Counter, ALU, ...</span>
-                </span>
-                <span>
-                    <a id="splines" href="./splines/" target="iframe">Splines</a> <span class="chip draft">DRAFT</span><br/>
-                    <span class="desc">Bézier curves, Bernstein polynomials, ...</span>
-                </span>
-                <span>
-                    <a id="snake" href="./snake/" target="iframe">Snake game</a> <span class="chip warning">WIP</span> <span class="chip buggy">buggy</span><br/>
-                    <span class="desc">neural net/DAG + genetic algo.</span>
-                </span>
-                <span>
-                    <a id="spreadsheet" href="./spreadsheet/" target="iframe">Spreadsheet</a> <span class="chip draft">DRAFT</span><br/>
-                    <span class="desc">application of topological sort.</span>
-                </span>
-                <span>
-                    <a id="gray-scott" href="./gray-scott/" target="iframe">Gray-Scott model</a> <span class="chip info">slow</span><br/>
-                    <span class="desc">reaction-diffusion model.</span>
-                </span>
-                <span>
-                    <a id="marbling" href="./marbling/" target="iframe">Marbling</a><br/>
-                    <span class="desc">simulate painting drops technique.</span>
-                </span>
-                <span>
-                    <a id="lagrange" href="./lagrange-interp/" target="iframe">Lagrange interpolation</a><br/>
-                    <span class="desc">draw a polynomial interpolation curve between n given points.</span>
-                </span>
-                <span>
-                    <a id="correlations" href="./correlations/" target="iframe">Correlation coefficients</a><br/>
-                    <span class="desc">Pearson's r, Spearman's ρ, Kendall's τ, cosine similarity</span>
-                </span>
-                <span>
-                    <a id="delaunay" href="./delaunay/" target="iframe">Delaunay triangulation</a> <span class="chip info">slow</span><br/>
-                    <span class="desc">method that maximizes triangles' minimal angle over a set of points.</span>
-                </span>
-                <span>
-                    <a id="newton-fractals" href="./newton-fractals/dist/newton-fractals/browser/" target="iframe">Newton fractals</a> <span class="chip info">slow startup</span><br/>
-                    <span class="desc">based on Newton-Raphson root finding method (over a complex function).</span>
-                </span>
-                <span>
-                    <a id="lyapunov" href="./lyapunov-fractals/" target="iframe">Markus-Lyapunov fractals</a> <span class="chip info">slow startup</span><br/>
-                    <span class="desc">using Lyapunov exponent λ.</span>
-                </span>
-                <span>
-                    <a id="minimax" href="./minimax/dist/minimax/browser/" target="iframe">Minimax algorithm (with α-β pruning)</a> <span class="chip buggy">buggy</span> <span class="chip info">slow</span><br/>
-                    <span class="desc">applied to Tic-tac-toe & Connect4 games.</span>
-                </span>
-                <span>
-                    <a id="metaballs" href="./metaballs/" target="iframe">Metaballs</a> <span class="chip buggy">buggy</span><br/>
-                    <span class="desc">moving "blob" shapes using implicit function, marching square algorithm and linear interpolation.</span>
-                </span>
-                <span>
-                    <a id="shading" href="./shading-methods/" target="iframe">Shading methods (WebGL)</a> <span class="chip warning">WIP</span> <span class="chip buggy">buggy</span><br/>
-                    <span class="desc">flat, Gouraud and Phong shading.</span>
-                </span>
-                <span>
-                    <a id="sph" href="./sph/" target="iframe">Smoothed-particle hydrodynamics</a> <span class="chip warning">WIP</span><br/>
-                    <span class="desc">to simulate water with SPH.</span>
-                </span>
-                <span>
-                    <a id="traffic" href="./traffic/public/" target="iframe">Traffic jam</a> <span class="chip warning">WIP</span><br/>
-                    <span class="desc">to control traffic lights.</span>
-                </span>
-                <span>
-                    <a id="douglas-peucker" href="./douglas-pucker/" target="iframe">Douglas-Pucker algorithm (1973)</a><br/>
-                    <span class="desc">path simplification, ...</span>
-                </span>
+                <div id="searchDiv">
+                    <input type="search" id="search" placeholder="Search (you can type 'Enter', if only 1 entry)" autocomplete="off" />
+                </div>
+                
+                <!-- filled automatically -->
+                <div id="menu-entries"></div>
             </section>
 
             <section id="main-panel">
@@ -91,57 +25,7 @@
             </section>
         </div>
 
-
-        <script type="text/javascript">
-            let currentHash = ''; // current demo selected
-
-            function onHashChange() {
-                //console.log("hash changed to", window.location.hash);
-                if(window.location.hash) { // changed to this
-                    const aLink = document.querySelector(window.location.hash);
-                    aLink?.click(); // click on demo
-                    document.querySelector("iframe").focus();
-                    changeSelected(currentHash, window.location.hash);
-                    currentHash = window.location.hash;
-                }
-            }
-
-            window.addEventListener('hashchange', onHashChange, false);
-
-            // handle the initial hash if needed
-            onHashChange();
-
-            const menu = document.querySelector("#menu");
-            menu.addEventListener('click', (e) => {
-                //console.log("e:", e);
-                //console.log("clicked on ", e.target.id, e.target.tagName)
-
-                if(e.target.tagName === 'A' && e.target.id) {
-                    history.pushState(null, null, '#' + e.target.id);
-                    changeSelected(currentHash, '#' + e.target.id)
-
-                    // new
-                    currentHash = '#' + e.target.id;
-                }
-            });
-
-            function changeSelected(fromHash, toHash) {
-                //console.log("from", fromHash, "to", toHash);
-                if(fromHash) {
-                    const from = document.querySelector(fromHash);
-                    if(from) {
-                        from.parentNode.classList.remove('highlighted-demo');
-                    }
-                }
-                if(toHash) {
-                    const to = document.querySelector(toHash);
-                    if(to) {
-                        to.parentNode.classList.add('highlighted-demo');
-                        to.parentNode.scrollIntoView(false);
-                    }
-                }
-            }
-        </script>
+        <script type="module" src="index.js"></script>
 
     </body>
 </html>

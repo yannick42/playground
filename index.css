@@ -10,14 +10,13 @@ body {
     display: flex;
     height: 96%; /* because of the header ? */
 }
+
 #menu {
-    display: flex;
-    flex-direction: column;
     width: var(--menu-width);
     font-size: medium;
     border-right: 1px solid var(--theme-color);
-    overflow: scroll;
 }
+
 #main-panel {
     width: calc(100% - var(--menu-width));
 }
@@ -43,8 +42,32 @@ iframe {
     margin: 10px;
 }
 
+#searchDiv {
+    margin: 5px;
+}
+
+#search {
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+    outline: 0;
+    border: 0;
+    background: color-mix(in srgb, var(--theme-color) 20%, transparent);
+}
+
+#search:focus {
+    outline: 1px solid var(--theme-color);
+}
+
+#menu-entries {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    height: 96%;
+}
+
 /* demo entry */
-#menu > span {
+#menu-entries > span {
     padding: 6px 5px 6px 10px;
     border-bottom: 1px solid var(--theme-color);
 }
