@@ -25,7 +25,7 @@
 
 			<div id="desc">
 				<br/>
-				<b>TODO:</b> apply (batch/stochastic/mini-batch) gradient descent on a linear regression model<br/>
+				<b>TODO:</b> apply stochastic & mini-batch gradient descent on a linear regression model<br/>
 				- show learning curve & show path in the parameter space (2d)<br/>
             </div>
 
@@ -39,8 +39,8 @@
 				<div>
 					<b>Parameters :</b><br/>
 					number of points : <span id="nbPoints"></span><br/>
-					η (learning rate) : <span id="eta"></span><br/>
-					epochs : <span id="epochs"></span>
+					η (learning rate) : <input type="number" id="eta" min="0.01" max="0.1" step="0.01" /><br/>
+					epochs : <input type="number" id="epochs" min="1" max="500" step="1" />
 				</div>
 				<div>
 					<b>Solution :</b><br/>

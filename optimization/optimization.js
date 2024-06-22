@@ -9,8 +9,19 @@ const SQUARE_SIZE = 25,
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+let eta = 0.01; // learning rate
+let NB_EPOCHS = 250;
+
+const etaEl = document.querySelector("#eta");
+const epochsEl = document.querySelector("#epochs");
+
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    etaEl.addEventListener('change', (e) => eta = e.target.value);
+    epochsEl.addEventListener('change', (e) => NB_EPOCHS = e.target.value);
+
+    etaEl.value = eta;
+    epochsEl.value = NB_EPOCHS;
 
     redraw();
 }
@@ -58,8 +69,6 @@ function rejectionSampling(proposalDist, targetDist) {
  */
 function gradientDescent(points) {
 
-    const eta = 0.01; // learning rate
-    const NB_EPOCHS = 30;
     const m = points.length;
 
 
@@ -121,7 +130,9 @@ function gradientDescent(points) {
         ]));
         console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
 
-        drawSolution(thetas[0][0], thetas[1][0], epoch); // draw temporary solution !
+        if(epoch % 10 === 0) {
+            drawSolution(thetas[0][0], thetas[1][0], epoch); // draw temporary solution !
+        }
     }
 
     return [thetas[0][0], thetas[1][0]]; // intercept, slope
@@ -156,7 +167,7 @@ function redraw() {
 
         // in graph-coordinates
         const valueX = i; // + randX;
-        const valueY = a * i + b + randY * 0.25;
+        const valueY = a * i + b + randY * 0.5;
 
         const [pixelX, pixelY] = convertToCanvasCoords(canvas, valueX, valueY, SQUARE_SIZE);
         
@@ -202,7 +213,7 @@ function drawSolution(intercept, slope, epoch=null) {
     //console.log("zeros:", zeroX, zeroY);
     //console.log(">>>>", pt1X, zeroY - pt1Y, pt2X, zeroY - pt2Y)
 
-    const size = epoch == null ? 2.5 : 0.25;
+    const size = epoch == null ? 2.5 : 0.33;
     const color = epoch == null ? "red" : colors[epoch % colors.length];
 
     drawLine(
