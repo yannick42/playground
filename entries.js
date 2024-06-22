@@ -1,8 +1,8 @@
 export const entries = [{
-    id: 'optimization',
-    href: './optimization/',
-    name: 'Optimization algorithms',
-    desc: 'Gradient descent, Momentum, Adagrad, ...',
+    id: 'gradient-descent',
+    href: './gradient-descent/',
+    name: 'Gradient descent',
+    desc: 'applied to linear regression',
     chips: [{
         type: 'draft',
         text: "DRAFT"
