@@ -53,7 +53,7 @@ function simplify() {
 
     // overlay debugging info.
     ctx.font = "16px sans-serif";
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "black";
     ctx.fillText(`simplified from ${points.length} points to ${simplifiedPoints.length}`, 15, 25);
 }
 
