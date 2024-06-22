@@ -21,11 +21,20 @@
 		
 		<div id="content">
 			<div id="title">Splines</div>
-			<div id="subtitle">(cubic) Bézier curves (1959), ...:</div>
+			<div id="subtitle"><u>Goal</u> : to test methods to draw splines, eg. (cubic) <b>Bézier curves</b> (1959), ...</div>
+
+			<br/>
 
 			<div id="desc">
-                TODO: use Bernstein polynomials (1912) to draw various types of parametric curve (quadratic, cubic, ...)
-            </div>
+                - Using 3 "nested" <b>linear interpolations</b> <i>(lerp)</i>.<br/>
+				- We can also use Bernstein polynomials (1912) over [0,1] to draw various types of parametric curve (quadratic, cubic, ...) including Bézier curves as a particular case.
+				<br/>
+				<br/>
+				<b><mark>TODO:</mark></b><br/>
+				- <i>de Casteljau's algorithm</i> : numerically stable way to  evaluate polynomials in Bernstein form
+			</div>
+
+			<br/>
 
 			<div class="info">Points and arrows can be dragged.</div>
 
@@ -34,6 +43,7 @@
 			</canvas>
 
             <button id="refresh">Refresh randomly</button>
+			<br/>
             <span id="timing"></span>
 			
         </div>

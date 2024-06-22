@@ -24,11 +24,13 @@ body {
 }
 
 #subtitle {
-	align-self: start;	
+	align-self: start;
+	font-style: italic;
 }
 
 canvas {
 	border: 1px solid black;
+	margin: 5px;
 }
 
 .info {
