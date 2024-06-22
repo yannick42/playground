@@ -67,22 +67,15 @@ function rejectionSampling(proposalDist, targetDist) {
 /**
  * Batch GD !
  */
-function gradientDescent(points) {
-
-    const m = points.length;
-
-
-    document.querySelector("#eta").innerText = eta;
-    document.querySelector("#epochs").innerText = NB_EPOCHS;
-    document.querySelector("#nbPoints").innerText = m;
-
-    console.log(`eta: ${eta} \t epochs: ${NB_EPOCHS} \t m: ${m}`);
+function gradientDescent(points) { // points = [[x_1, Y_1], ...] (shape = 1 x m)
 
     //console.log(points); // [[-5, -0.5], [X value (abscisses), Y value (valeur..)], ...] ???!!!
 
-    const Xs = points.map(point => [1, point[0]]); // only one feature -> 500 x 2
-    const Ys = [points.map(point => point[1])]; // 1 x 500
+    const m = points.length;
+    document.querySelector("#nbPoints").innerText = m;
 
+    const Xs = points.map(point => [1, point[0]]); // only one feature -> m x 2
+    const Ys = [points.map(point => point[1])]; // 1 x m
     //console.log("Ys:", Ys)
 
     let thetas = [[Math.random() - 0.5], [Math.random() - 0.5]]; // intercept, theta_1 (slope)
@@ -93,42 +86,41 @@ function gradientDescent(points) {
     for(let epoch = 1; epoch <= NB_EPOCHS; epoch++) {
 
         // (X @ thetas - y)
-        let test = matMul( // 500 x 1
-            Xs, // 500 x 2
+        let test = matMul( // m x 1
+            Xs, // m x 2
             thetas // 2 x 1
-        ).map( // same shape : 500 x 1
+        ).map( // same shape : m x 1
             (res, idx) => {
                 return [res - Ys[0][idx]]; // = error
             }
         );
+        // no need to sum anything ...
 
-        // TODO : sum ?!
-
-        console.log("> test =", test);
-        console.log("matMal( Xs, thetas ) - y");
-        showShape(test);
+        //console.log("> test =", test);
+        //console.log("matMal( Xs, thetas ) - y");
+        //showShape(test);
 
         // X.T @ (X @ thetas - y)
         gradients = matMul( // 2 x 1
-            transpose(Xs), // 2 x 500
-            test // 500 x 1
+            transpose(Xs), // 2 x m
+            test // m x 1
         );
 
-        console.log("gradient =");
-        showShape(gradients);
+        //console.log("gradient =");
+        //showShape(gradients);
 
         //console.log("factor:", 2/m);
         gradients[0][0] *= (2 / m);
         gradients[1][0] *= (2 / m);
 
-        console.log("gradients:", JSON.stringify(gradients));
-        console.log("thetas (before):", JSON.stringify(thetas));
+        //console.log("gradients:", JSON.stringify(gradients));
+        //console.log("thetas (before):", JSON.stringify(thetas));
 
         // update model parameters
         thetas = thetas.map((theta, i) => ([
             theta[0] - eta * gradients[i][0]
         ]));
-        console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
+        //console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
 
         if(epoch % 10 === 0) {
             drawSolution(thetas[0][0], thetas[1][0], epoch); // draw temporary solution !
