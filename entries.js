@@ -1,4 +1,14 @@
 export const entries = [{
+    id: 'heightmap',
+    href: './heightmap/',
+    name: 'Heightmap',
+    desc: 'Normals & bump mapping with the map of the world',
+    classes: ['disabled-entry'],
+    chips: [{
+        type: 'early-draft',
+        text: "EARLY DRAFT"
+    }]
+},{
     id: 'convolution-filters',
     href: './convolution-filters/',
     name: 'Convolution Filters',

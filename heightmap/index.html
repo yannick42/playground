@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Heightmap, normals & bump mapping</div>
+			<div id="subtitle"><u>Goal</u> : learn the basics of 2D/3D rendering</div>
+
+			<div id="desc">
+                - ??
+            </div>
+
+			<canvas width=500 height=500></canvas>
+
+			<button id="refresh">Compute normal map + draw map !</button>
+			
+        </div>
+
+        <script type="module" src="./heightmap.js"></script>
+    </body>
+</html>
