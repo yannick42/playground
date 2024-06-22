@@ -21,17 +21,19 @@
 		
 		<div id="content">
 			<div id="title">Optimization algorithms</div>
-			<div id="subtitle">to explore ML methods (for linear regression, ...)</div>
+			<div id="subtitle">Explore ML methods for linear regression, logistic regression, neural nets, ...</div>
 
 			<div id="desc">
 				<br/>
-				<b>TODO:</b> apply stochastic & mini-batch gradient descent on a linear regression model<br/>
+				<b>TODO :</b><br/>
+				- apply mini-batch gradient descent on a linear regression model<br/>
+				- add a learning schedule to SGD & Mini-batch ?<br/>
 				- show learning curve & show path in the parameter space (2d)<br/>
             </div>
 
 			<br/>
 
-			<div><b>Batch gradient descent :</b></div>
+			<div><b>Gradient descent methods :</b></div>
 
 			<canvas width=500 height=500></canvas>
 
@@ -40,7 +42,11 @@
 					<b>Parameters :</b><br/>
 					number of points : <span id="nbPoints"></span><br/>
 					η (learning rate) : <input type="number" id="eta" min="0.01" max="0.1" step="0.01" /><br/>
-					epochs : <input type="number" id="epochs" min="1" max="500" step="1" />
+					epochs : <input type="number" id="epochs" min="1" max="500" step="1" /><br/>
+					method : <select id="method">
+						<option value="BatchGD" selected>Batch gradient descent</option>
+						<option value="SGD">Stochastic gradient descent (SGD)</option>
+					</select>
 				</div>
 				<div>
 					<b>Solution :</b><br/>
@@ -50,7 +56,8 @@
 				</div>
 			</div>
 
-			<button id="refresh">Run batch GD</button>
+			<br/>
+			<button id="refresh">Apply gradient descent</button>
 			<div id="timings"></div>
 			
         </div>

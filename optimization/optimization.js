@@ -9,19 +9,23 @@ const SQUARE_SIZE = 25,
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-let eta = 0.01; // learning rate
+let ETA = 0.01; // learning rate
 let NB_EPOCHS = 250;
+let METHOD = 'BatchGD'; // batch gradient descent
 
 const etaEl = document.querySelector("#eta");
 const epochsEl = document.querySelector("#epochs");
+const methodEl = document.querySelector("#method");
 
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
-    etaEl.addEventListener('change', (e) => eta = e.target.value);
+    etaEl.addEventListener('change', (e) => ETA = e.target.value);
     epochsEl.addEventListener('change', (e) => NB_EPOCHS = e.target.value);
+    methodEl.addEventListener('change', (e) => METHOD = e.target.value);
 
-    etaEl.value = eta;
+    etaEl.value = ETA;
     epochsEl.value = NB_EPOCHS;
+    methodEl.value = METHOD;
 
     redraw();
 }
@@ -105,21 +109,19 @@ function gradientDescent(points) { // points = [[x_1, Y_1], ...] (shape = 1 x m)
             transpose(Xs), // 2 x m
             test // m x 1
         );
-
         //console.log("gradient =");
         //showShape(gradients);
 
-        //console.log("factor:", 2/m);
         gradients[0][0] *= (2 / m);
         gradients[1][0] *= (2 / m);
 
         //console.log("gradients:", JSON.stringify(gradients));
-        //console.log("thetas (before):", JSON.stringify(thetas));
 
         // update model parameters
         thetas = thetas.map((theta, i) => ([
-            theta[0] - eta * gradients[i][0]
+            theta[0] - ETA * gradients[i][0]
         ]));
+
         //console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
 
         if(epoch % 10 === 0) {
@@ -131,6 +133,79 @@ function gradientDescent(points) { // points = [[x_1, Y_1], ...] (shape = 1 x m)
 }
 
 
+/**
+ * Batch GD !
+ */
+function stochasticGradientDescent(points) { // points = [[x_1, Y_1], ...] (shape = 1 x m)
+
+    //console.log(points); // [[-5, -0.5], [X value (abscisses), Y value (valeur..)], ...] ???!!!
+
+    const m = points.length;
+    document.querySelector("#nbPoints").innerText = m;
+
+    const Xs = points.map(point => [1, point[0]]); // only one feature -> m x 2
+    const Ys = [points.map(point => point[1])]; // 1 x m
+    //console.log("Ys:", Ys)
+
+    let thetas = [[Math.random() - 0.5], [Math.random() - 0.5]]; // intercept, theta_1 (slope)
+    
+    drawSolution(thetas[0][0], thetas[1][0], 0); // initial state..
+
+    let gradients;
+
+    for(let epoch = 1; epoch <= NB_EPOCHS; epoch++) {
+
+        for(let i = 0; i < m; i++) {
+
+            const randomIndex = randInt(0, m - 1);
+
+            const X = [Xs[randomIndex]]; // 1 x 2
+            const Y = [[Ys[0][randomIndex]]]; // 1 x 1
+
+            // (X @ thetas - y)
+            let test = matMul( // m x 1
+                X, // m x 2
+                thetas // 2 x 1
+            ).map( // same shape : m x 1
+                (res, idx) => {
+                    return [res - Y[0][idx]]; // = error
+                }
+            );
+            // no need to sum anything ...
+
+            //console.log("> test =", test);
+            //console.log("matMal( Xs, thetas ) - y");
+            //showShape(test);
+
+            // X.T @ (X @ thetas - y)
+            gradients = matMul( // 2 x 1
+                transpose(X), // 2 x m
+                test // m x 1
+            );
+            //console.log("gradient =");
+            //showShape(gradients);
+
+            gradients[0][0] *= (2 / m);
+            gradients[1][0] *= (2 / m);
+
+            //console.log("gradients:", JSON.stringify(gradients));
+
+            // update model parameters
+            thetas = thetas.map((theta, i) => ([
+                theta[0] - ETA * gradients[i][0]
+            ]));
+
+            //console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
+
+        }
+
+        if(epoch % 10 === 0) {
+            drawSolution(thetas[0][0], thetas[1][0], epoch); // draw temporary solution !
+        }
+    }
+
+    return [thetas[0][0], thetas[1][0]]; // intercept, slope
+}
 
 
 
@@ -175,13 +250,17 @@ function redraw() {
     //console.log(dataPoints);
 
     const t0 = performance.now();
-    const [intercept, slope] = gradientDescent(dataPoints);
+    let intercept, slope;
+    if(METHOD == 'BatchGD') {
+        [intercept, slope] = gradientDescent(dataPoints);
+    } else if (METHOD == 'SGD') {
+        [intercept, slope] = stochasticGradientDescent(dataPoints);
+    }
     const t1 = performance.now();
-
     document.querySelector("#intercept").innerText = round(intercept, 4);
     document.querySelector("#slope").innerText = round(slope, 4);
 
-    document.querySelector("#timings").innerText = `Finished in ${round(t1 - t0, 0)} ms.`;
+    document.querySelector("#timings").innerHTML = `<b>${METHOD}</b> finished in ${round(t1 - t0, 0)} ms.`;
 
     drawSolution(intercept, slope); // final linear model solution
 }
