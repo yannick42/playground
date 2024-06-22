@@ -1,4 +1,13 @@
 export const entries = [{
+    id: 'convolution-filters',
+    href: './convolution-filters/',
+    name: 'Convolution Filters',
+    desc: 'Kernels: blur, sharpen, Sobel filter, ...',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'gradient-descent',
     href: './gradient-descent/',
     name: 'Gradient descent',
