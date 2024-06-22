@@ -8,6 +8,8 @@ const searchInputEl = document.querySelector("#search");
 window.onload = function() {
     updateFilteredEntries(entries); // load initial list (everything !)
 
+    document.querySelector("#numberOfPages").innerText = entries.length;
+
     // handle the initial hash if needed (to click on the wanted tool)
     onHashChange();
     console.log("initial hash:", currentHash);
