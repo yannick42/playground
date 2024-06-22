@@ -101,48 +101,69 @@ function transpose(matrix) {
     return transposed;
 }
 
+function showShape(A) {
+    console.log("shape:", A.length, " by ", A[0].length);
+}
+
 /**
  * Batch GD !
  */
 function gradientDescent(points) {
 
-    const eta = 0.01; // learning rate
-    const NB_EPOCHS = 10;
+    const eta = 0.025; // learning rate
+    const NB_EPOCHS = 5;
     const m = points.length;
-    console.log("m:", m);
+    console.log(`eta: ${eta} \t epochs: ${NB_EPOCHS} \t m: ${m}`);
 
-    console.log(points); // [[X, Y value], ...] ???!!!
+    console.log(points); // [[-5, -0.5], [X value (abscisses), Y value (valeur..)], ...] ???!!!
 
-    const Xs = points.map(point => [point[0]]); // only one feature -> 500 x 1
+    const Xs = points.map(point => [point[0]]); // only one feature -> 500 x 2
     const Ys = points.map(point => point[1]); // array size = 500
 
     //console.log("Ys:", Ys)
 
-    let thetas = [[Math.random(), Math.random()]]; // intercept, theta_1 (slope)
+    //let thetas = [[Math.random(), Math.random()]]; // intercept, theta_1 (slope)
+    let thetas = [[-2, -1]];
+    drawSolution(thetas[0][0], thetas[0][1], 0); // initial state..
+
     let gradients;
 
     for(let epoch = 1; epoch <= NB_EPOCHS; epoch++) {
 
+        let test = matMul(
+            Xs, // 500 x 1
+            thetas // 1 x 2
+            // -> 500 x 2
+        ).map( // same shape : 500 x 2
+            (res, idx) => {
+                return [res[0] - Ys[idx], res[1] * thetas[0][1] - Ys[idx]]; // error
+            }
+        );
+
+        //console.log(">", test);
+        console.log("matMal( Xs, thetas ) - y");
+        showShape(test);
+
         gradients = matMul( // 1 x 2
             transpose(Xs), // 1 x 500
-            matMul(
-                Xs, // 500 x 1
-                thetas // 1 x 2
-            ) // 500 x 2
-            .map(
-                (res, idx) => [res[0] - Ys[idx], res[1] - Ys[idx]]
-            ) // same : 500 x 2
-        ).map(value => value.map(v => 2 / m * v)); // same : 1 x 2 (should be transpose ?! not important..)
+            test // 500 x 2
+        ).map(value => value.map(v => {
+            //console.log(">>", v)
+            return 2 / m * v;
+        })); // same : 1 x 2 (should be transpose ?! not important..)
+
+        console.log("matMal( Xs.T, 2/m* __ )");
+        showShape(gradients)
 
         console.log("gradients:", JSON.stringify(gradients));
-        console.log("thetas (before):", JSON.stringify(thetas));
+        //console.log("thetas (before):", JSON.stringify(thetas));
 
         // update model parameters
         thetas = thetas.map((theta, i) => ([
             theta[0] - eta * gradients[0][0],
             theta[1] - eta * gradients[0][1]
         ]));
-        console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
+        //console.log("thetas (after):", JSON.stringify(thetas)); // 1 x 2
 
         drawSolution(thetas[0][0], thetas[0][1], epoch); // draw temporary solution !
     }
@@ -165,17 +186,17 @@ function redraw() {
     const MEAN = 0, SIGMA = 1;
 
     const nb_points = 100; // nb of points to generate
-    const step = 20 / nb_points;
-    for (let i = -5; i < 15; i = i + step) {
+    const from = -5;
+    const to = 15;
+    const step = (to - from) / nb_points;
+    for (let i = from; i < to; i += step) {
 
-        const randX = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+        //const randX = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+        const randY = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+        //console.warn(randX, randY);
 
-        const randY = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN)) * 0.2;
-
-        console.warn(randX, randY);
-
-        const valueX = i + randX;
-        const valueY = a * i + b + randY;
+        const valueX = i; // + randX;
+        const valueY = a * i + b + randY; // * 2;
 
         const [pixelX, pixelY] = convertToCanvasCoords(canvas, valueX, valueY, SQUARE_SIZE);
         
@@ -183,13 +204,12 @@ function redraw() {
         //const [zeroX, zeroY] = convertToCanvasCoords(canvas, 0, 0, SQUARE_SIZE);
         drawPointAt(ctx, pixelX, pixelY, 3, 'black');
 
-        console.error(valueX, valueY, pixelX, pixelY);
-
+        //console.error(valueX, valueY, pixelX, pixelY);
         // to graph coordinates
         dataPoints.push([valueX, valueY]);
     }
 
-    console.log(dataPoints);
+    //console.log(dataPoints);
 
     const [intercept, slope] = gradientDescent(dataPoints);
 
@@ -197,12 +217,12 @@ function redraw() {
 }
 
 // solution lines
-const colors = ['green', 'yellowgreen', 'orange', 'darkorange'];
+const colors = ['green', 'yellowgreen', 'orange', 'fuchsia', 'darkorange'];
 
-function drawSolution(intercept, slope, epoch=0) {
+function drawSolution(intercept, slope, epoch=null) {
 
-    console.log("intercept:", intercept);
-    console.log("slope:", slope);
+    //console.log("intercept:", intercept);
+    //console.log("slope:", slope);
 
     const point1X = -5;
     const point1Y = slope * point1X + intercept;
@@ -212,15 +232,15 @@ function drawSolution(intercept, slope, epoch=0) {
     // from graph-coordinate to pixel/canvas-coordinates
     const [pt1X , pt1Y] = convertToCanvasCoords(canvas, point1X, point1Y, SQUARE_SIZE);
     const [pt2X , pt2Y] = convertToCanvasCoords(canvas, point2X, point2Y, SQUARE_SIZE);
-    console.log(pt1X, pt1Y, pt2X, pt2Y)
+    //console.log(pt1X, pt1Y, pt2X, pt2Y)
 
     // to ?
     //const [zeroX, zeroY] = convertToCanvasCoords(canvas, 0, 0, SQUARE_SIZE);
     //console.log("zeros:", zeroX, zeroY);
     //console.log(">>>>", pt1X, zeroY - pt1Y, pt2X, zeroY - pt2Y)
 
-    const size = epoch == 0 ? 1.5 : 0.5;
-    const color = epoch == 0 ? "red" : colors[epoch % colors.length];
+    const size = epoch == null ? 2.5 : 0.5;
+    const color = epoch == null ? "red" : colors[epoch % colors.length];
 
     drawLine(
         ctx,

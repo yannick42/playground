@@ -1,0 +1,51 @@
+
+:root {
+	--canvas-size: 500px;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#content {
+	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
+  margin-top: 15px;
+	width: calc(var(--canvas-size) + 150px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#title {
+	font-size: 15pt;
+	text-align: center;
+	padding-bottom: 20px;
+	text-decoration: underline;
+}
+
+#subtitle {
+	align-self: start;	
+}
+
+#desc {
+	align-self: end;
+}
+
+canvas {
+	border: 1px solid black;
+}
+
+#info {
+	color: blue;
+	font-style: italic;
+	font-size: small;
+}
+
+#controls {
+	margin: 15px;
+	text-align: center;
+}
+
+#epsilon {
+	width: 40px;
+}
