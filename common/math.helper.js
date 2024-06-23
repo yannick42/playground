@@ -21,9 +21,24 @@ export function distance(x1, y1, x2, y2) {
     return Math.sqrt(dx*dx + dy*dy);
 }
 
+export function normalize(vec) {
+    const length = Math.sqrt(vec.map(v => v*v).reduce((partialSum, a) => partialSum + a, 0));
+    return vec.map(v => v / length);
+}
+
 export function round(value, precision=2) {
     return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
 }
+
+
+
+
+
+
+
+/**
+ * LINEAR ALGEBRA / MATRICES
+ */
 
 // standard matrix multiplication
 export function matMul(A, B) {

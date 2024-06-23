@@ -1,16 +1,7 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
-
-
-
-function normalize(vec) {
-    const length = Math.sqrt(vec.map(v => v*v).reduce((partialSum, a) => partialSum + a, 0));
-    return vec.map(v => v / length);
-}
-
-
-
+import { normalize, round } from '../common/math.helper.js';
 
 
 
@@ -18,7 +9,7 @@ function normalize(vec) {
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const WORLD_HEIGHTMAP_FILE = './world-heightmap.png'; // 1920 x 1118
+let WORLD_HEIGHTMAP_FILE = './world-heightmap.png'; // 1920 x 1118 (same for UK.png)
 
 let heightmap,
     normalMap,
@@ -28,6 +19,10 @@ let heightmap,
 function main() {
     document.querySelector("#show_heightmap").addEventListener('click', (e) => loadHeightMap());
     document.querySelector("#animate").addEventListener('click', (e) => computeMaps());
+    document.querySelector("#select_map").addEventListener('change', (e) => {
+        WORLD_HEIGHTMAP_FILE = './' + e.target.value + '.png';
+        loadHeightMap();
+    })
 
     window.onload = function(e) {
         loadHeightMap();
@@ -103,31 +98,32 @@ function computeMaps()
 
 function fn() {
     // 
-    // black if both negative ?!
+    // black if both negative ?! or both 0 ??
     // 
-    const xDir = Math.abs(
-        Math.sin(2 * Math.PI * iter + 0.5) * 0.1
-    );
-    const yDir = 
-    //Math.abs(
-        Math.cos(4 * Math.PI * iter + 0.5) * 0.1
-    //);
+    const xDir = Math.sin(Math.PI * iter + Math.PI / 4) * 0.5 + 0.5; // PI/4 so not both are sometimes at 0 (black view)
+    const yDir = Math.cos(2 * Math.PI * iter) * 0.5 + 0.5;
     const zDir = 1;
-    //console.log("light direction :", [xDir, yDir, zDir]);
+    //console.log("light direction :", [xDir, yDir, zDir]); // TODO : understand this !!
 
     const xy = normalize([
         //0.5,
         xDir,
         //0.5,
-        yDir
+        yDir,
+        zDir
     ]);
 
     const lightDir = [
         xy[0],
         xy[1],
-        zDir
+        //zDir
+        xy[2]
     ];
     //console.log("Normalized light direction :", lightDir)
+
+    document.querySelector("#lightDirX").innerText = round(lightDir[0], 2);
+    document.querySelector("#lightDirY").innerText = round(lightDir[1], 2);
+    document.querySelector("#lightDirZ").innerText = round(lightDir[2], 2);
 
     const timeIt = false;
     let t0, t1;
@@ -140,12 +136,14 @@ function fn() {
         console.warn(`time taken : ${t1 - t0} ms.`)
     }
 
-    iter += 0.01;
+    iter += 0.05;
 
     if(!stopAnimation) {
         requestAnimationFrame(fn);
     }
 }
+
+const groundColor = [61, 203, 49]
 
 function computeImage(lightDir) {
 
@@ -161,20 +159,23 @@ function computeImage(lightDir) {
 
             const norm_x = normalMap.data[offset];
             const norm_y = normalMap.data[offset + 1];
+            const norm_z = normalMap.data[offset + 2];
 
-            const dotProduct = norm_x * lightDir[0] + norm_y * lightDir[1];
-            const brightness = Math.max(0, dotProduct) / 255;
+            const min = 0; // ??
+            const dotProduct = norm_x * lightDir[0] + norm_y * lightDir[1]; // + norm_z * lightDir[2];
+            const brightness = Math.max(min, dotProduct) / 255; // from "min" to 1
 
-            //if(brightness == 0) {
-            //    data[offset] = 0;
-            //    data[offset + 1] = 0;
-            //    data[offset + 2] = 255;
-            //} else {
-                data[offset] = 136 * brightness;
-                data[offset + 1] = 199 * brightness;
-                data[offset + 2] = 153 * brightness;
-            //}
+            //console.log(brightness);
+
+            const multiplyBy = 50; // ??
+
+            const offsetBy = 0;
+
+            data[offset] = groundColor[0] * brightness * multiplyBy - min + offsetBy;
+            data[offset + 1] = groundColor[1] * brightness * multiplyBy - min + offsetBy;
+            data[offset + 2] = groundColor[2] * brightness * multiplyBy - min + offsetBy;
             data[offset + 3] = 255; // no change... TODO: do not use alpha
+
         }
     }
 
@@ -200,7 +201,7 @@ function computeImage(lightDir) {
         canvas.height = height;
 
         // show world map with its light illumination
-        console.log(`convert resolution (decreased by ${scale}) from ${heightmap.width} x ${heightmap.height} to ${width} x ${height}, keep aspect ratio to ${ratio}`)
+        //console.log(`convert resolution (decreased by ${scale}) from ${heightmap.width} x ${heightmap.height} to ${width} x ${height}, keep aspect ratio to ${ratio}`)
 
         //ctx.scale(1 / scale, 1 / scale);
         ctx.drawImage(imageObject, 0, 0, width, height); // conserve ratio
@@ -239,7 +240,9 @@ function computeNormals(heightmap) {
             //let diffY = heightmap.data[offset] - heightmap.data[upOffset];
             let diffY = heightmap.data[upOffset] - heightmap.data[downOffset];
 
-            const length = Math.sqrt(diffX*diffX + diffY*diffY);
+            const diffZ = 255;
+
+            const length = Math.sqrt(diffX*diffX + diffY*diffY + diffZ*diffZ);
 
             diffX = Math.round(diffX / length * 255);
             diffY = Math.round(diffY / length * 255);
@@ -247,7 +250,7 @@ function computeNormals(heightmap) {
             normalData[offset] = diffX; // norm x
             normalData[offset + 1] = diffY; // norm y
             normalData[offset + 2] = 255; // nothing... (=> blueish image)
-            normalData[offset + 3] = 255; // no change... TODO: do not use alpha
+            normalData[offset + 3] = 255; // no change... TODO: optimize to not use alpha channel (always 1)
         }
     }
 
