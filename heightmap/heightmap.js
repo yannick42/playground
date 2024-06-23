@@ -3,9 +3,6 @@ import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.
 import { randInt } from '../common/common.helper.js';
 import { normalize, round } from '../common/math.helper.js';
 
-
-
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -35,7 +32,6 @@ function main() {
         MOUSE_Y = null;
     })
     
-
     window.onload = function(e) {
         loadHeightMap();
     }
@@ -43,7 +39,7 @@ function main() {
 
 function loadHeightMap() {
 
-    stopAnimation = true; // will show the heightmap only
+    stopAnimation = true; // will show the heightmap only (and stop next frame animation !)
 
     const image = new Image();
     image.src = WORLD_HEIGHTMAP_FILE;
@@ -71,7 +67,7 @@ function loadHeightMap() {
             }
         */
 
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // auto resized
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // auto resized..
     }
 }
 
@@ -87,13 +83,11 @@ function computeMaps()
     }
 
     if (! heightmap) return; // if heightmap is loaded
-        
+    //console.log("heightmap:", heightmap);
+     
     // 
     // Compute normal map
     // 
-
-    //console.log("heightmap:", heightmap);
-    
     const normalData = computeNormals(heightmap);
     //console.log("normalData:", normalData); // Uint8ClampedArray
 
