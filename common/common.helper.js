@@ -14,3 +14,36 @@ export function randFloat(min, max) {
 export function choice(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
+
+// ??
+export function loadHeightMap(pngFile, callback) {
+    // create an Image
+    const image = new Image();
+    image.src = pngFile;
+
+    // when file loaded -> put it in its own temporary canvas
+    image.onload = function(e) {
+
+        const heightMapCanvas = document.createElement('canvas');
+        const hmCtx = heightMapCanvas.getContext('2d');
+
+        // resize to its full size
+        heightMapCanvas.width = image.width;
+        heightMapCanvas.height = image.height;
+
+        //console.log("image:", image); // <img .../>
+        hmCtx.drawImage(image, 0, 0, image.width, image.height);
+        const heightmap = hmCtx.getImageData(0, 0, image.width, image.height); // store it globally (ready to pursue "computeMaps")
+        //console.log("heightmap:", heightmap);
+        /*
+            ImageData {
+                data: Uint8ClampedArray(8 547 840),
+                width: 1920,
+                height: 1113,
+                colorSpace: 'srgb'
+            }
+        */
+
+        callback(heightmap, image);
+    }
+}

@@ -1,6 +1,6 @@
 
 :root {
-	--canvas-size: 500px;
+	--canvas-size: 750px;
 }
 
 body {
@@ -30,4 +30,5 @@ body {
 
 canvas {
 	border: 1px solid black;
+	width: 100%;
 }

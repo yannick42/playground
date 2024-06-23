@@ -29,7 +29,7 @@ body {
 }
 
 canvas {
-	border: 1px solid black;
+	border: 0;
 }
 
 .info {
@@ -38,13 +38,20 @@ canvas {
 	font-size: smaller;
 }
 
+#camera_x_pos,
+#camera_y_pos,
 #camera_z_pos,
 #camera_orientation_roll,
 #camera_orientation_pitch,
 #camera_orientation_yaw {
 	width: 50px;
+	background-color: aliceblue;
 }
 
 #parameters {
+	border-radius: 5px;
+	padding: 15px;
+	background-color: lightblue;
+	border: 1px solid black;
 	margin: 5px;
 }

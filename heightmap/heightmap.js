@@ -1,6 +1,6 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { randInt, loadHeightMap } from '../common/common.helper.js';
 import { normalize, round } from '../common/math.helper.js';
 
 const canvas = document.querySelector("canvas");
@@ -16,11 +16,15 @@ let heightmap,
     MOUSE_Y;
 
 function main() {
-    document.querySelector("#show_heightmap").addEventListener('click', (e) => loadHeightMap());
+    document.querySelector("#show_heightmap").addEventListener('click', (e) => {
+        stopAnimation = true; // will show the heightmap only (and stop next frame animation !?)
+        loadHeightMap(WORLD_HEIGHTMAP_FILE, whenHeightMapLoaded);
+    });
     document.querySelector("#animate").addEventListener('click', (e) => computeMaps());
     document.querySelector("#select_map").addEventListener('change', (e) => {
-        WORLD_HEIGHTMAP_FILE = './' + e.target.value + '.png';
-        loadHeightMap();
+        stopAnimation = true;
+        WORLD_HEIGHTMAP_FILE = './' + e.target.value;
+        loadHeightMap(WORLD_HEIGHTMAP_FILE, whenHeightMapLoaded);
     })
     canvas.addEventListener('mousemove', (e) => {
         MOUSE_X = 2 * (e.offsetX - canvas.width / 2) / canvas.width;
@@ -33,42 +37,15 @@ function main() {
     })
     
     window.onload = function(e) {
-        loadHeightMap();
+        loadHeightMap(WORLD_HEIGHTMAP_FILE, whenHeightMapLoaded);
     }
 }
 
-function loadHeightMap() {
-
-    stopAnimation = true; // will show the heightmap only (and stop next frame animation !)
-
-    const image = new Image();
-    image.src = WORLD_HEIGHTMAP_FILE;
-
-    // when file loaded -> put it in its own temporary canvas
-    image.onload = function(e) {
-
-        const heightMapCanvas = document.createElement('canvas');
-        const hmCtx = heightMapCanvas.getContext('2d');
-
-        // resize to its full size
-        heightMapCanvas.width = image.width;
-        heightMapCanvas.height = image.height;
-
-        //console.log("image:", image); // <img .../>
-        hmCtx.drawImage(image, 0, 0, image.width, image.height);
-        heightmap = hmCtx.getImageData(0, 0, image.width, image.height); // store it globally (ready to pursue "computeMaps")
-        //console.log("heightmap:", heightmap);
-        /*
-            ImageData {
-                data: Uint8ClampedArray(8 547 840),
-                width: 1920,
-                height: 1113,
-                colorSpace: 'srgb'
-            }
-        */
-
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // auto resized..
-    }
+function whenHeightMapLoaded(hm, image) {
+    heightmap = hm;
+    console.log("image:", image);
+    // show it now ! (just after load)
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // auto resized...
 }
 
 let iter = 0;

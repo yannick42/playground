@@ -6,7 +6,9 @@ import { matMul } from '../common/math.helper.js';
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-let cameraZPos = -250;
+let cameraXPos = 200;
+let cameraYPos = 250;
+let cameraZPos = -275;
 
 let cameraOrientationTheta = 0; // roll ?
 let cameraOrientationPhi = 0; // pitch ?
@@ -25,10 +27,24 @@ function main() {
         cameraOrientationPsi = e.target.value;
         redraw();
     });
+
+    // camera position
+    document.querySelector("#camera_x_pos").addEventListener('change', (e) => {
+        cameraXPos = e.target.value;
+        redraw();
+    });
+    document.querySelector("#camera_y_pos").addEventListener('change', (e) => {
+        cameraYPos = e.target.value;
+        redraw();
+    });
     document.querySelector("#camera_z_pos").addEventListener('change', (e) => {
         cameraZPos = e.target.value;
         redraw();
     });
+
+    document.querySelector("#camera_x_pos").value = cameraXPos;
+    document.querySelector("#camera_y_pos").value = cameraYPos;
+    document.querySelector("#camera_z_pos").value = cameraZPos;
 
     redraw();
 }
@@ -84,9 +100,9 @@ class Square {
         return this.z + this.height / 2;
     }
 
-    draw(lineWidth, color) {
+    draw(lineWidth, color=null) {
         // TODO: ctx ?!
-        drawLineThroughPoints(ctx, this.points, lineWidth, color);
+        drawLineThroughPoints(ctx, this.points, lineWidth, color ?? this.color);
     }
 }
 
@@ -130,7 +146,7 @@ function createRandomSquarePoints(canvas, prop={}) {
 function redraw() {
 
     // clear everything
-    setUpCanvas(ctx, canvas.width, canvas.height, 'gainsboro');
+    setUpCanvas(ctx, canvas.width, canvas.height, 'AliceBlue');
 
     //const square = createRandomSquarePoints(canvas);
     const squares = [];
@@ -154,13 +170,11 @@ function redraw() {
     const nbOfSquares = squares.length;    
 
     for(let i = 0; i < nbOfSquares; i++) {
+        // draw square on 2D-canvas
         const lineWidth = 1;
-        const color = squares[i].color;
-
-        squares[i].draw(lineWidth, color);
-
-        // draw center point
-        drawPointAt(ctx, squares[i].centerX, squares[i].centerY, 1, 'red')
+        squares[i].draw(lineWidth);
+        // with its center point
+        //drawPointAt(ctx, squares[i].centerX, squares[i].centerY, 1, 'red');
     }
 
     //
@@ -293,7 +307,7 @@ function redraw() {
             //
             // to control the behavior of the perspective
             //
-            const cameraPosition = [canvas.width / 2, canvas.height / 2, cameraZPos]; // C (= origin)
+            const cameraPosition = [cameraXPos, cameraYPos, cameraZPos]; // C (= origin)
             const cameraOrientation = [cameraOrientationTheta, cameraOrientationPhi, cameraOrientationPsi]; // Tait-Bryan angles (Euler angles)
             
             const displaySurfacePosition = [0, 0, 1]; // E = display surface relative to C
