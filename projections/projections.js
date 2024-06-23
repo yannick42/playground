@@ -134,24 +134,23 @@ function redraw() {
 
     //const square = createRandomSquarePoints(canvas);
     const squares = [];
-    // front face
-    squares.push(new Square(300, 300, 0 /*z*/, 50, 50, 'X', 'purple'));
+
+    // /!\ orderer from least visible to front ...
+
     // back face
     squares.push(new Square(300, 300, 100 /*z*/, 50, 50, 'X', 'red'));
-    // top face
-    squares.push(new Square(300, 300, 0 /*z*/, 100, 50, 'Z', 'lightgreen'));
-    // right face
-    squares.push(new Square(300, 350, 0 /*z*/, 100, 50, 'Z', 'darkorange'));
-
-    // not necessary : 2 other faces
-
-    // left face
-    squares.push(new Square(300, 300, 0 /*z*/, 50, 100, 'Y', 'blue'));
     // right face
     squares.push(new Square(350, 300, 0 /*z*/, 50, 100, 'Y', 'fuchsia'));
+    // top face
+    squares.push(new Square(300, 300, 0 /*z*/, 100, 50, 'Z', 'lightgreen'));
+    // bottom face
+    squares.push(new Square(300, 350, 0 /*z*/, 100, 50, 'Z', 'darkorange'));
+    // left face
+    squares.push(new Square(300, 300, 0 /*z*/, 50, 100, 'Y', 'blue'));
+    // front face
+    squares.push(new Square(300, 300, 0 /*z*/, 50, 50, 'X', 'purple'));
 
-    //console.log("squares:", squares);
-
+    console.log("squares:", squares);
     const nbOfSquares = squares.length;    
 
     for(let i = 0; i < nbOfSquares; i++) {

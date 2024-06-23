@@ -20,30 +20,19 @@
 	<body>
 		
 		<div id="content">
-			<div id="title">Projections</div>
-			<div id="subtitle"><u>Goal</u>: learn the math behind projections (2D/3D), matrices, ...</div>
+			<div id="title">Map projections</div>
+			<div id="subtitle"><u>Goal</u>: to understand projection methods to create planar maps from a globe</div>
 
 			<div id="desc">
                 
             </div>
-			
+
 			<br/>
 
 			<canvas width=500 height=500></canvas>
-
-			<div id="parameters">
-				<b>Camera parameters:</b><br/>
-				z-position : <input type="number" id="camera_z_pos" value="-250" /><br/>
-
-				<u>Orientation :</u><br/>
-				<span class="info">- Tait-Bryan angles, so if camera orientation is 0 => horizontal position</span><br/>
-				Roll (θ) : <input type="number" id="camera_orientation_roll" value="0" />
-				- Pitch (φ) : <input type="number" id="camera_orientation_pitch" value="0" />
-				- Yaw (ψ) : <input type="number" id="camera_orientation_yaw" value="0" />
-			</div>
 			
         </div>
 
-        <script type="module" src="./projections.js"></script>
+        <script type="module" src="./map-projections.js"></script>
     </body>
 </html>
