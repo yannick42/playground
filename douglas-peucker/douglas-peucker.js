@@ -101,7 +101,7 @@ function douglasPeucker(points, epsilon) {
         const res1 = segment1.length > 1 ? douglasPeucker(segment1, epsilon) : segment1;
         const res2 = segment2.length > 1 ? douglasPeucker(segment2, epsilon) : segment2;
 
-        return res1.concat(res2);
+        return res1.concat(res2.slice(1));
     } else {
         return line; // simplify to a line !
     }

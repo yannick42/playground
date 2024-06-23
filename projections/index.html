@@ -32,10 +32,14 @@
 			<canvas width=500 height=500></canvas>
 
 			<div>
-				Camera z-position : <input type="number" id="camera_z_pos" value="-250" /><br/>
-				Roll (θ) : <input type="number" id="camera_orientation_roll" value="0" /><br/>
-				Pitch (φ) : <input type="number" id="camera_orientation_pitch" value="0" /><br/>
-				Yaw (ψ) : <input type="number" id="camera_orientation_yaw" value="0" /><br/>
+				<b>Camera parameters:</b><br/>
+				z-position : <input type="number" id="camera_z_pos" value="-250" /><br/>
+
+				<u>Orientation :</u><br/>
+				<span class="info">- Tait-Bryan angles, so if camera orientation is 0 => horizontal position</span><br/>
+				Roll (θ) : <input type="number" id="camera_orientation_roll" value="0" />
+				- Pitch (φ) : <input type="number" id="camera_orientation_pitch" value="0" />
+				- Yaw (ψ) : <input type="number" id="camera_orientation_yaw" value="0" />
 			</div>
 			
         </div>

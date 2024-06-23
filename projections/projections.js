@@ -272,7 +272,23 @@ function redraw() {
             rotatedSquare.push(rotatedPt);
 
 
+
+
+
+
+
+
+
+
+            
             //const projectedPt = orthogonalProjection(rotatedPt); // no change...
+
+
+
+
+
+
+
 
 
             //

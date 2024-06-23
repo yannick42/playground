@@ -2,7 +2,7 @@ export const entries = [{
     id: 'projections',
     href: './projections/',
     name: 'Projections',
-    desc: '<b>TODO:</b> orthographic, perspective, ...',
+    desc: 'Orthographic & perspective projections',
     chips: [{
         type: 'draft',
         text: "DRAFT"

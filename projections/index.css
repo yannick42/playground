@@ -30,3 +30,15 @@ body {
 canvas {
 	border: 1px solid black;
 }
+
+.info {
+	color: blue;
+	font-style: italic;
+	font-size: smaller;
+}
+
+#camera_orientation_roll,
+#camera_orientation_pitch,
+#camera_orientation_yaw {
+	width: 50px;
+}
