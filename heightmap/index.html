@@ -25,10 +25,17 @@
 
 			<div id="desc"></div>
 
-			<select id="select_map">
-				<option value="world-heightmap" selected>World</option>
-				<option value="UK">UK</option>
-			</select>
+			<br/>
+			<span>
+				<b>Heightmap:</b>
+				<select id="select_map">
+					<option value="world-heightmap" selected>World</option>
+					<option value="UK">UK</option>
+				</select>
+			</span>
+
+			<br/>
+			<div id="info">If the mouse is over the canvas, the normalized mouse position is used as the X/Y light direction (from -1 to 1, z=1 unnormalized...)</div>
 
 			<canvas width=960 height=556></canvas>
 

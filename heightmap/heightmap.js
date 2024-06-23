@@ -14,7 +14,9 @@ let WORLD_HEIGHTMAP_FILE = './world-heightmap.png'; // 1920 x 1118 (same for UK.
 let heightmap,
     normalMap,
     intervalId,
-    stopAnimation;
+    stopAnimation,
+    MOUSE_X,
+    MOUSE_Y;
 
 function main() {
     document.querySelector("#show_heightmap").addEventListener('click', (e) => loadHeightMap());
@@ -23,6 +25,16 @@ function main() {
         WORLD_HEIGHTMAP_FILE = './' + e.target.value + '.png';
         loadHeightMap();
     })
+    canvas.addEventListener('mousemove', (e) => {
+        MOUSE_X = 2 * (e.offsetX - canvas.width / 2) / canvas.width;
+        MOUSE_Y = 2 * (e.offsetY - canvas.height / 2) / canvas.height;
+    })
+    
+    canvas.addEventListener('mouseout', (e) => {
+        MOUSE_X = null;
+        MOUSE_Y = null;
+    })
+    
 
     window.onload = function(e) {
         loadHeightMap();
@@ -100,15 +112,17 @@ function fn() {
     // 
     // black if both negative ?! or both 0 ??
     // 
-    const xDir = Math.sin(Math.PI * iter + Math.PI / 4) * 0.5 + 0.5; // PI/4 so not both are sometimes at 0 (black view)
-    const yDir = Math.cos(2 * Math.PI * iter) * 0.5 + 0.5;
+    const xDir = MOUSE_X === null ?
+        Math.sin(Math.PI * iter + Math.PI / 4) * 0.5 + 0.5
+        : MOUSE_X; // PI/4 so not both are sometimes at 0 (black view)
+    const yDir = MOUSE_Y === null ?
+        Math.cos(2 * Math.PI * iter) * 0.5 + 0.5
+        : MOUSE_Y;
     const zDir = 1;
     //console.log("light direction :", [xDir, yDir, zDir]); // TODO : understand this !!
 
     const xy = normalize([
-        //0.5,
         xDir,
-        //0.5,
         yDir,
         zDir
     ]);
