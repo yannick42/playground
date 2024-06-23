@@ -3,10 +3,10 @@ export const entries = [{
     href: './heightmap/',
     name: 'Heightmap',
     desc: 'Normals & bump mapping with the map of the world',
-    classes: ['disabled-entry'],
+    classes: [],
     chips: [{
-        type: 'early-draft',
-        text: "EARLY DRAFT"
+        type: 'draft',
+        text: "DRAFT"
     }]
 },{
     id: 'convolution-filters',
