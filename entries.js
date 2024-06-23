@@ -2,7 +2,7 @@ export const entries = [{
     id: 'map-projections',
     href: './map-projections/',
     name: 'Map projections',
-    desc: '<b>TODO</b>: Mercator',
+    desc: 'Mercator, equirectangular projection, ...',
     classes: ['disabled-entry'],
     chips: [{
         type: 'early-draft',
