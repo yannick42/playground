@@ -183,3 +183,9 @@ export function drawAxis(canvas, canvasSquareSize=25) {
 		addVerticalAt(canvas, (canvas.width * 0.25) - canvasSquareSize * i);
 	}
 }
+
+export function drawLineThroughPoints(ctx, points, lineWidth, color) {
+  for(let i = 1; i < points.length; i++) {
+      drawLine(ctx, points[i - 1][0], points[i - 1][1], points[i][0], points[i][1], lineWidth, color);
+  }
+}

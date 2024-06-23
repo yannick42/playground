@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Projections</div>
+			<div id="subtitle"><u>GOAL</u> : learn the math behind projections (2D/3D), matrices, ...</div>
+
+			<div id="desc">
+                
+            </div>
+			
+			<br/>
+
+			<canvas width=500 height=500></canvas>
+
+			<div>
+				Camera z-position : <input type="number" id="camera_z_pos" value="-250" /><br/>
+				Roll (θ) : <input type="number" id="camera_orientation_roll" value="0" /><br/>
+				Pitch (φ) : <input type="number" id="camera_orientation_pitch" value="0" /><br/>
+				Yaw (ψ) : <input type="number" id="camera_orientation_yaw" value="0" /><br/>
+			</div>
+			
+        </div>
+
+        <script type="module" src="./projections.js"></script>
+    </body>
+</html>

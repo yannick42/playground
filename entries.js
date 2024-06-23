@@ -1,4 +1,13 @@
 export const entries = [{
+    id: 'projections',
+    href: './projections/',
+    name: 'Projections',
+    desc: '<b>TODO:</b> orthographic, perspective, ...',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'heightmap',
     href: './heightmap/',
     name: 'Heightmap',
@@ -80,6 +89,10 @@ export const entries = [{
     href: './marbling/',
     name: 'Marbling',
     desc: 'simulate painting drops technique.',
+    chips: [{
+        type: 'draft',
+        text: 'DRAFT'
+    }]
 },{
     id: 'lagrange',
     href: './lagrange-interp/',

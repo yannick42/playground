@@ -1,5 +1,5 @@
 
-import { setUpCanvas, drawPointAt, drawLine } from '../common/canvas.helper.js';
+import { setUpCanvas, drawPointAt, drawLine, drawLineThroughPoints } from '../common/canvas.helper.js';
 import { choice } from '../common/common.helper.js';
 
 const canvas = document.querySelector("canvas");
@@ -44,19 +44,13 @@ function clear() {
     redraw();
 }
 
-function drawLineThroughPoints(points, lineWidth, color) {
-    for(let i = 1; i < points.length; i++) {
-        drawLine(ctx, points[i - 1][0], points[i - 1][1], points[i][0], points[i][1], lineWidth, color);
-    }
-}
-
 function simplify() {
     redraw(); // clear canvas to initial color
 
     const simplifiedPoints = douglasPeucker(points, epsilonEl.value ?? 10);
     //console.log("simplified points : ", simplifiedPoints);
 
-    drawLineThroughPoints(simplifiedPoints, 3, 'red');
+    drawLineThroughPoints(ctx, simplifiedPoints, 3, 'red');
     simplifiedPoints.forEach(point => drawPointAt(ctx, point[0], point[1], 4, 'red'));
 
     // overlay debugging info.
@@ -116,7 +110,7 @@ function douglasPeucker(points, epsilon) {
 function redraw() {
     setUpCanvas(ctx, 500, 500, '#F2F4F4');
 
-    drawLineThroughPoints(points, 2, 'black');
+    drawLineThroughPoints(ctx, points, 2, 'black');
     points.forEach(point => drawPointAt(ctx, point[0], point[1], 4, 'black'));
 }
 
