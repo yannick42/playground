@@ -37,7 +37,7 @@ use this to preview the found shapes: https://yqnn.github.io/svg-path-editor/
 
 save a file containing only <svg><path d="....."></path></svg>
 
-Send it to : (visualize and __generate points list__, save it as "shape-europe.csv")
+Send it to : (visualize and __generate points list__, save it as "shape-europe.csv", it contains decimal values)
 https://shinao.github.io/PathToPoints/
 
 
@@ -67,16 +67,28 @@ z = end
 // available shapes
 const shapes = [heart, star, Europe];
 
-let shape = choice(shapes);
-const points = shape.path;
+let shape = Europe;
+let points = shape.path;
+
 
 function main() {
+
+    //
+    // UI Event listeners
+    //
     document.querySelector("#clear").addEventListener('click', (e) => clear());
     document.querySelector("#simplify").addEventListener('click', (e) => simplify());
     epsilonEl.addEventListener('change', (e) => {
         if(isSimplified) {
             simplify();
         }
+    });
+
+    document.querySelector("#random").addEventListener('click', (e) => {
+        clear();
+        shape = choice(shapes);
+        points = shape.path;
+        redraw();
     });
 
     canvas.addEventListener('click', (e) => {
@@ -99,7 +111,7 @@ function main() {
 function clear() {
     isSimplified = false;
     shape = null;
-    points.splice(0, points.length);
+    points = [];
     redraw();
 }
 
