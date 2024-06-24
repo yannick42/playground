@@ -47,3 +47,10 @@ export function loadHeightMap(pngFile, callback) {
         callback(heightmap, image);
     }
 }
+
+export const printVar = (obj, fn='log') => {
+    const propertyName = Object.keys(obj)[0];
+    for(let propertyName of Object.keys(obj)) {
+        console[fn](propertyName, "=", obj[propertyName]);
+    }
+};
