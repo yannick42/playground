@@ -9,18 +9,20 @@ const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 const epsilonEl = document.querySelector("#epsilon");
+const hideOriginalEl = document.querySelector("#hide_original");
 
 let isSimplified = false;
+let hideOriginal = false;
 
 // 
 // shapes
 //
 const heart = {
-    pointSize: 4,
+    pointSize: 3,
     path: [[242,380],[231,368],[212,347],[201,331],[187,314],[171,294],[162,281],[153,269],[147,255],[143,241],[141,228],[141,213],[142,199],[150,186],[163,174],[175,167],[192,163],[222,166],[236,172],[249,187],[257,204],[260,215],[262,222],[269,220],[289,214],[306,204],[328,197],[349,197],[369,207],[387,225],[394,243],[389,266],[374,289],[348,324],[332,339],[310,359],[281,372],[260,381],[244,385]]
 };
 const star = {
-    pointSize: 4,
+    pointSize: 3,
     path: [[83,209],[88,209],[98,206],[109,203],[119,199],[128,199],[141,197],[151,196],[165,195],[173,193],[182,192],[189,190],[192,190],[195,180],[196,168],[197,157],[199,146],[203,134],[208,122],[214,108],[220,95],[227,85],[233,75],[238,65],[239,66],[243,83],[244,95],[248,107],[252,119],[261,137],[265,151],[267,162],[268,172],[270,185],[272,189],[273,193],[280,194],[292,195],[312,200],[317,200],[328,203],[339,205],[351,208],[363,214],[377,219],[385,224],[394,226],[385,238],[368,249],[354,256],[342,259],[329,263],[313,267],[300,272],[289,274],[278,278],[271,284],[282,303],[297,322],[305,338],[307,352],[310,367],[314,378],[317,393],[317,400],[290,386],[285,379],[278,371],[271,363],[258,351],[243,334],[239,330],[230,317],[224,312],[219,307],[207,306],[193,321],[179,340],[157,355],[144,366],[128,377],[115,384],[104,389],[103,389],[117,359],[126,345],[132,332],[137,321],[145,307],[151,295],[153,291],[156,284],[166,267],[168,261],[167,258],[155,248],[140,238],[126,230],[112,221],[98,211],[88,207]]
 };
 const Europe = {
@@ -69,6 +71,7 @@ const shapes = [heart, star, Europe];
 
 let shape = Europe;
 let points = shape.path;
+console.log("Initial number of points :", points.length);
 
 
 function main() {
@@ -76,16 +79,39 @@ function main() {
     //
     // UI Event listeners
     //
-    document.querySelector("#clear").addEventListener('click', (e) => clear());
+    document.querySelector("#clear").addEventListener('click', (e) => {    
+        hideOriginal = false;
+        hideOriginalEl.checked = false;
+        
+        shape = null;
+        points = [];
+        clear();
+    });
     document.querySelector("#simplify").addEventListener('click', (e) => simplify());
     epsilonEl.addEventListener('change', (e) => {
         if(isSimplified) {
+            clear();
+            if(! hideOriginal) {
+                redraw();
+            }
             simplify();
         }
     });
 
+    hideOriginalEl.addEventListener('click', (e) => {
+        hideOriginal = e.target.checked;
+        console.log(">>hideOriginal:", hideOriginal);
+        clear();
+        if(! hideOriginal) {
+            redraw();
+        }
+        simplify(); // redraw only simplified lines/points
+    });
+
     document.querySelector("#random").addEventListener('click', (e) => {
         clear();
+        hideOriginal = false;
+        hideOriginalEl.checked = false;
         shape = choice(shapes);
         points = shape.path;
         redraw();
@@ -105,25 +131,26 @@ function main() {
         //console.log(points);
     })
 
+    clear();
     redraw();
 }
 
 function clear() {
+    console.log("clear !");
+    setUpCanvas(ctx, 500, 500, '#F2F4F4');
     isSimplified = false;
-    shape = null;
-    points = [];
-    redraw();
 }
 
 function simplify() {
     isSimplified = true;
-    redraw(); // clear canvas to initial color
+    //clear(); // clear canvas to initial color
 
+    console.log("apply simplification!");
     const simplifiedPoints = douglasPeucker(points, epsilonEl.value ?? 10);
     //console.log("simplified points : ", simplifiedPoints);
 
-    drawLineThroughPoints(ctx, simplifiedPoints, 3, 'red');
-    simplifiedPoints.forEach(point => drawPointAt(ctx, point[0], point[1], 4, 'red'));
+    drawLineThroughPoints(ctx, simplifiedPoints, (shape?.pointSize ?? 2) * 2, 'red');
+    simplifiedPoints.forEach(point => drawPointAt(ctx, point[0], point[1], (shape?.pointSize ?? 2) * 2, 'red'));
 
     // overlay debugging info.
     ctx.font = "16px sans-serif";
@@ -179,10 +206,10 @@ function douglasPeucker(points, epsilon) {
     }
 }
 
+// shape only (black one)
 function redraw() {
-    setUpCanvas(ctx, 500, 500, '#F2F4F4');
-
-    drawLineThroughPoints(ctx, points, 2, 'black');
+    console.log("draw original shape :", points.length, "points");
+    drawLineThroughPoints(ctx, points, 1, 'black');
     points.forEach(point => drawPointAt(ctx, point[0], point[1], shape?.pointSize ?? 4, 'black'));
 }
 
