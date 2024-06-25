@@ -1,4 +1,9 @@
 export const entries = [{
+    id: 'douglas-peucker',
+    href: './douglas-peucker/',
+    name: 'Line simplification',
+    desc: "Douglas-Peucker algorithm (1973), divide-and-conquer, ...",
+},{
     id: 'map-projections',
     href: './map-projections/',
     name: 'Map projections',
@@ -21,7 +26,7 @@ export const entries = [{
     id: 'heightmap',
     href: './heightmap/',
     name: 'Heightmap',
-    desc: 'Normals & bump mapping with the map of the world',
+    desc: 'normals & bump mapping with the map of the world',
     classes: [],
     chips: [{
         type: 'draft',
@@ -31,7 +36,7 @@ export const entries = [{
     id: 'convolution-filters',
     href: './convolution-filters/',
     name: 'Convolution Filters',
-    desc: 'Kernels: blur, sharpen, Sobel filter, ...',
+    desc: 'kernels: blur, sharpen, Sobel filter, ...',
     chips: [{
         type: 'draft',
         text: "DRAFT"
@@ -191,9 +196,4 @@ export const entries = [{
         type: 'warning',
         text: 'WIP'
     }]
-},{
-    id: 'douglas-peucker',
-    href: './douglas-peucker/',
-    name: 'Douglas-Peucker algorithm (1973)',
-    desc: "path simplification, divide-and-conquer...",
 }];
