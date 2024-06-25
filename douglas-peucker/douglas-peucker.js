@@ -497,14 +497,10 @@ let shape, points; // either a given shape, or handwritten points .....
 
 
 
-
-
-
-
-
+const CANVAS_COLOR = '#F2F4F4';
 function clearCanvas() {
     console.log("clear !");
-    setUpCanvas(ctx, 500, 500, '#F2F4F4');
+    setUpCanvas(ctx, 500, 500, CANVAS_COLOR);
     //isSimplified = false;
 }
 
@@ -749,10 +745,24 @@ function redraw(shape) {
     // show number of lines in the svg path
     countPathLinesEl.innerText = shape?.info?.line_count ?? '-';
 
+    const fillColors = ['powderblue', CANVAS_COLOR, CANVAS_COLOR];
+
     if(shape) {
-        shape.paths.forEach(path => {
+        shape.paths.forEach((path, i) => {
+            
+            // background color (fill)
+            ctx.fillStyle = fillColors[i % fillColors.length];
+            ctx.beginPath();
+            ctx.moveTo(path[0][0], path[0][1]);
+            for(let i = 1; i < path.length ; i++) {
+                ctx.lineTo(path[i][0], path[i][1]);
+            }
+            ctx.closePath();
+            ctx.fill(); // only fill, no stroke => no boundary line
+
             // lines
             drawLineThroughPoints(ctx, path, shape.lineWidth ?? 1, shape.color ?? 'black');
+
             // points
             path.forEach(point => drawPointAt(ctx, point[0], point[1], shape.pointSize ?? 4, shape.color ?? 'black'));
         });
