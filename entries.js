@@ -1,4 +1,9 @@
 export const entries = [{
+    id: 'leaflet-playground',
+    href: './leaflet-playground/',
+    name: 'Leaflet Playground',
+    desc: "GLMarkers, ...",
+},{
     id: 'douglas-peucker',
     href: './douglas-peucker/',
     name: 'Line simplification',
@@ -35,7 +40,7 @@ export const entries = [{
 },{
     id: 'convolution-filters',
     href: './convolution-filters/',
-    name: 'Convolution Filters',
+    name: 'Convolution filters',
     desc: 'kernels: blur, sharpen, Sobel filter, ...',
     chips: [{
         type: 'draft',
