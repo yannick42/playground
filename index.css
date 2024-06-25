@@ -1,11 +1,13 @@
 :root {
     --menu-width: 20%;
-    --theme-color: #68889e; /* = blue; red/salmon = #ff6857 */
+    --theme-color: #467799; /* = blue; red/salmon = #ff6857 */
+    --menu-bg-color: #d9e7f1;
 }
 body {
     font-family: sans-serif;
-    margin: 0; /* !!! */
+    margin: 0; /* init */
 }
+
 #main {
     display: flex;
     height: 96%; /* because of the header ? */
@@ -15,6 +17,7 @@ body {
     width: var(--menu-width);
     font-size: medium;
     border-right: 1px solid var(--theme-color);
+    background-color: var(--menu-bg-color);
 }
 
 #main-panel {
@@ -22,7 +25,17 @@ body {
 }
 
 .highlighted-demo {
-    background: color-mix(in srgb, var(--theme-color) 20%, transparent); /* to make a lighter theme color */
+    background: color-mix(in srgb, var(--theme-color) 60%, transparent);
+    box-shadow: 0px 0px 10px 4px var(--theme-color); /* blur = 10, spread = 4 */
+}
+
+.highlighted-demo:not(.disabled-entry) > a:visited,
+.highlighted-demo:not(.disabled-entry) > a {
+    color: white;
+}
+
+.highlighted-demo:not(.disabled-entry) > .desc {
+    color: white;
 }
 
 a:visited, a, #totalPages {
@@ -33,6 +46,7 @@ a:visited, a, #totalPages {
     padding: 7px;
     font-style: italic;
     border-bottom: 1px solid var(--theme-color);
+    background-color: var(--menu-bg-color);
 }
 
 iframe {
@@ -60,6 +74,7 @@ iframe {
 }
 
 #toggle-menu {
+    user-select: none;
     cursor: pointer;
     font-weight: bold;
 }
@@ -103,7 +118,7 @@ iframe {
     /* style */
     font-style: italic;
     border-radius: 6px;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .warning {

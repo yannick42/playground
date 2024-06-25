@@ -145,7 +145,7 @@ function changeSelected(fromHash, toHash) {
         const to = document.querySelector(toHash);
         if(to) {
             to.parentNode.classList.add('highlighted-demo');
-            to.parentNode.scrollIntoView(false);
+            to.parentNode.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
 }

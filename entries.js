@@ -50,7 +50,7 @@ export const entries = [{
     id: 'gradient-descent',
     href: './gradient-descent/',
     name: 'Gradient descent',
-    desc: 'applied to linear regression',
+    desc: 'Batch GD & SGD applied to linear regression',
     chips: [{
         type: 'draft',
         text: "DRAFT"
@@ -69,7 +69,7 @@ export const entries = [{
     id: 'splines',
     href: './splines/',
     name: 'Splines',
-    desc: 'Bézier curves, Bernstein polynomials, ...',
+    desc: 'Bézier curves, ...',
     chips: [{
         type: 'draft',
         text: "DRAFT"
@@ -78,7 +78,7 @@ export const entries = [{
     id: 'snake',
     href: './snake/',
     name: 'Snake game',
-    desc: 'neural network (DAG) + genetic algorithm',
+    desc: 'neural network (DAG) + genetic algorithm (crossover, mutation)',
     chips: [{
         type: 'warning',
         text: "WIP"
@@ -103,6 +103,9 @@ export const entries = [{
     chips: [{
         type: 'info',
         text: 'slow'
+    },{
+        type: 'draft',
+        text: 'DRAFT'
     }]
 },{
     id: 'marbling',
@@ -127,7 +130,7 @@ export const entries = [{
     id: 'delaunay',
     href: './delaunay/',
     name: 'Delaunay triangulation',
-    desc: "method that maximizes triangles' minimal angle over a set of points.",
+    desc: "maximizes triangles' minimal angle over a set of points.",
     chips: [{
         type: 'info',
         text: 'slow'
@@ -140,12 +143,15 @@ export const entries = [{
     chips: [{
         type: 'info',
         text: 'slow startup'
+    },{
+        type: 'draft',
+        text: 'DRAFT'
     }]
 },{
     id: 'lyapunov',
     href: './lyapunov-fractals/',
     name: 'Markus-Lyapunov fractals',
-    desc: "using Lyapunov exponent λ.",
+    desc: "using Lyapunov exponent λ formula.",
     chips: [{
         type: 'info',
         text: 'slow startup'
@@ -153,8 +159,8 @@ export const entries = [{
 },{
     id: 'minimax',
     href: './minimax/dist/minimax/browser/',
-    name: 'Minimax algorithm (with α-β pruning)',
-    desc: "applied to Tic-tac-toe & Connect4 games.",
+    name: 'Minimax algorithm',
+    desc: "with α-β pruning, applied to Tic-tac-toe & Connect4 games.",
     chips: [{
         type: 'info',
         text: 'slow'
@@ -187,7 +193,7 @@ export const entries = [{
     id: 'sph',
     href: './sph/',
     name: 'Smoothed-particle hydrodynamics',
-    desc: "to simulate water with SPH.",
+    desc: "trying to simulate water with SPH...",
     chips: [{
         type: 'warning',
         text: 'WIP'
