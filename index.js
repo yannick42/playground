@@ -183,13 +183,15 @@ function updateFilteredEntries(entries, searchText = '') {
     document.querySelector("#menu-entries").innerHTML = ''; // clear !!
     entries.filter(entry => {
         return entry.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            entry.desc.toLowerCase().includes(searchText.toLowerCase());
+            entry.desc.toLowerCase().includes(searchText.toLowerCase()) ||
+            entry.id.toLowerCase().includes(searchText.toLowerCase());
     }).forEach(entry => addMenuEntry(entry, searchText));
 }
 
 function visibleEntries(entries) {
     return entries.filter(entry => {
         return entry.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            entry.desc.toLowerCase().includes(searchText.toLowerCase());
+            entry.desc.toLowerCase().includes(searchText.toLowerCase()) ||
+            entry.id.toLowerCase().includes(searchText.toLowerCase());
     });
 }
