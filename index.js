@@ -116,7 +116,7 @@ function changeSelected(fromHash, toHash) {
     }
 }
 
-function addMenuEntry(entry) {
+function addMenuEntry(entry, highlightedText = '') {
     const chips = entry.chips?.map(chip => `<span class="chip ${chip.type}">${chip.text}</span>`);
 
     if(entry.id === currentHash.substring(1)) {
@@ -132,9 +132,12 @@ function addMenuEntry(entry) {
         }
     }
 
+    const name = highlightedText ? entry.name.replace(new RegExp(highlightedText, 'ig'), (m) => '<mark>' + m + '</mark>') : entry.name;
+    const desc = highlightedText ? entry.desc.replace(new RegExp(highlightedText, 'ig'), (m) => '<mark>' + m + '</mark>') : entry.desc;
+
     const html = `<span${entry.classes ? ' class="' + entry.classes.join(' ') + '"' : ''}>
-        <a id="${entry.id}" href="${entry.href}" target="iframe">${entry.name}</a> ${chips?.join(' ') ?? ''}<br/>
-        <span class="desc">${entry.desc}</span>
+        <a id="${entry.id}" href="${entry.href}" target="iframe">${name}</a> ${chips?.join(' ') ?? ''}<br/>
+        <span class="desc">${desc}</span>
     </span>`;
 
     const container = document.createElement('container');
@@ -147,7 +150,7 @@ function updateFilteredEntries(entries, searchText = '') {
     entries.filter(entry => {
         return entry.name.toLowerCase().includes(searchText.toLowerCase()) ||
             entry.desc.toLowerCase().includes(searchText.toLowerCase());
-    }).forEach(entry => addMenuEntry(entry));
+    }).forEach(entry => addMenuEntry(entry, searchText));
 }
 
 function visibleEntries(entries) {
