@@ -7,7 +7,7 @@ export const entries = [{
     id: 'douglas-peucker',
     href: './douglas-peucker/',
     name: 'Line simplification',
-    desc: "Douglas-Peucker algorithm (1973), divide-and-conquer, ...",
+    desc: "Douglas-Peucker algorithm, divide-and-conquer, ...",
 },{
     id: 'map-projections',
     href: './map-projections/',

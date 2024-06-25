@@ -4,6 +4,9 @@ let currentHash = '', // current demo selected
     searchText = '';
 
 const searchInputEl = document.querySelector("#search");
+const toggleMenuEl = document.querySelector("#toggle-menu");
+const menu = document.querySelector("#menu");
+const menuEntriesEl = document.querySelector("#menu-entries");
 
 window.onload = function() {
     updateFilteredEntries(entries); // load initial list (everything !)
@@ -34,6 +37,9 @@ window.onload = function() {
                 const url = new URL(window.location)
                 url.searchParams.delete("search");
                 history.pushState(null, null, url); // '#' + visibles[0].id
+
+
+                closeMenu();
             }
         }
     }
@@ -68,11 +74,39 @@ searchInputEl.addEventListener('keyup', (e) => {
             //goTo(visibles[0].id);
             const aLink = document.querySelector('#' + visibles[0].id);
             aLink?.click();
+
+            closeMenu();
         }
     }
 });
 
-const menu = document.querySelector("#menu");
+let isClosedMenu = false;
+
+function closeMenu() {
+    console.log("close menu")
+    const root = document.querySelector(':root');
+    root.style.setProperty('--menu-width', '25px');
+    searchInputEl.style.display = 'none';
+    menuEntriesEl.style.display = 'none';
+    isClosedMenu = true;
+    toggleMenuEl.innerText = '⏻';
+}
+
+function openMenu() {
+    console.log("open menu")
+    const root = document.querySelector(':root');
+    root.style.setProperty('--menu-width', ''); // revert to 20% (css)
+    searchInputEl.style.display = 'inline-block';
+    menuEntriesEl.style.display = 'flex';
+    isClosedMenu = false;
+    searchInputEl.focus(); // ready to search something !
+    toggleMenuEl.innerText = '⏼';
+}
+
+
+toggleMenuEl.addEventListener('click', (e) => isClosedMenu ? openMenu() : closeMenu());
+
+
 menu.addEventListener('click', (e) => {
     //console.log("e:", e);
     //console.log("clicked on ", e.target.id, e.target.tagName)
@@ -142,7 +176,7 @@ function addMenuEntry(entry, highlightedText = '') {
 
     const container = document.createElement('container');
     container.innerHTML = html;
-    document.querySelector("#menu-entries").appendChild(container.firstChild);
+    menuEntriesEl.appendChild(container.firstChild);
 }
 
 function updateFilteredEntries(entries, searchText = '') {
