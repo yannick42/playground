@@ -184,7 +184,8 @@ function updateFilteredEntries(entries, searchText = '') {
     entries.filter(entry => {
         return entry.name.toLowerCase().includes(searchText.toLowerCase()) ||
             entry.desc.toLowerCase().includes(searchText.toLowerCase()) ||
-            entry.id.toLowerCase().includes(searchText.toLowerCase());
+            entry.id.toLowerCase().includes(searchText.toLowerCase()) ||
+            entry.searchContext?.toLowerCase().includes(searchText.toLowerCase());
     }).forEach(entry => addMenuEntry(entry, searchText));
 }
 
@@ -192,6 +193,7 @@ function visibleEntries(entries) {
     return entries.filter(entry => {
         return entry.name.toLowerCase().includes(searchText.toLowerCase()) ||
             entry.desc.toLowerCase().includes(searchText.toLowerCase()) ||
-            entry.id.toLowerCase().includes(searchText.toLowerCase());
+            entry.id.toLowerCase().includes(searchText.toLowerCase()) ||
+            entry.searchContext?.toLowerCase().includes(searchText.toLowerCase());
     });
 }

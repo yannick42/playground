@@ -149,11 +149,10 @@ iframe {
 
 .early-draft {
     color: white;
-    background-color: red;
+    background-color: #ad2e2e;
 }
 
 .disabled-entry {
-    opacity: 0.5;
     background: repeating-linear-gradient(
         -45deg,
         white,
@@ -161,4 +160,9 @@ iframe {
         lightgray 10px,
         lightgray 20px
     );
+    box-shadow: inset 3px 0px 20px -3px black;
+}
+
+.disabled-entry > * {
+    opacity: 0.6;
 }
