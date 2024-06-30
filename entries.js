@@ -1,4 +1,14 @@
 export const entries = [{
+    id: 'book-progression',
+    href: './book-progression/',
+    name: 'Book progression',
+    desc: "tool to visualize progression on technical books",
+    searchContext: 'tool',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'leaflet-playground',
     href: './leaflet-playground/',
     name: 'Leaflet Playground',

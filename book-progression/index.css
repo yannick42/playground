@@ -1,0 +1,109 @@
+
+:root {
+	--canvas-size: 500px;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#content {
+	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
+  margin-top: 15px;
+	width: calc(var(--canvas-size) + 150px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#title {
+	font-size: 15pt;
+	text-align: center;
+	padding-bottom: 20px;
+	text-decoration: underline;
+}
+
+#subtitle {
+	align-self: start;	
+}
+
+canvas {
+	border: 1px solid black;
+}
+
+
+/**
+ *
+ */
+#book_list {
+	background-color: #deffdd;
+	width: 500px;
+	font-size: smaller;
+}
+
+.book {
+	border: 1px solid blueviolet;
+	padding: 10px;
+}
+
+.title {
+	text-decoration: underline;
+}
+
+.level {
+	display: flex;
+	flex-direction: column;
+}
+
+.content {
+	width: 100%;
+}
+
+.content > .start_page {
+	float: right;
+}
+
+.content_title_0 {
+	font-weight: bold;
+}
+
+.content_title_1 {
+	font-style: italic;
+}
+
+.start_page {
+	right: 0;
+	position: relative;
+}
+
+.leaf {
+	padding-left: 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.leaf > .start_page {
+	padding-right: 8px;
+}
+
+.checked {
+	color: gray;
+	text-decoration: line-through;
+}
+
+.progress-bar {
+	width: 100%;
+	background-color: #e0e0e0;
+	border-radius: 5px;
+	overflow: hidden;
+	margin: 3px 0px;
+}
+  
+.progress {
+	width: 0;
+	height: 8px;
+	background-color: #76c7c0;
+	transition: width 0.3s;
+}

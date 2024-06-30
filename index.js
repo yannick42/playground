@@ -46,13 +46,26 @@ window.onload = function() {
 }
 
 function onHashChange() {
+    const hash = window.location.hash;
     //console.log("hash changed to", window.location.hash);
-    if(window.location.hash) { // changed to this
-        const aLink = document.querySelector(window.location.hash);
-        aLink?.click(); // click on demo
-        //document.querySelector("iframe").focus();
-        changeSelected(currentHash, window.location.hash);
-        //currentHash = window.location.hash;
+    if(hash) { // changed to this
+
+        const hashEl = hash.split('|');
+
+        hashEl.reverse().forEach(hash => {
+
+            if(hash == '0') {
+                closeMenu();
+                return;
+            }
+    
+            const aLink = document.querySelector(hash);
+            aLink?.click(); // click on demo
+            //document.querySelector("iframe").focus();
+            changeSelected(currentHash, hash);
+            //currentHash = hash;
+        })
+        
     }
 }
 
@@ -118,12 +131,12 @@ menu.addEventListener('click', (e) => {
 });
 
 function goTo(id) {
-    console.log("goto :", id);
+    console.log("goto :", id, "menu closed?", isClosedMenu);
 
     //const aLink = document.querySelector("#" + id);
     //aLink?.click(); // click on demo
 
-    history.pushState(null, null, '#' + id); // ???
+    history.pushState(null, null, '#' + id + (isClosedMenu ? '|0' : '')); // ???
 
     // from, to
     changeSelected(currentHash, '#' + id); // change color to see which tool is selected

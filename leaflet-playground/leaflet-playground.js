@@ -1,11 +1,14 @@
-import { randInt, choice } from '../common/common.helper.js';
+import { randFloat, randInt, choice } from '../common/common.helper.js';
 import { round } from '../common/math.helper.js';
+
+import KDBush from 'https://cdn.jsdelivr.net/npm/kdbush/+esm';
 
 function main() {
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
 
     redraw();
 }
+
 
 const vertexCode = `
 attribute vec2 aCRSCoords;
@@ -65,10 +68,25 @@ void main(void) {
 }
 `;
 
+const NB_MARKERS = 1_000; // 500_000 -> 311 ms ?
+
 let map;
 const center = [48.866, 2.333];
 
 function redraw() {
+
+    // init
+    const index = new KDBush(NB_MARKERS);
+
+
+
+
+
+
+
+
+
+
     map = L.map('map').setView(center, 13);
 
     console.log("map:", map)
@@ -101,36 +119,128 @@ function redraw() {
 
     const t0 = window.performance.now();
 
-    const NB_MARKERS = 100_000; // 500_000 -> 311 ms ?
+
+    const markerPositions = [];
+    for(let i = 0; i < NB_MARKERS; i++) {
+
+        if(Math.random() < 0.2) {
+            // reuse an older one
+            markerPositions.push(markerPositions[randInt(0, markerPositions.length - 1)]);
+        } else {
+            markerPositions.push([
+                center[0] + randFloat(-6/100, 6/100),
+                center[1] + randFloat(-12/100, 12/100)
+            ]);
+        }
+    }
+
+
 
     const MARKER_PER_GROUP = 10_000;
     const glMarkerGroups = [];
+    
+    markerPositions.forEach(([latitude, longitude], i) => {
 
-    for(let i = 0; i < NB_MARKERS; i++) {
-
+        // create new group ?
         if (i % MARKER_PER_GROUP === 0) {
-            console.log("create new !")
             // every SIZE marker -> add a new WebGL marker group layer
             glMarkerGroups.push(createGroup());
         }  
 
-        const [latitude, longitude] = [
-            center[0] + randInt(-3000, 3000)/100000,
-            center[1] + randInt(-6000, 6000)/100000
-        ];
+        // add a point in the spatial index
+        index.add(latitude, longitude);
+
         glMarkerGroups[glMarkerGroups.length - 1].addMarker(new L.GLMarker(
             [latitude, longitude],
             {
-                color: choice([1, 2, 3]), // Only 3 choices
-                size: choice([5, 7, 9]),
+                color: choice([1]), //, 2, 3]), // Only 3 choices
+                size: choice([5]), //, 7, 9]),
             }
         ));
-    }
+    });
     const t1 = window.performance.now();
 
     console.log("number of glMarkerGroups:", glMarkerGroups.length);
 
     document.getElementById('number_of_markers').innerText = NB_MARKERS + ' markers inserted in ' + round(t1 - t0, 2) + ' ms.';
+
+
+    // perform the indexing
+    index.finish();
+
+
+    const markers = L.markerClusterGroup({
+        disableClusteringAtZoom: 1, // never show ?
+        //spiderfyOnMaxZoom: true, // default
+        //singleMarkerMode: false,
+        showCoverageOnHover: false,
+        removeOutsideVisibleBounds: true, // for performance
+        spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 1 },
+        iconCreateFunction: function(cluster) {
+            return L.divIcon({ html: '<div style="border-radius: 6px; background-color: lime; font-weight: bold; margin: 2px;"> ' + cluster.getChildCount() + ' </div>' });
+        },
+        spiderfyShapePositions: function(count, centerPt) {
+            var distanceFromCenter = 35,
+                markerDistance = 45,
+                lineLength = markerDistance * (count - 1),
+                lineStart = centerPt.y - lineLength / 2,
+                res = [],
+                i;
+
+            res.length = count;
+
+            for (i = count - 1; i >= 0; i--) {
+                res[i] = new Point(centerPt.x + distanceFromCenter, lineStart + markerDistance * i);
+            }
+
+            return res;
+        },
+        chunkedLoading: true,
+    });
+    // if points are exactly at the same spot
+    markerPositions.forEach(([latitude, longitude]) => {
+        if(index.within(latitude, longitude, 0).length > 1) {
+            markers.addLayer(L.marker([latitude, longitude]));
+        }
+    });
+    map.addLayer(markers);
+
+    let tooltip; // unique tooltip
+    map.on('click', (e) => {
+
+        const currentZoom = e.target.getZoom();
+        // 
+        // 13 -> 0.001
+        // 
+        // 17 -> 0.0001
+        // 
+
+        const slope = (0.0008 - 0.00008) / (13 - 17);
+        const neighborSize = (currentZoom - 17) * slope + 0.0001;
+        console.log("neighborSize:", neighborSize);
+
+        // radius query
+        const neighborIds = index.within(e.latlng.lat, e.latlng.lng, neighborSize);
+        console.log("neighborIds:", neighborIds);
+
+        if(neighborIds.length) {
+            tooltip = L.tooltip()
+                .setLatLng(e.latlng)
+                .setContent('<b>id</b> : ' + neighborIds.join(", "))
+                .addTo(map);
+        }
+    });
+
+
+    markers.on('click', function (a) {
+        console.log('layer:', a);
+    });
+    
+    markers.on('clusterclick', function (a) {
+        // a.layer is actually a cluster
+        console.log('cluster ', a.layer.getAllChildMarkers().length);
+    });
+    
 
 }
 
