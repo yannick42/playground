@@ -3,11 +3,7 @@ export const entries = [{
     href: './book-progression/',
     name: 'Book progression',
     desc: "tool to visualize progression on technical books",
-    searchContext: 'tool',
-    chips: [{
-        type: 'draft',
-        text: "DRAFT"
-    }]
+    searchContext: 'tool,book,reading',
 },{
     id: 'leaflet-playground',
     href: './leaflet-playground/',
