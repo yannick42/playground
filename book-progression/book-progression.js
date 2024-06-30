@@ -4,9 +4,9 @@ import { randInt } from '../common/common.helper.js';
 import { computeBézierCurve } from '../common/math.helper.js';
 
 // hard-coded books
-import { SICP } from './_books/SICP.js';
-import { CG } from './_books/CG.js';;
-import { VG } from './_books/VG.js';
+import { SICP } from './books/SICP.js';
+import { CG } from './books/CG.js';;
+import { VG } from './books/VG.js';
 
 /**
  * TODO:
