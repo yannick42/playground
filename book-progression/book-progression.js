@@ -10,13 +10,12 @@ const bookListEl = document.getElementById("book_list");
 
 function main() {
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
-
     redraw();
 }
 
 
 /**
- * TODO: get it from localStorage !
+ * TODO: get it from localStorage too ! (or backend ?!)
  */
 function getBookList() {
     return [SICP]
@@ -31,6 +30,7 @@ function createHtml(book) {
 
             <div class="progress-bar">
                 <div class="progress"></div>
+                <span class="progress-value"></span>
             </div>
 
             <div class="level ${getVisibility(book.id) ? '' : 'toggled'}">
@@ -188,6 +188,7 @@ function updateProgressBar(book) {
     const value = Math.round(book.progress?.length / count * 100);
     console.log("value:", value);
     document.querySelector("#"+bookItem.id+" .progress").style.width = value + '%';
+    document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value}%`;
 }
 
 function redraw() {

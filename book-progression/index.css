@@ -121,3 +121,12 @@ canvas {
 	height: 0;
 	overflow: hidden;
 }
+
+.progress-value {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    top: 28px;
+    font-size: 7pt;
+}

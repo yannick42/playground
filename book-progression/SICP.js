@@ -186,5 +186,347 @@ export const SICP = {
                 start_page: 274
             }]
         }]
+    },{
+        title: '3 - Modularity, Objects, and State',
+        start_page: 294,
+        content: [{
+            title: '3.1 - Assignment and Local State',
+            start_page: 296,
+            content: [{
+                id: '3.1.1',
+                title: '3.1.1 - Local State Variables',
+                start_page: 297
+            },{
+                id: '3.1.2',
+                title: '3.1.2 - The Benefits of Introducing Assignment',
+                start_page: 305
+            },{
+                id: '3.1.3',
+                title: '3.1.3 - The Costs of Introducing Assignment',
+                start_page: 311
+            }]
+        },{
+            title: '3.2 - The Environment Model of Evaluation',
+            start_page: 320,
+            content: [{
+                id: '3.2.1',
+                title: '3.2.1 - The Rules for Evaluation',
+                start_page: 322
+            },{
+                id: '3.2.2',
+                title: '3.2.2 - Applying Simple Procedures',
+                start_page: 327
+            },{
+                id: '3.2.3',
+                title: '3.2.3 - Frames as the Repository of Local State',
+                start_page: 330
+            },{
+                id: '3.2.4',
+                title: '3.2.4 - Internel Definitions',
+                start_page: 337
+            }]
+        },{
+            title: '3.3 - Modeling with Mutable Data',
+            start_page: 341,
+            content: [{
+                id: '3.3.1',
+                title: '3.3.1 - Mutable List Structure',
+                start_page: 342
+            },{
+                id: '3.3.2',
+                title: '3.3.2 - Representing Queues',
+                start_page: 353
+            },{
+                id: '3.3.3',
+                title: '3.3.3 - Representing Tables',
+                start_page: 360
+            },{
+                id: '3.3.4',
+                title: '3.3.4 - A Simulator for Digital Circuits',
+                start_page: 369
+            },{
+                id: '3.3.5',
+                title: '3.3.5 - Propagation of Constraints',
+                start_page: 386
+            }]
+        },{
+            title: '3.4 - Concurrency: Time Is of the Essence',
+            start_page: 401,
+            content: [{
+                id: '3.4.1',
+                title: '3.4.1 - The Nature of Time in Concurrent Systems',
+                start_page: 403
+            },{
+                id: '3.4.2',
+                title: '3.4.2 - Mechanisms for Controlling Concurrency',
+                start_page: 410
+            }]
+        },{
+            title: '3.5 - Streams',
+            start_page: 428,
+            content: [{
+                id: '3.5.1',
+                title: '3.5.1 - Streams Are Delayed Lists',
+                start_page: 430
+            },{
+                id: '3.5.2',
+                title: '3.5.2 - Infinite Streams',
+                start_page: 441
+            },{
+                id: '3.5.3',
+                title: '3.5.3 - Exploiting the Stream Paradigm',
+                start_page: 453
+            },{
+                id: '3.5.4',
+                title: '3.5.4 - Streams and Delayed Evaluation',
+                start_page: 470
+            },{
+                id: '3.5.5',
+                title: '3.5.5 - Modularity of Functional Programs and Modularity of Objects',
+                start_page: 479
+            }]
+        }]
+    },
+
+
+
+
+
+
+
+
+    {
+        title: '4 - Metalinguistic Abstraction',
+        start_page: 487,
+        content: [{
+            title: '4.1 - The Metacircular Evaluator',
+            start_page: 492,
+            content: [{
+                id: '4.1.1',
+                title: '4.1.1 - The Core of the Evaluator',
+                start_page: 495
+            },{
+                id: '4.1.2',
+                title: '4.1.2 - Representing Expressions',
+                start_page: 501
+            },{
+                id: '4.1.3',
+                title: '4.1.3 - Evaluator Data Structures',
+                start_page: 512
+            },{
+                id: '4.1.4',
+                title: '4.1.4 - Running the Evaluator as a Program',
+                start_page: 518
+            },{
+                id: '4.1.5',
+                title: '4.1.5 - Data as Programs',
+                start_page: 522
+            },{
+                id: '4.1.6',
+                title: '4.1.6 - Internal Definitions',
+                start_page: 526
+            },{
+                id: '4.1.7',
+                title: '4.1.7 - Separating Syntactic Analysis from Execution',
+                start_page: 534
+            }]
+        },{
+            title: '4.2 - Variations on a Scheme - Lazy Evaluation',
+            start_page: 541,
+            content: [{
+                id: '4.2.1',
+                title: '4.2.1 - Normal Order and Applicative Order',
+                start_page: 542
+            },{
+                id: '4.2.2',
+                title: '4.2.2 - An Interpreter with Lazy Evaluation',
+                start_page: 544
+            },{
+                id: '4.2.3',
+                title: '4.2.3 - Streams as Lazy Lists',
+                start_page: 555
+            }]
+        },{
+            title: '4.3 - Variations on a Scheme - Nondeterministic Computing',
+            start_page: 559,
+            content: [{
+                id: '4.3.1',
+                title: '4.3.1 - Amb and Search',
+                start_page: 561
+            },{
+                id: '4.3.2',
+                title: '4.3.2 - Examples of Nondeterministic Programs',
+                start_page: 567
+            },{
+                id: '4.3.3',
+                title: '4.3.3 - Implementing the amb Evaluator',
+                start_page: 578
+            }]
+        },{
+            title: '4.4 - Logic Programming',
+            start_page: 594,
+            content: [{
+                id: '4.4.1',
+                title: '4.4.1 - Deductive Information Retrieval',
+                start_page: 599
+            },{
+                id: '4.4.2',
+                title: '4.4.2 - How the Query System Works',
+                start_page: 615
+            },{
+                id: '4.4.3',
+                title: '4.4.3 - Is Logic Programming Mathematical Logic?',
+                start_page: 627
+            },{
+                id: '4.4.4',
+                title: '4.4.4 - Implementing the Query System',
+                start_page: 635,
+                content: [{
+                    id: '4.4.4.1',
+                    title: '4.4.4.1 - The Driver Loop and Instantiation',
+                    start_page: 636
+                },{
+                    id: '4.4.4.2',
+                    title: '4.4.4.2 - The Evaluator',
+                    start_page: 638
+                },{
+                    id: '4.4.4.3',
+                    title: '4.4.4.3 - Finding Assertions by Pattern Matching',
+                    start_page: 642
+                },{
+                    id: '4.4.4.4',
+                    title: '4.4.4.4 - Rules and Unification',
+                    start_page: 645
+                },{
+                    id: '4.4.4.5',
+                    title: '4.4.4.5 - Maintaining the Data Base',
+                    start_page: 651
+                },{
+                    id: '4.4.4.6',
+                    title: '4.4.4.6 - Stream Operations',
+                    start_page: 654
+                },{
+                    id: '4.4.4.7',
+                    title: '4.4.4.7 - Query Syntax Procedures',
+                    start_page: 656
+                },{
+                    id: '4.4.4.9',
+                    title: '4.4.4.8 - Frames and Bindings',
+                    start_page: 659
+                }]
+            }]
+        }]
+    },{
+        title: '5 - Computing with Register Machines',
+        start_page: 666,
+        content: [{
+            title: '5.1 - Designing Register Machines',
+            start_page: 668,
+            content: [{
+                id: '5.1.1',
+                title: '5.1.1 - A Language for Describing Register Machines',
+                start_page: 672
+            },{
+                id: '5.1.2',
+                title: '5.1.2 - Abstraction in Machine Design',
+                start_page: 678
+            },{
+                id: '5.1.3',
+                title: '5.1.3 - Subroutines',
+                start_page: 681
+            },{
+                id: '5.1.4',
+                title: '5.1.4 - Using a Stack to Implement Recursion',
+                start_page: 686
+            },{
+                id: '5.1.5',
+                title: '5.1.5 - Instruction Summary',
+                start_page: 695
+            }]
+        },{
+            title: '5.2 - A Register-Machine Simulator',
+            start_page: 696,
+            content: [{
+                id: '5.2.1',
+                title: '5.2.1 - The Machine Model',
+                start_page: 698
+            },{
+                id: '5.2.2',
+                title: '5.2.2 - The Assembler',
+                start_page: 704
+            },{
+                id: '5.2.3',
+                title: '5.2.3 - Generating Execution Procedures for Instructions',
+                start_page: 708
+            },{
+                id: '5.2.4',
+                title: '5.2.4 - Monitoring Machine Performance',
+                start_page: 718
+            }]
+        },{
+            title: '5.3 - Storage Allocation and Garbage Collection',
+            start_page: 723,
+            content: [{
+                id: '5.3.1',
+                title: '5.3.1 - Memory as Vectors',
+                start_page: 724
+            },{
+                id: '5.3.2',
+                title: '5.3.2 - Maintaining the Illusion of Infinite Memory',
+                start_page: 731
+            }]
+        },{
+            title: '5.4 - The Explicit-Control Evaluator',
+            start_page: 741,
+            content: [{
+                id: '5.4.1',
+                title: '5.4.1 - The Core of the Explicit-Control Evaluator',
+                start_page: 743
+            },{
+                id: '5.4.2',
+                title: '5.4.2 - Sequence Evaluation and Tail Recursion',
+                start_page: 751
+            },{
+                id: '5.4.3',
+                title: '5.4.3 - Conditionals, Assignments, and Definitions',
+                start_page: 756
+            },{
+                id: '5.4.4',
+                title: '5.4.4 - Running the Evaluator',
+                start_page: 759
+            }]
+        },{
+            title: '5.5 - Compilation',
+            start_page: 767,
+            content: [{
+                id: '5.5.1',
+                title: '5.5.1 - Structure of the Compiler',
+                start_page: 772
+            },{
+                id: '5.5.2',
+                title: '5.5.2 - Compiling Expressions',
+                start_page: 779
+            },{
+                id: '5.5.3',
+                title: '5.5.3 - Compiling Combinations',
+                start_page: 788
+            },{
+                id: '5.5.4',
+                title: '5.5.4 - Combining Instruction Sequences',
+                start_page: 797
+            },{
+                id: '5.5.5',
+                title: '5.5.5 - An Example of Compiled Code',
+                start_page: 802
+            },{
+                id: '5.5.6',
+                title: '5.5.6 - Lexical Addressing',
+                start_page: 817
+            },{
+                id: '5.5.7',
+                title: '5.5.7 - Interfacing Compiled Code to the Evaluator',
+                start_page: 823
+            }]
+        }]
     }]
 };
