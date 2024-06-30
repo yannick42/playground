@@ -61,6 +61,10 @@ canvas {
 	position: relative; /* for the child to be able to use "position: absolute" */
 }
 
+.book input[type='checkbox'] {
+	pointer-events: none;
+}
+
 .title {
 	text-decoration: underline;
 	text-overflow: ellipsis;
