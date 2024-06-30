@@ -45,10 +45,9 @@ import { CG } from './CG.js';
 
 const bookListEl = document.getElementById("book_list");
 const canvas = document.querySelector("canvas");
-canvas.width = 1208;
-canvas.height = 839;
 const ctx = canvas.getContext("2d");
 
+window.addEventListener("resize", (event) => updateArrows());
 
 function main() {
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
@@ -222,6 +221,11 @@ function addEvents() {
 
 function updateArrows() {
 
+    console.log("update arrows");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     setUpCanvas(ctx, canvas.width, canvas.height, 'white')
 
     const pointSize = 5, color = "#467799";
@@ -229,13 +233,13 @@ function updateArrows() {
     const SICPBBox = document.getElementById("SICP").getBoundingClientRect();
     const pt1 = [
         SICPBBox.left + canvas.offsetLeft,
-        (SICPBBox.bottom - SICPBBox.top) / 2 + SICPBBox.top - 10 - pointSize/2
+        (SICPBBox.bottom - SICPBBox.top) / 2 + SICPBBox.top - 12.5 - pointSize/2
     ];
 
     const CGBBox = document.getElementById("CG").getBoundingClientRect();
     const pt2 = [
         CGBBox.left + canvas.offsetLeft,
-        (CGBBox.bottom - CGBBox.top) / 2 + CGBBox.top - 10 - pointSize/2
+        (CGBBox.bottom - CGBBox.top) / 2 + CGBBox.top - 15 /*??*/
     ];
     drawPointAt(ctx, pt1[0], pt1[1], 5, color); // starting point only (end = arrow)
     
