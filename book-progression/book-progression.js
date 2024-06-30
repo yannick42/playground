@@ -1,12 +1,53 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
+import { computeBézierCurve } from '../common/math.helper.js';
 
 // hard-coded books
 import { SICP } from './SICP.js';
 import { CG } from './CG.js';
 
+/**
+ * TODO:
+ * 
+ * 
+
+- start all closed (if no config. in localStorage)
+
+
+
+
+
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const bookListEl = document.getElementById("book_list");
+const canvas = document.querySelector("canvas");
+canvas.width = 1208;
+canvas.height = 839;
+const ctx = canvas.getContext("2d");
 
 
 function main() {
@@ -99,6 +140,7 @@ function _getLocalStorageObj(itemName) {
 }
 
 function setVisibility(bookId, value) {
+    console.log("setVisibility:", bookId, "to", value)
     const booksProgress = _getLocalStorageObj('book_progress');
     // get and keep unchanged books
     const newObject = booksProgress.filter(prog => prog.id !== bookId);
@@ -137,13 +179,15 @@ function addEvents() {
             if(newVisibility) {
                 e.target.offsetParent.querySelector('.level').classList.remove('toggled');
                 e.target.innerText = '➖';
+                const test = getBookList().filter(book => book.id != bookId).forEach(book => document.querySelector("#"+book.id+" .toggle").click());
             } else {
                 e.target.offsetParent.querySelector('.level').classList.add('toggled');
                 e.target.innerText = '➕';
             }
+
+            updateArrows();
         });
     });
-
 
 
     const titleEls = document.querySelectorAll("#book_list [class^='content_title']")
@@ -174,6 +218,41 @@ function addEvents() {
             })
         }
     })
+}
+
+function updateArrows() {
+
+    setUpCanvas(ctx, canvas.width, canvas.height, 'white')
+
+    const pointSize = 5, color = "#467799";
+
+    const SICPBBox = document.getElementById("SICP").getBoundingClientRect();
+    const pt1 = [
+        SICPBBox.left + canvas.offsetLeft,
+        (SICPBBox.bottom - SICPBBox.top) / 2 + SICPBBox.top - 10 - pointSize/2
+    ];
+
+    const CGBBox = document.getElementById("CG").getBoundingClientRect();
+    const pt2 = [
+        CGBBox.left + canvas.offsetLeft,
+        (CGBBox.bottom - CGBBox.top) / 2 + CGBBox.top - 10 - pointSize/2
+    ];
+    drawPointAt(ctx, pt1[0], pt1[1], 5, color); // starting point only (end = arrow)
+    
+    const arrows = [
+        [pt1[0], pt1[1], pt1[0]-100, pt1[1]],
+        [pt2[0], pt2[1], pt2[0]-100, pt2[1]]
+    ];
+    const curvePoints = computeBézierCurve(ctx, [pt1, pt2], arrows, 1/25);
+
+    // draw curve
+    const nbCurvePoints = curvePoints.length;
+    curvePoints.forEach((point, i) => {
+        if(i + 1 === nbCurvePoints) return; // last point
+        drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], 2, color);
+    });
+        
+    drawArrow(ctx, curvePoints[nbCurvePoints-2][0], curvePoints[nbCurvePoints-2][1], curvePoints[nbCurvePoints-1][0], curvePoints[nbCurvePoints-1][1], color, 2 /*width*/, /*head_len*/ 10);
 }
 
 // TODO
@@ -217,6 +296,8 @@ function redraw() {
         const book = getProgress(b.id);
         updateProgressBar(book)
     });
+
+    updateArrows();
 }
 
 main();
