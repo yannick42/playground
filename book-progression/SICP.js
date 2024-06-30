@@ -1,6 +1,7 @@
 export const SICP = {
     title: 'Structure and Interpretation of Computer Programs, 2nd ed. (1996)',
     nb_pages: 855,
+    front_cover: 'https://m.media-amazon.com/images/I/71BBXQnykuL._SL100_.jpg',
     id: 'SICP',
     content: [{
         title: '1 - Building Abstractions with Procedures',

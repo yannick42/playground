@@ -63,6 +63,9 @@ canvas {
 
 .title {
 	text-decoration: underline;
+	text-overflow: ellipsis;
+	height: 32px;
+	width: 93%;
 }
 
 .level {
@@ -102,7 +105,10 @@ canvas {
 }
 
 .leaf > .start_page {
-	padding-right: 8px;
+}
+
+.front-cover {
+	margin-right: 5px;
 }
 
 .checked {
@@ -110,20 +116,38 @@ canvas {
 	text-decoration: line-through;
 }
 
+.book > div:nth-child(1) {
+	display: flex;
+}
+
+/**
+ * Book's progress bar
+ */
 .progress-bar {
 	width: 100%;
 	background-color: #e0e0e0;
 	border-radius: 5px;
 	overflow: hidden;
-	margin: 3px 0px;
+	margin: 3px 0 0 0;
 }
   
 .progress {
 	width: 0;
-	height: 8px;
+	height: 33px;
 	background-color: #467799;
 	transition: width 0.3s;
 }
+
+.progress-value {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    top: 51px;
+    font-size: 10pt;
+}
+
+
 
 .toggle {
 	position: absolute;
@@ -138,11 +162,13 @@ canvas {
 	overflow: hidden;
 }
 
-.progress-value {
-    text-align: center;
-    display: inline-block;
-    width: 100%;
+.tags {
     position: absolute;
-    top: 23px;
-    font-size: 7pt;
+    right: 25px;
+}
+
+.tag {
+	border-radius: 3px;
+    padding: 2px;
+    font-size: x-small;
 }

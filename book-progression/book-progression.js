@@ -5,7 +5,8 @@ import { computeBézierCurve } from '../common/math.helper.js';
 
 // hard-coded books
 import { SICP } from './SICP.js';
-import { CG } from './CG.js';
+import { CG } from './CG.js';;
+import { VG } from './VG.js';
 
 /**
  * TODO:
@@ -55,23 +56,48 @@ function main() {
 }
 
 
+
+const arrowsList = [
+    ['SICP', 'CG', 'solid'],
+    ['CG', 'VG', 'dashed']
+]
+
+
+
+
 /**
  * TODO: get it from localStorage too ! (or backend ?!)
  */
 function getBookList() {
-    return [SICP, CG]
+    return [SICP, CG, VG]
 }
 
 function createHtml(book) {
+
+    if(! getProgress(book.id)) { // init to hidden
+        setVisibility(book.id, false);
+    }
+
     const html = `
         <div id="${book.id}" class="book">
-            <div class="toggle">${getVisibility(book.id) ? '➖' : '➕'}</div>
+            <div>
 
-            <span class="title">${book.title}</span>${book.authors ? ` ${book.authors.join(', ')}` : ''}
+                ${book.front_cover ? `<div class="front-cover"><img src="${book.front_cover}" width=46 height=68 /></div>` : ''}
+                
+                <div style="width: 100%">
+                    <div class="toggle">${getVisibility(book.id) ? '➖' : '➕'}</div>
+                    ${book.tags?.length ? `<div class="tags">${book.tags?.map(tag => {
+                        console.log(tag)
+                        return `<span class="tag" style="background-color: ${tag.bgColor}; color: ${tag.textColor}">${tag.text}</span>`
+                    }).join('')}</div>` : ''}
 
-            <div class="progress-bar">
-                <div class="progress"></div>
-                <span class="progress-value"></span>
+                    <div class="title">${book.title}</div>${book.authors ? ` ${book.authors.join(', ')}` : ''}
+
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                        <span class="progress-value"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="level ${getVisibility(book.id) ? '' : 'toggled'}">
@@ -79,10 +105,6 @@ function createHtml(book) {
             </div>
         </div>
     `;
-
-    if(! getProgress(book.id)) { // init to hidden
-        setVisibility(book.id, true);
-    }
 
     return html;
 }
@@ -178,7 +200,7 @@ function addEvents() {
             if(newVisibility) {
                 e.target.offsetParent.querySelector('.level').classList.remove('toggled');
                 e.target.innerText = '➖';
-                const test = getBookList().filter(book => book.id != bookId).forEach(book => document.querySelector("#"+book.id+" .toggle").click());
+                const test = getBookList().filter(book => book.id != bookId).forEach(book => book.visibility && document.querySelector("#"+book.id+" .toggle").click());
             } else {
                 e.target.offsetParent.querySelector('.level').classList.add('toggled');
                 e.target.innerText = '➕';
@@ -225,38 +247,44 @@ function updateArrows() {
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     setUpCanvas(ctx, canvas.width, canvas.height, 'white')
 
     const pointSize = 5, color = "#467799";
 
-    const SICPBBox = document.getElementById("SICP").getBoundingClientRect();
-    const pt1 = [
-        SICPBBox.left + canvas.offsetLeft,
-        (SICPBBox.bottom - SICPBBox.top) / 2 + SICPBBox.top - 12.5 - pointSize/2
-    ];
 
-    const CGBBox = document.getElementById("CG").getBoundingClientRect();
-    const pt2 = [
-        CGBBox.left + canvas.offsetLeft,
-        (CGBBox.bottom - CGBBox.top) / 2 + CGBBox.top - 15 /*??*/
-    ];
-    drawPointAt(ctx, pt1[0], pt1[1], 5, color); // starting point only (end = arrow)
-    
-    const arrows = [
-        [pt1[0], pt1[1], pt1[0]-100, pt1[1]],
-        [pt2[0], pt2[1], pt2[0]-100, pt2[1]]
-    ];
-    const curvePoints = computeBézierCurve(ctx, [pt1, pt2], arrows, 1/25);
+    arrowsList.forEach(([from, to, style]) => {
 
-    // draw curve
-    const nbCurvePoints = curvePoints.length;
-    curvePoints.forEach((point, i) => {
-        if(i + 1 === nbCurvePoints) return; // last point
-        drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], 2, color);
-    });
+        const SICPBBox = document.getElementById(from).getBoundingClientRect();
+        const pt1 = [
+            SICPBBox.left + canvas.offsetLeft,
+            (SICPBBox.bottom - SICPBBox.top) / 2 + SICPBBox.top - 12.5 - pointSize/2
+        ];
+
+        const CGBBox = document.getElementById(to).getBoundingClientRect();
+        const pt2 = [
+            CGBBox.left + canvas.offsetLeft,
+            (CGBBox.bottom - CGBBox.top) / 2 + CGBBox.top - 15 /*??*/
+        ];
+        drawPointAt(ctx, pt1[0], pt1[1], 5, color); // starting point only (end = arrow)
         
-    drawArrow(ctx, curvePoints[nbCurvePoints-2][0], curvePoints[nbCurvePoints-2][1], curvePoints[nbCurvePoints-1][0], curvePoints[nbCurvePoints-1][1], color, 2 /*width*/, /*head_len*/ 10);
+        const arrows = [
+            [pt1[0], pt1[1], pt1[0]-100, pt1[1]],
+            [pt2[0], pt2[1], pt2[0]-100, pt2[1]]
+        ];
+        const curvePoints = computeBézierCurve(ctx, [pt1, pt2], arrows, 1/25);
+
+        // draw curve
+        const nbCurvePoints = curvePoints.length;
+        curvePoints.forEach((point, i) => {
+            if(i + 1 === nbCurvePoints) return; // last point
+            drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], 2, color);
+        });
+            
+        drawArrow(ctx, curvePoints[nbCurvePoints-2][0], curvePoints[nbCurvePoints-2][1], curvePoints[nbCurvePoints-1][0], curvePoints[nbCurvePoints-1][1], color, 2 /*width*/, /*head_len*/ 10);
+
+
+    });
+
 }
 
 // TODO

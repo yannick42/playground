@@ -2,6 +2,12 @@ export const CG = {
     title: 'Computational Geometry - Algorithms & Applications, 3rd ed. (2008)',
     nb_pages: 386,
     id: 'CG',
+    front_cover: 'https://m.media-amazon.com/images/I/614hApBTToL._AC_UF100,100_QL80_.jpg',
+    tags: [{
+        text: 'todo',
+        bgColor: 'yellow',
+        textColor: 'black'
+    }],
     content: [{
         title: '1 - Computational Geometry',
         desc: 'Introduction',
