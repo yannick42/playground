@@ -27,23 +27,27 @@ body {
 	align-self: start;	
 }
 
-canvas {
-	border: 1px solid black;
-}
+
+
+
+
+
 
 
 /**
  *
  */
 #book_list {
-	background-color: #deffdd;
 	width: 500px;
 	font-size: smaller;
 }
 
 .book {
+	background-color: #deffdd;
 	border: 1px solid blueviolet;
-	padding: 10px;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;
 	position: relative; /* for the child to be able to use "position: absolute" */
 }
 
@@ -127,6 +131,6 @@ canvas {
     display: inline-block;
     width: 100%;
     position: absolute;
-    top: 28px;
+    top: 23px;
     font-size: 7pt;
 }

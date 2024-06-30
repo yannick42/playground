@@ -4,6 +4,7 @@ import { randInt } from '../common/common.helper.js';
 
 // hard-coded books
 import { SICP } from './SICP.js';
+import { CG } from './CG.js';
 
 const bookListEl = document.getElementById("book_list");
 
@@ -18,7 +19,7 @@ function main() {
  * TODO: get it from localStorage too ! (or backend ?!)
  */
 function getBookList() {
-    return [SICP]
+    return [SICP, CG]
 }
 
 function createHtml(book) {
@@ -38,6 +39,11 @@ function createHtml(book) {
             </div>
         </div>
     `;
+
+    if(! getProgress(book.id)) { // init to hidden
+        setVisibility(book.id, true);
+    }
+
     return html;
 }
 
@@ -73,7 +79,7 @@ function findNextEntry(book, id) {
 
 function getProgress(bookId) {
     const bookProgress = _getLocalStorageObj('book_progress');
-    return bookProgress.find(b => b.id === bookId) ?? {id: bookId, progress: []} ;
+    return bookProgress.find(b => b.id === bookId);
 }
 
 function getProgressForId(bookId, id) {
@@ -97,8 +103,13 @@ function setVisibility(bookId, value) {
     // get and keep unchanged books
     const newObject = booksProgress.filter(prog => prog.id !== bookId);
     // modify current book
-    const currentBook = booksProgress.find(prog => prog.id === bookId);
-    currentBook['visibility'] = value;
+    let currentBook = booksProgress.find(prog => prog.id === bookId);
+    console.log("setVis:", currentBook)
+    if(currentBook) { // if present
+        currentBook['visibility'] = value;
+    } else {
+        currentBook = { 'id': bookId, 'visibility': value, 'progress': []}
+    }
     // save it
     newObject.push(currentBook);
     localStorage.setItem('book_progress', JSON.stringify(newObject)); // in LocalStorage
@@ -140,10 +151,8 @@ function addEvents() {
     titleEls.forEach(el => {
         if(el.id) {
             el.addEventListener('click', (e) => {
-
                 const bookId = e.target.offsetParent.id; // use nearest positionned parent ? (because of position: relative ?)
-                console.log(e.target.innerText, "clicked")
-
+                
                 const checkbox = e.target.querySelector("input[type='checkbox']");
                 checkbox.checked = !checkbox.checked; // toggle
 
@@ -151,7 +160,7 @@ function addEvents() {
                 if(checkbox.checked) {
                     e.target.classList.add('checked');
 
-                    if(! book.progress.includes(e.target.id)) book.progress.push(e.target.id) // add
+                    if(! book.progress.includes(e.target.id)) book.progress.push(e.target.id) // add to completed ids (eg. 1.1.1, ...)
 
                 } else {
                     e.target.classList.remove('checked');
@@ -185,10 +194,10 @@ function updateProgressBar(book) {
     const bookItem = getBookList().find(b => b.id == book.id);
     countIds(bookItem.content);
 
-    const value = Math.round(book.progress?.length / count * 100);
-    console.log("value:", value);
+    const value = Math.round(count ? (book.progress?.length ?? 0) / count * 100 : 0);
+
     document.querySelector("#"+bookItem.id+" .progress").style.width = value + '%';
-    document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value}%`;
+    document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value} %`;
 }
 
 function redraw() {
