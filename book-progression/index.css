@@ -44,6 +44,7 @@ canvas {
 .book {
 	border: 1px solid blueviolet;
 	padding: 10px;
+	position: relative; /* for the child to be able to use "position: absolute" */
 }
 
 .title {
@@ -106,4 +107,17 @@ canvas {
 	height: 8px;
 	background-color: #76c7c0;
 	transition: width 0.3s;
+}
+
+.toggle {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	cursor: pointer;
+}
+
+.toggled {
+	background-color: lightgray;
+	height: 0;
+	overflow: hidden;
 }
