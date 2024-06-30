@@ -50,7 +50,7 @@ function onHashChange() {
     //console.log("hash changed to", window.location.hash);
     if(hash) { // changed to this
 
-        const hashEl = hash.split('|');
+        const hashEl = hash.split('|').join(',').split('%7C').join(',').split(',');
 
         hashEl.reverse().forEach(hash => {
 
