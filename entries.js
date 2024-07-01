@@ -1,4 +1,12 @@
 export const entries = [{
+    id: 'two-sat',
+    href: './2-sat/',
+    name: '2-SAT',
+    desc: "solve simple satisfiability problems using strongly connected components",
+    searchContext: 'SCC,Strongly Connected Components,topological sort',
+    creationDate: '15/06/2024',
+    classes: ['disabled-entry'],
+},{
     id: 'book-progression',
     href: './book-progression/',
     name: 'Book progression',

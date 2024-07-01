@@ -1,4 +1,8 @@
+import { setUpCanvas, drawPointAt, drawLine, drawArrow } from './canvas.helper.js';
+import { randInt } from './common.helper.js';
+import { computeBézierCurve } from './math.helper.js';
 
+// A simple Graph class
 export class Graph {
     V = {} // vertices
     adj = {} // adjacency list
@@ -71,7 +75,7 @@ export function dfs(g) {
     //console.log("end ?");
 }
 
-function dfs_visit(g, start_vertex) {
+export function dfs_visit(g, start_vertex) {
     TIME += 1
     g.V[start_vertex].d = TIME; // discovery time
     g.V[start_vertex].color = GRAY;
@@ -89,6 +93,15 @@ function dfs_visit(g, start_vertex) {
 
     g.toposort.unshift(start_vertex); // add this vertex at the front of the list
 }
+
+
+
+
+
+/**
+ * DAG for Neural Network
+ * 
+ */
 
 export let nb_params = 0;
 export function createDAG(sizes) {
@@ -130,4 +143,96 @@ export function createDAG(sizes) {
     
     dfs(g);
     return g;
+}
+
+
+const vertexPositions = {};
+export function draw(canvas, graph) {
+    const ctx = canvas.getContext("2d");
+
+    const colors = ["blue", "green", "red"];
+
+    setUpCanvas(ctx, canvas.width, canvas.height)
+
+    const nbVertices = Object.keys(graph.V).length;
+
+    // add points at random on the graph
+    Object.keys(graph.V).forEach((vertex, i) => {
+        const color = colors[i % colors.length];
+
+        graph.V[vertex].color = color;
+
+        vertexPositions[vertex] = [
+            Math.sin(2 * Math.PI / nbVertices * i) * 200 + canvas.width / 2,
+            Math.cos(2 * Math.PI / nbVertices * i) * 200 + canvas.width / 2
+        ]
+
+        drawPointAt(ctx, vertexPositions[vertex][0], vertexPositions[vertex][1], 10, color);
+    });
+
+
+    Object.keys(graph.adj).forEach(fromVertex => {
+
+        const color = graph.V[fromVertex].color;
+
+        graph.adj[fromVertex].forEach(toVertex => {
+            console.log("to", toVertex);
+
+
+
+            const points = [
+                vertexPositions[fromVertex],
+                vertexPositions[toVertex]
+            ];
+
+            const curvePoints = computeBézierCurve(
+                ctx,
+                points
+                ,[
+                    [
+                        vertexPositions[fromVertex][0], vertexPositions[fromVertex][1],
+                        canvas.width/2, canvas.height/2 // in direction of the center ?
+                    ],[
+                        vertexPositions[toVertex][0], vertexPositions[toVertex][1],
+                        canvas.width/2, canvas.height/2 // in direction of the center ?
+                    ]
+                ],
+                1/20
+            );
+
+            const lineWidth = 4;
+
+            // draw curve
+            const nbCurvePoints = curvePoints.length;
+            curvePoints.forEach((point, i) => {
+                if(i + 1 === nbCurvePoints) return; // last point
+                drawLine(ctx, point[0], point[1], curvePoints[i+1][0], curvePoints[i+1][1], lineWidth, color);
+            });
+            
+            // final end : arrow
+            drawArrow(
+                ctx,
+                // from
+                curvePoints[nbCurvePoints-2][0],
+                curvePoints[nbCurvePoints-2][1],
+                // to
+                curvePoints[nbCurvePoints-1][0],
+                curvePoints[nbCurvePoints-1][1],
+                color,
+                lineWidth,
+                /*head_len*/ 10
+            );
+
+        });
+    })
+
+    // draw in front
+    Object.keys(graph.V).forEach(vertex => {
+        const color = graph.V[vertex].color;
+
+        ctx.font = "14px Arial";
+        ctx.fillStyle = color;
+		ctx.fillText(vertex, vertexPositions[vertex][0] + 10, vertexPositions[vertex][1] - 10);
+    });
+
 }

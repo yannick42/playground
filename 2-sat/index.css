@@ -1,0 +1,61 @@
+
+:root {
+	--canvas-size: 500px;
+}
+
+/* zeroes out default margins */
+html, body, * { 
+	margin: 0; 
+	padding: 0; 
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#content {
+	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
+  	margin-top: 15px;
+	width: calc(var(--canvas-size) + 150px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#title {
+	font-size: 15pt;
+	text-align: center;
+	padding-bottom: 20px;
+	text-decoration: underline;
+}
+
+#subtitle {
+	align-self: start;
+	font-style: italic;
+}
+
+
+#new_element {
+    width: 60px;
+}
+
+#list_of_elements {
+    width: 150px;
+    height: 100px;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+#solution {
+    font-weight: bold;
+}
+
+#like {
+    color: red;
+}
+
+#dislike {
+    color: rgb(120, 98, 98);
+}

@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+    <body>
+
+        <div id="content">
+            <div id="title">2-SAT problem</div>
+            <div id="subtitle">a tool to display the <a target="_blank" href="https://en.wikipedia.org/wiki/Implication_graph">implication graph</a> of a 2-SAT formula</div>
+
+            <br/>
+
+            <div id="desc">
+                Here, select multiple pairs of elements while choosing their relationship.
+                If the satisfiability is not possible, a message will appear, it means there no way to gather at least 2 person according to their liking.
+                <i style="font-size: smaller;">(you can use Ctrl+Click to select an other person, and also doubleclick a name to remove it)</i>.
+                <br/><br/>
+                - If a pair are compatible, we have \(a \lor b\) which can be rewritten as \(\lnot a \rightarrow b\) and \(\lnot b \rightarrow a\).
+                <br/>
+                - Otherwise \(a \lor \lnot b\) becomes \(\lnot a \rightarrow \lnot b\) and \( b \rightarrow a\)
+                <br/><br/>
+                If a literal (a, b, ...) and its negation are in the same <a target="_blank" href="https://en.wikipedia.org/wiki/Strongly_connected_component">strongly connected component</a>, then no solution is possible. 
+            </div>
+
+            <br/>
+            <span>Add a new person : <input type="text" id="new_element" /></span>
+            <br />
+            <select id="list_of_elements" multiple></select>
+            <br />
+
+            <div>
+                <button id="like">Like</button>
+                <button id="dislike">or dislike</button> each other
+            </div>
+
+            <br />
+            <div>
+                <u>List of clauses</u>: <span id="pairs"></span>
+            </div>
+
+            <br/>
+            <span id="solution"></span>
+            <br/>
+
+            <div>
+                Implication graph: <button id="refresh_graph">refresh!</button>
+            </div>
+            <br/>
+            <canvas width="500" height="500"></canvas>
+        </div>
+
+        <script type="module" src="index.js"></script>
+    </body>
+</html>
