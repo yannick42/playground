@@ -3,11 +3,7 @@
     "nb_pages": 386,
     "id": "CG",
     "front_cover": "https://m.media-amazon.com/images/I/614hApBTToL._AC_UF100,100_QL80_.jpg",
-    "tags": [{
-        "text": "todo",
-        "bgColor": "yellow",
-        "textColor": "black"
-    }],
+    "tags": [],
     "content": [{
         "title": "1 - Computational Geometry",
         "desc": "Introduction",
@@ -213,15 +209,276 @@
         },{
             "id": "7.4",
             "title": "7.4 - Farthest-Point Voronoi Diagrams",
-            "start_page": 140
+            "start_page": 163
         },{
             "id": "7.5",
             "title": "7.5 - Notes and Comments",
-            "start_page": 143
+            "start_page": 167
         },{
             "id": "7.6",
             "title": "7.6 - Exercises",
-            "start_page": 144
+            "start_page": 170
+        }]
+    },{
+        "title": "8 - Arrangements and Duality",
+        "desc": "Supersampling in Ray Tracing",
+        "start_page": 173,
+        "content": [{
+            "id": "8.1",
+            "title": "8.1 - Computing the Discrepancy",
+            "start_page": 175
+        },{
+            "id": "8.2",
+            "title": "8.2 - Duality",
+            "start_page": 177
+        },{
+            "id": "8.3",
+            "title": "8.3 - Arrangements of Lines",
+            "start_page": 179
+        },{
+            "id": "8.4",
+            "title": "8.4 - Levels and Discrepancy",
+            "start_page": 185
+        },{
+            "id": "8.5",
+            "title": "8.5 - Notes and Comments",
+            "start_page": 186
+        },{
+            "id": "8.6",
+            "title": "8.6 - Exercises",
+            "start_page": 188
+        }]
+    },{
+        "title": "9 - Delaunay Triangulation",
+        "desc": "Height interpolation",
+        "start_page": 191,
+        "content": [{
+            "id": "9.1",
+            "title": "9.1 - Triangulations of Planar Point Sets",
+            "start_page": 193
+        },{
+            "id": "9.2",
+            "title": "9.2 - The Delaunay Triangulation",
+            "start_page": 196
+        },{
+            "id": "9.3",
+            "title": "9.3 - Computing the Delaunay Triangulation",
+            "start_page": 199
+        },{
+            "id": "9.4",
+            "title": "9.4 - The Analysis",
+            "start_page": 205
+        },{
+            "id": "9.5",
+            "title": "9.5* - A Framework for Randomized Algorithms",
+            "start_page": 208
+        },{
+            "id": "9.6",
+            "title": "9.6 - Notes and Comments",
+            "start_page": 214
+        },{
+            "id": "9.7",
+            "title": "9.7 - Exercises",
+            "start_page": 215
+        }]
+    },{
+        "title": "10 - More Geometric Data Structures",
+        "desc": "Windowing",
+        "start_page": 219,
+        "content": [{
+            "id": "10.1",
+            "title": "10.1 - Interval Trees",
+            "start_page": 220
+        },{
+            "id": "10.2",
+            "title": "10.2 - Priority Search Trees",
+            "start_page": 226
+        },{
+            "id": "10.3",
+            "title": "10.3 - Segment Trees",
+            "start_page": 231
+        },{
+            "id": "10.4",
+            "title": "10.4 - Notes and Comments",
+            "start_page": 237
+        },{
+            "id": "10.5",
+            "title": "10.5 - Exercises",
+            "start_page": 239
+        }]
+    },{
+        "title": "11 - Convex Hulls",
+        "desc": "Mixing Things",
+        "start_page": 243,
+        "content": [{
+            "id": "11.1",
+            "title": "11.1 - The Complexity of Convex Hulls in 3-Space",
+            "start_page": 244
+        },{
+            "id": "11.2",
+            "title": "11.2 - Computing Convex Hulls in 3-Space",
+            "start_page": 246
+        },{
+            "id": "11.3",
+            "title": "11.3* - The Analysis",
+            "start_page": 250
+        },{
+            "id": "11.4",
+            "title": "11.4* - Convex Hulls and Half-Space Intersection",
+            "start_page": 253
+        },{
+            "id": "11.5",
+            "title": "11.5* - Voronoi Diagrams Revisited",
+            "start_page": 254
+        },{
+            "id": "11.6",
+            "title": "11.6 - Notes and Comments",
+            "start_page": 256
+        },{
+            "id": "11.7",
+            "title": "11.7 - Exercises",
+            "start_page": 257
+        }]
+    },{
+        "title": "12 - Binary Space Partitions",
+        "desc": "The Painter's algorithm",
+        "start_page": 259,
+        "content": [{
+            "id": "12.1",
+            "title": "12.1 - ",
+            "start_page": 261
+        },{
+            "id": "12.2",
+            "title": "12.2 - ",
+            "start_page": 263
+        },{
+            "id": "12.3",
+            "title": "12.3 - ",
+            "start_page": 264
+        },{
+            "id": "12.4",
+            "title": "12.4* - ",
+            "start_page": 268
+        },{
+            "id": "12.5",
+            "title": "12.5 - ",
+            "start_page": 271
+        },{
+            "id": "12.6",
+            "title": "12.6 - Notes and Comments",
+            "start_page": 278
+        },{
+            "id": "12.7",
+            "title": "12.7 - Exercises",
+            "start_page": 279
+        }]
+    },{
+        "title": "13 - Robot Motion Planning",
+        "desc": "Getting Where You Want to Be",
+        "start_page": 283,
+        "content": [{
+            "id": "13.1",
+            "title": "13.1 - Work Space and Configuration Space",
+            "start_page": 284
+        },{
+            "id": "13.2",
+            "title": "13.2 - A Point Robot",
+            "start_page": 286
+        },{
+            "id": "13.3",
+            "title": "13.3 - Minkowski Sums",
+            "start_page": 290
+        },{
+            "id": "13.4",
+            "title": "13.4 - Translational Motion Planning",
+            "start_page": 297
+        },{
+            "id": "13.5",
+            "title": "13.5* - Motion Planning with Rotations",
+            "start_page": 299
+        },{
+            "id": "13.6",
+            "title": "13.6 - Notes and Comments",
+            "start_page": 303
+        },{
+            "id": "13.7",
+            "title": "13.7 - Exercises",
+            "start_page": 305
+        }]
+    },{
+        "title": "14 - Quadtrees",
+        "desc": "Non-Uniform Mesh Generation",
+        "start_page": 307,
+        "content": [{
+            "id": "14.1",
+            "title": "14.1 - Uniform and Non-Uniform Meshes",
+            "start_page": 308
+        },{
+            "id": "14.2",
+            "title": "14.2 - Quadtrees for Point Sets",
+            "start_page": 309
+        },{
+            "id": "14.3",
+            "title": "14.3 - From Quadtrees to Meshes",
+            "start_page": 315
+        },{
+            "id": "14.4",
+            "title": "14.4 - Notes and Comments",
+            "start_page": 318
+        },{
+            "id": "14.5",
+            "title": "14.5 - Exercises",
+            "start_page": 320
+        }]
+    },{
+        "title": "15 - Visibility Graphs",
+        "desc": "Finding the Shortest Route",
+        "start_page": 323,
+        "content": [{
+            "id": "15.1",
+            "title": "15.1 - Shortest Path for a Point Robot",
+            "start_page": 324
+        },{
+            "id": "15.2",
+            "title": "15.2 - Computing the Visibility Graph",
+            "start_page": 326
+        },{
+            "id": "15.3",
+            "title": "15.3 - Shortest Paths for a Translating Polygonal Robot",
+            "start_page": 330
+        },{
+            "id": "15.4",
+            "title": "15.4 - Notes and Comments",
+            "start_page": 331
+        },{
+            "id": "15.5",
+            "title": "15.5 - Exercises",
+            "start_page": 332
+        }]
+    },{
+        "title": "16 - Simplex Range Searching",
+        "desc": "Windowing revisited",
+        "start_page": 335,
+        "content": [{
+            "id": "16.1",
+            "title": "16.1 - Partition Trees",
+            "start_page": 336
+        },{
+            "id": "16.2",
+            "title": "16.2 - Multi-level Partition Trees",
+            "start_page": 343
+        },{
+            "id": "16.3",
+            "title": "16.3 - Cutting Trees",
+            "start_page": 346
+        },{
+            "id": "16.4",
+            "title": "16.4 - Notes and Comments",
+            "start_page": 352
+        },{
+            "id": "16.5",
+            "title": "16.5 - Exercises",
+            "start_page": 353
         }]
     }]
 }

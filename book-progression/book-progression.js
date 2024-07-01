@@ -40,7 +40,8 @@ function main() {
  */
 const arrowsList = [
     ['SICP', 'CG', 'solid'],
-    ['CG', 'VG', 'dashed']
+    ['CG', 'VG', 'dashed'],
+    ['Cormen', 'AlgoForOptimization', 'solid']
 ]
 
 /**
@@ -63,7 +64,13 @@ async function getBookListFromFirebase() {
     fetched = await fetch(url);
     const VG = await fetched.json();
 
-    return [SICP, CG, VG];
+    fetched = await fetch('./books/Cormen.json');
+    const Cormen = await fetched.json();
+
+    fetched = await fetch('./books/AlgoForOptimization.json');
+    const AlgoForOptimization = await fetched.json();
+
+    return [SICP, CG, VG, Cormen, AlgoForOptimization];
 }
 
 function getBookList() {
@@ -287,7 +294,9 @@ function searchKeyUp(e) {
             const filteredContent = content.filter(entry => {
                 const test = entry.title.toLowerCase().includes(searchStr.toLowerCase());
                 //console.log(">", entry.title, "is matching ?", test);
-                return test || content.every(entry => entry.content?.length > 0);
+
+                // 
+                return test || content.some(entry => entry.content?.length > 0);
             });
 
             return filteredContent.length === 0 ?
@@ -302,9 +311,14 @@ function searchKeyUp(e) {
         copy.forEach(book => {
             const res = book.content.map(entry => prune(entry, entry.content, 0)).filter(entry => entry); // remove nulls
             //console.log(">>> res:", res);
-            book.content = res;
+            book.content = res; // filtered content
+
+            setVisibility(book.id, true);
         });
+
         //console.warn("result:", copy);
+    } else {
+        copy.forEach(book => setVisibility(book.id, false));
     }
 
     removeEvents();
@@ -339,8 +353,8 @@ function updateArrows()
         drawPointAt(ctx, pt1[0], pt1[1], 5, color); // starting point only (end = arrow)
         
         const arrows = [
-            [pt1[0], pt1[1], pt1[0]-100, pt1[1]],
-            [pt2[0], pt2[1], pt2[0]-100, pt2[1]]
+            [pt1[0], pt1[1], pt1[0]-randInt(80, 100), pt1[1]],
+            [pt2[0], pt2[1], pt2[0]-randInt(80, 100), pt2[1]]
         ];
         const curvePoints = computeBézierCurve(ctx, [pt1, pt2], arrows, 1/25);
 

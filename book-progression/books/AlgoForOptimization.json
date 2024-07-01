@@ -1,0 +1,21 @@
+{
+    "title": "Algorithms for Optimization (2019)",
+    "nb_pages": 481,
+    "id": "AlgoForOptimization",
+    "front_cover": "https://m.media-amazon.com/images/I/61JWMNiYWoL._AC_UF100,100_QL80_.jpg",
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
+    "content": [{
+        "id": "1",
+        "title": "1 - Introduction",
+        "start_page": 3,
+        "content": [{
+            "id": "1.1",
+            "title": "1.1 - A History",
+            "start_page": 5
+        }]
+    }]
+}

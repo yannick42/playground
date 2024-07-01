@@ -49,7 +49,7 @@ canvas {
  *
  */
 #book_list {
-	width: 500px;
+	width: 575px;
 	font-size: smaller;
 }
 
@@ -76,13 +76,14 @@ canvas {
 .level {
 	display: flex;
 	flex-direction: column;
-    height: 250px;
+    max-height: 250px;
     overflow: scroll;
+	padding-right: 5px;
 }
 
 .content {
 	/*width: 100%;*/
-	margin-top: 3px;
+	margin-top: 1px;
 }
 
 .content > .start_page {
@@ -178,6 +179,7 @@ canvas {
 	border-radius: 3px;
     padding: 2px;
     font-size: x-small;
+	user-select: none;
 }
 
 /**

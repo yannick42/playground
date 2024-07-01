@@ -3,11 +3,7 @@
     "nb_pages": 499,
     "id": "VG",
     "front_cover": "https://m.media-amazon.com/images/I/81uF+naRFlL._AC_UF100,100_QL80_.jpg",
-    "tags": [{
-        "text": "todo",
-        "bgColor": "yellow",
-        "textColor": "black"
-    }],
+    "tags": [],
     "content": [{
         "title": "1 - Introduction",
         "start_page": 1,
@@ -93,28 +89,304 @@
             "start_page": 119
         }]
     },{
-        "title": "4 - ",
-        "start_page": 41,
+        "title": "4 - Globe Rendering",
+        "start_page": 121,
         "content": [{
             "id": "4.1",
-            "title": "4.1 - ",
-            "start_page": 42
+            "title": "4.1 - Tessellation",
+            "start_page": 121
         },{
             "id": "4.2",
-            "title": "4.2 -  ",
-            "start_page": 46
+            "title": "4.2 - Shading",
+            "start_page": 133
         },{
             "id": "4.3",
-            "title": "4.3 - ",
-            "start_page": 50
+            "title": "4.3 - GPU Ray Casting",
+            "start_page": 149
         },{
             "id": "4.4",
-            "title": "4.4 - ",
-            "start_page": 63
+            "title": "4.4 - Resources",
+            "start_page": 154
+        }]
+    },{
+        "title": "5 - Vertex Transform Precision",
+        "start_page": 157,
+        "content": [{
+            "id": "5.1",
+            "title": "5.1 - Jittering Explained",
+            "start_page": 158
         },{
-            "id": "4.5",
-            "title": "4.5 - ",
-            "start_page": 84
+            "id": "5.2",
+            "title": "5.2 - Rendering Relative to Center",
+            "start_page": 164
+        },{
+            "id": "5.3",
+            "title": "5.3 - Rendering Relative to Eye Using the CPU",
+            "start_page": 169
+        },{
+            "id": "5.4",
+            "title": "5.4 - Rendering Relative to Eye Using the GPU",
+            "start_page": 171
+        },{
+            "id": "5.5",
+            "title": "5.5 - Recommendations",
+            "start_page": 177
+        },{
+            "id": "5.5",
+            "title": "5.5 - Resources",
+            "start_page": 180
+        }]
+    },{
+        "title": "6 - Depth Buffer Precision",
+        "start_page": 181,
+        "content": [{
+            "id": "6.1",
+            "title": "6.1 - Causes of Depth Buffer Errors",
+            "start_page": 181
+        },{
+            "id": "6.2",
+            "title": "6.2 - Basic Solutions",
+            "start_page": 188
+        },{
+            "id": "6.3",
+            "title": "6.3 - Complementary Depth Buffering",
+            "start_page": 189
+        },{
+            "id": "6.4",
+            "title": "6.4 - Logarithmic Depth Buffer",
+            "start_page": 191
+        },{
+            "id": "6.5",
+            "title": "6.5 - Rendering with Multiple Frustums",
+            "start_page": 194
+        },{
+            "id": "6.6",
+            "title": "6.6 - W-Buffer",
+            "start_page": 198
+        },{
+            "id": "6.7",
+            "title": "6.7 - Algorithms Summary",
+            "start_page": 198
+        },{
+            "id": "6.8",
+            "title": "6.8 - Resources",
+            "start_page": 199
+        }]
+    },{
+        "title": "7 - Vector Data and Polylines",
+        "start_page": 203,
+        "content": [{
+            "id": "7.1",
+            "title": "7.1 - Sources of Vector Data",
+            "start_page": 203
+        },{
+            "id": "7.2",
+            "title": "7.2 - Combating Z-Fighting",
+            "start_page": 204
+        },{
+            "id": "7.3",
+            "title": "7.3 - Polylines",
+            "start_page": 207
+        },{
+            "id": "7.4",
+            "title": "7.4 - Resources",
+            "start_page": 219
+        }]
+    },{
+        "title": "8 - Polygons",
+        "start_page": 221,
+        "content": [{
+            "id": "8.1",
+            "title": "8.1 - Render to Texture",
+            "start_page": 221
+        },{
+            "id": "8.2",
+            "title": "8.2 - Tessellating Polygons",
+            "start_page": 222
+        },{
+            "id": "8.3",
+            "title": "8.3 - Polygons on Terrain",
+            "start_page": 241
+        },{
+            "id": "8.4",
+            "title": "8.4 - Resources",
+            "start_page": 250
+        }]
+    },{
+        "title": "9 - Billboards",
+        "start_page": 251,
+        "content": [{
+            "id": "9.1",
+            "title": "9.1 - Basic Rendering",
+            "start_page": 252
+        },{
+            "id": "9.2",
+            "title": "9.2 - Minimizing Texture Switches",
+            "start_page": 258
+        },{
+            "id": "9.3",
+            "title": "9.3 - Origins and Offsets",
+            "start_page": 267
+        },{
+            "id": "9.4",
+            "title": "9.4 - Rendering Text",
+            "start_page": 271
+        },{
+            "id": "9.5",
+            "title": "9.5 - Resources",
+            "start_page": 273
+        }]
+    },{
+        "title": "10 - Exploiting Parallelism in Resource Preparation",
+        "start_page": 275,
+        "content": [{
+            "id": "10.1",
+            "title": "10.1 - Parallelism Everywhere",
+            "start_page": 275
+        },{
+            "id": "10.2",
+            "title": "10.2 - Task-Level Parallelism in Virtual Globes",
+            "start_page": 278
+        },{
+            "id": "10.3",
+            "title": "10.3 - Architectures for Multithreading",
+            "start_page": 280
+        },{
+            "id": "10.4",
+            "title": "10.4 - Multithreading in OpenGL",
+            "start_page": 292
+        },{
+            "id": "10.5",
+            "title": "10.5 - Resources",
+            "start_page": 304
+        }]
+    },{
+        "title": "11 - Terrain Basics",
+        "start_page": 307,
+        "content": [{
+            "id": "11.1",
+            "title": "11.1 - Terrain Representations",
+            "start_page": 308
+        },{
+            "id": "11.2",
+            "title": "11.2 - Rendering Height Maps",
+            "start_page": 313
+        },{
+            "id": "11.3",
+            "title": "11.3 - Computing Normals",
+            "start_page": 335
+        },{
+            "id": "11.4",
+            "title": "11.4 - Shading",
+            "start_page": 343
+        },{
+            "id": "11.5",
+            "title": "11.5 - Resources",
+            "start_page": 363
+        }]
+    },{
+        "title": "12 - Massive-Terrain Rendering",
+        "start_page": 365,
+        "content": [{
+            "id": "12.1",
+            "title": "12.1 - Level of Detail",
+            "start_page": 367
+        },{
+            "id": "12.2",
+            "title": "12.2 - Preprocessing",
+            "start_page": 376
+        },{
+            "id": "12.3",
+            "title": "12.3 - Out-of-Core Rendering",
+            "start_page": 381
+        },{
+            "id": "12.4",
+            "title": "12.4 - Culling",
+            "start_page": 390
+        },{
+            "id": "12.5",
+            "title": "12.5 - Resources",
+            "start_page": 400
+        }]
+    },{
+        "title": "13 - Geometry Clipmapping",
+        "start_page": 403,
+        "content": [{
+            "id": "13.1",
+            "title": "13.1 - The Clipmap Pyramid",
+            "start_page": 406
+        },{
+            "id": "13.2",
+            "title": "13.2 - Vertex Buffers",
+            "start_page": 408
+        },{
+            "id": "13.3",
+            "title": "13.3 - Vertex and Fragment Shaders",
+            "start_page": 411
+        },{
+            "id": "13.4",
+            "title": "13.4 - Blending",
+            "start_page": 414
+        },{
+            "id": "13.5",
+            "title": "13.5 - Clipmap Update",
+            "start_page": 417
+        },{
+            "id": "13.6",
+            "title": "13.6 - Shading",
+            "start_page": 435
+        },{
+            "id": "13.7",
+            "title": "13.7 - Geometry Clipmapping on a Globe",
+            "start_page": 436
+        },{
+            "id": "13.8",
+            "title": "13.8 - Resources",
+            "start_page": 443
+        }]
+    },{
+        "title": "14 - Chunked LOD",
+        "start_page": 445,
+        "content": [{
+            "id": "14.1",
+            "title": "14.1 - Chunks",
+            "start_page": 447
+        },{
+            "id": "14.2",
+            "title": "14.2 - Selection",
+            "start_page": 448
+        },{
+            "id": "14.3",
+            "title": "14.3 - Cracks between Chunks",
+            "start_page": 449
+        },{
+            "id": "14.4",
+            "title": "14.4 - Switching",
+            "start_page": 450
+        },{
+            "id": "14.5",
+            "title": "14.5 - Generation",
+            "start_page": 452
+        },{
+            "id": "14.6",
+            "title": "14.6 - Shading",
+            "start_page": 459
+        },{
+            "id": "14.7",
+            "title": "14.7 - Out-of-Core Rendering",
+            "start_page": 460
+        },{
+            "id": "14.8",
+            "title": "14.8 - Chunked LOD on a Global",
+            "start_page": 462
+        },{
+            "id": "14.9",
+            "title": "14.9 - Chunked LOD Compared to Geometry Clipmapping",
+            "start_page": 463
+        },{
+            "id": "14.10",
+            "title": "14.10 - Resources",
+            "start_page": 465
         }]
     }]
 }
