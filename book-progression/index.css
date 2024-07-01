@@ -30,7 +30,8 @@ body {
 }
 
 #subtitle {
-	align-self: start;	
+	align-self: start;
+	font-style: italic;
 }
 
 canvas {

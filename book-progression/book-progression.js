@@ -3,38 +3,23 @@ import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.
 import { randInt } from '../common/common.helper.js';
 import { computeBézierCurve } from '../common/math.helper.js';
 
-// hard-coded books
-import { SICP } from './books/SICP.js';
-import { CG } from './books/CG.js';;
-import { VG } from './books/VG.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"
 
-/**
- * TODO:
- * 
- * 
+const firebaseConfig = {
+    apiKey: "AIzaSyAvPeqHFoSYuETGai2VoAtDmbP8a_F3QR0", // no risk : https://firebase.google.com/docs/projects/api-keys
+    authDomain: "book-progression.firebaseapp.com",
+    projectId: "book-progression",
+    storageBucket: "book-progression.appspot.com",
+    messagingSenderId: "1017563463675",
+    appId: "1:1017563463675:web:4c84cebf8c0c78a7d0d55e",
+    measurementId: "G-BS2RFS52ET"
+};
 
-- start all closed (if no config. in localStorage)
-
-
-
-
-
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+//const analytics = getAnalytics(app);
+const storage = getStorage(app);
 
 
 
@@ -50,8 +35,6 @@ function main() {
 }
 
 
-
-
 /**
  * Links
  */
@@ -63,8 +46,28 @@ const arrowsList = [
 /**
  * TODO: get it from localStorage too ! (or backend ?!)
  */
-function getBookList() {
+async function getBookListFromFirebase() {
+    // hard-coded books stored in Firebase Storage (GCS)
+    let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
+    console.log("url:", url)
+    let fetched = await fetch(url);
+    const SICP = await fetched.json();
+
+    url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
+    console.log("url:", url)
+    fetched = await fetch(url);
+    const CG = await fetched.json();
+
+    url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
+    console.log("url:", url)
+    fetched = await fetch(url);
+    const VG = await fetched.json();
+
     return [SICP, CG, VG];
+}
+
+function getBookList() {
+    return bookList;
 }
 
 function createHtml(book) {
@@ -222,7 +225,10 @@ const toggleEventFn = function(e) {
     if(newVisibility) {
         e.target.offsetParent.querySelector('.level').classList.remove('toggled');
         e.target.innerText = '➖';
-        const test = getBookList().filter(book => book.id != bookId).forEach(book => book.visibility && document.querySelector("#"+book.id+" .toggle").click());
+        // toggle/close all the others if open !
+        const test = getBookList()
+            .filter(book => book.id !== bookId)
+            .forEach(book => getProgress(book.id).visibility == true && document.querySelector("#"+book.id+" .toggle").click());
     } else {
         e.target.offsetParent.querySelector('.level').classList.add('toggled');
         e.target.innerText = '➕';
@@ -255,6 +261,9 @@ function addEvents() {
 
 }
 
+/**
+ * CLEAN UP this method !
+ */
 function searchKeyUp(e) {
 
     // filter all the books objects (remove unnecessary leaf + if not leaf && not necessary -> remove !)
@@ -398,4 +407,6 @@ function redraw(books) {
 }
 
 
+
+const bookList = await getBookListFromFirebase();
 main();
