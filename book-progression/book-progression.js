@@ -292,8 +292,6 @@ function addEvents() {
  */
 function searchKeyUp(e) {
 
-    console.log(e)
-
     // filter all the books objects (remove unnecessary leaf + if not leaf && not necessary -> remove !)
 
     const searchStr = e.target.value;
@@ -301,36 +299,31 @@ function searchKeyUp(e) {
 
     let copy = structuredClone(getBookList());
 
-    function prune(book, content, depth) {
+    function pruneRecursive(book, content, depth) {
         //console.log("pruning content:", content, "at depth:", depth)
 
-        //if(content.length) { // is there a deeper level ?
-            // search & prune list recursively
-            content = content.map(entry => entry.content ?
-                    prune(entry, entry.content, depth + 1) // todo ? can be not passing the test but its children yes...
-                : { id: entry.id, title: entry.title, start_page: entry.start_page }
-            ).filter(entry => entry); // remove nulls
-            
-            // list of found matchings
-            const filteredContent = content.filter(entry => {
-                const test = entry.title.toLowerCase().includes(searchStr.toLowerCase());
-                //console.log(">", entry.title, "is matching ?", test);
+        // search & prune list recursively
+        content = content.map(entry => entry.content /* deeper level exists */ ?
+            pruneRecursive(entry, entry.content, depth + 1) // todo ? can be not passing the test but its children yes...
+            : { id: entry.id, title: entry.title, start_page: entry.start_page } // keep as is
+        ).filter(entry => entry); // remove nulls (from pruning)
 
-                // 
-                return test || content.some(entry => entry.content?.length > 0);
-            });
+        // list of found matchings
+        const filteredContent = content.filter(entry => {
+            const containsSearch = entry.title.toLowerCase().includes(searchStr.toLowerCase());
 
-            return filteredContent.length === 0 ?
-                null : // nothing found, this "node" will be removed, also its children as they don't have any values in them..
-                { id: book.id, title: book.title, start_page: book.start_page, content: filteredContent };
-        //}
+            return containsSearch || content.some(entry => entry.content?.length > 0) /*child a child (or grand-child, ...) has it ?*/;
+        });
 
-        //return; // never reached ?!
+        return filteredContent.length === 0 // nothing
+            && !book.title.toLowerCase().includes(searchStr.toLowerCase()) ? // and not in this current title
+            null : // nothing found, this "node" will be removed, also its children as they don't have any values in them..
+            { id: book.id, title: book.title, start_page: book.start_page, content: filteredContent };
     }
 
     if(searchStr) {
         copy.forEach(book => {
-            const res = book.content.map(entry => prune(entry, entry.content, 0)).filter(entry => entry); // remove nulls
+            const res = book.content.map(entry => pruneRecursive(entry, entry.content, 0)).filter(entry => entry); // remove nulls
             //console.log(">>> res:", res);
             book.content = res; // filtered content
 
