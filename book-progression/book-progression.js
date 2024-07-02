@@ -30,8 +30,9 @@ const ctx = canvas.getContext("2d");
 
 
 function main() {
+    visibleBooks = getBookList();
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
-    redraw(getBookList()); // get all books
+    redraw(visibleBooks); // get all books
 
 
 
@@ -207,7 +208,7 @@ function getVisibility(bookId) {
 
 function setBookVisibility(bookId, visible) {
     const el = document.getElementById(bookId);
-    console.log("el:", el)
+    //console.log("el:", el)
     el.style.display = visible ? 'block' : 'none';
 }
 
@@ -247,6 +248,9 @@ function clickCheckboxEvent (e) {
     updateProgressBar(book)
 }
 
+/**
+ * on +/- click
+ */
 const toggleEventFn = function(e) {
     const bookId = e.target.offsetParent.id;
     const currentVisibility = getVisibility(bookId);
@@ -254,14 +258,19 @@ const toggleEventFn = function(e) {
     const newVisibility = setVisibility(bookId, !currentVisibility);
 
     if(newVisibility) {
-        e.target.offsetParent.querySelector('.level').classList.remove('toggled');
+        e.target.offsetParent.querySelector('.level').classList.remove('toggled'); // opened
         e.target.innerText = '➖';
         // toggle/close all the others if open !
-        const test = getBookList()
-            .filter(book => book.id !== bookId)
-            .forEach(book => getProgress(book.id).visibility == true && document.querySelector("#"+book.id+" .toggle").click());
+        const test = visibleBooks
+            .filter(book => book.id !== bookId && getVisibility(book.id)) // only on the others if open
+            .forEach(book => {
+                setVisibility(book.id, false);
+                const el = document.querySelector("#" + book.id + " > .level");
+                el.classList.add('toggled'); // close them
+                el.innerText = '➕';
+            });
     } else {
-        e.target.offsetParent.querySelector('.level').classList.add('toggled');
+        e.target.offsetParent.querySelector('.level').classList.add('toggled'); // closed
         e.target.innerText = '➕';
     }
 
@@ -305,40 +314,74 @@ function search(text) {
     // filter all the books objects (remove unnecessary leaf + if not leaf && not necessary -> remove !)
 
     const searchStr = text;
-    console.log("searching for", searchStr)
+    let copy;
 
-    let copy = structuredClone(getBookList());
+    if(!searchStr) {
+        visibleBooks = getBookList(); // reset to all books
+        visibleBooks.forEach(book => {
+            setVisibility(book.id, false);
 
-    function pruneRecursive(book, content, depth) {
-        //console.log("pruning content:", content, "at depth:", depth)
-
-        // search & prune list recursively
-        const flattenedContent = content.map(entry => entry.content /* deeper level exists */ ?
-            pruneRecursive(entry, entry.content, depth + 1) // todo ? may not pass the test, but its children, yes!..
-            : entry
-        ).filter(entry => entry); // remove nulls (from pruning)
-
-        // list of found matchings
-        const filteredContent = flattenedContent.filter(entry => {
-            const containsSearch = (
-                entry.title.toLowerCase().includes(searchStr.toLowerCase()) ||
-                entry.search_context?.toLowerCase().includes(searchStr.toLowerCase())
-            );
-            return containsSearch
-                /* a child (or grand-child, ...) has it ? */ // BUG ?!
-                || content.some(entry => entry.content?.length > 0);
+            const el = document.querySelector("#" + book.id + " > .level");
+            el.classList.add('toggled'); // close them
+            el.innerText = '➕';
         });
+    } else {
 
-        return filteredContent.length === 0 // nothing in child
+        console.log("searching for", searchStr);
+
+        copy = structuredClone(getBookList());
+
+        const showDebug = '4.4x'
+        function pruneRecursive(book, content, depth) {
+            
+            if(book.title.startsWith(showDebug)) {
+                console.log("pruning content:", content, "at depth:", depth)
+            }
+
+            // search & prune list recursively
+            const flattenedContent = content.map(entry => entry.content /* deeper level exists */ ?
+                pruneRecursive(entry, entry.content, depth + 1) // todo ? may not pass the test, but its children, yes!..
+                : entry
+            ).filter(entry => entry); // remove nulls (from pruning)
+
+            if(book.title.startsWith(showDebug)) {
+                console.log(flattenedContent, depth)
+            }
+
+            // list of found matchings
+            const filteredContent = flattenedContent.filter(entry => {
+                const containsSearch = (
+                    entry.title.toLowerCase().includes(searchStr.toLowerCase()) ||
+                    entry.search_context?.toLowerCase().includes(searchStr.toLowerCase())
+                );
+                return containsSearch
+                    /* a child (or grand-child, ...) has it ? */
+                    || flattenedContent.some(entry => {
+
+                        if(book.title.startsWith(showDebug)) {
+                            console.log("?", entry);
+                        }
+                        return entry.content?.length > 0;
+                    });
+            });
+
+            if(book.title.startsWith(showDebug)) {
+                console.log(filteredContent, depth)
+            }
+
+            const returnedContent = filteredContent.length === 0 // nothing in child
             /*&& ! (
                 book.title.toLowerCase().includes(searchStr.toLowerCase())
                 || book.search_context?.toLowerCase().includes(searchStr.toLowerCase())
             )*/ ? // and not in this current level's title
                 null : // nothing found, this "node" will be removed, also its children as they don't have any values in them..
                 { ...book, content: filteredContent };
-    }
+            if(book.title.startsWith(showDebug)) {
+                console.warn(returnedContent, depth);
+            }
+            return returnedContent;
+        }
 
-    if(searchStr) {
         copy.forEach(book => {
             // filtered content
             book.content = book.content.map(entry => pruneRecursive(entry, entry.content, 0)).filter(entry => entry); // remove nulls
@@ -346,22 +389,26 @@ function search(text) {
         //console.warn("filtered books copy =", copy);
     }
 
+
+
     removeEvents();
     // erase all .....
     bookListEl.innerHTML = '';
 
-    const books = searchStr ? copy : getBookList();
-    redraw(books);
+    visibleBooks = searchStr ? copy : getBookList();
+    redraw(visibleBooks);
 
-    books.forEach(book => {
+    visibleBooks.forEach(book => {
         if(searchStr) {
             setVisibility(book.id, true);
             setBookVisibility(book.id, book.content.length > 0);
-        } else {
-            setVisibility(book.id, false)
         }
     })
+
+    updateArrows()
 }
+
+let visibleBooks = [];
 
 
 function updateArrows()
@@ -374,13 +421,19 @@ function updateArrows()
 
     arrowsList.forEach(([from, to, style]) => {
 
-        const fromBBox = document.getElementById(from).getBoundingClientRect();
+        const fromEl = document.getElementById(from);
+        const toEl = document.getElementById(to);
+
+        //console.warn(`(${from}->${to}) >`, fromEl.style.display, toEl.style.display)
+        if(fromEl.style.display == 'none' || toEl.style.display == 'none') return; // skip this one !
+
+        const fromBBox = fromEl.getBoundingClientRect();
         const pt1 = [
             fromBBox.left + canvas.offsetLeft,
             (fromBBox.bottom - fromBBox.top) / 2 + fromBBox.top - 12.5 - pointSize/2 + window.pageXOffset
         ];
 
-        const toBBox = document.getElementById(to).getBoundingClientRect();
+        const toBBox = toEl.getBoundingClientRect();
         const pt2 = [
             toBBox.left + canvas.offsetLeft,
             (toBBox.bottom - toBBox.top) / 2 + toBBox.top - 15 /*??*/ + window.pageXOffset
