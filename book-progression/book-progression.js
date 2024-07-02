@@ -283,18 +283,23 @@ function addEvents() {
 
     // remove ?
     searchEl.removeEventListener('keyup', searchKeyUp);
+    searchEl.removeEventListener('search', searchKeyUp);
+    // add !
     searchEl.addEventListener('keyup', searchKeyUp);
-
+    searchEl.addEventListener('search', searchKeyUp);
 }
 
 /**
  * CLEAN UP this method !
  */
 function searchKeyUp(e) {
+    search(e.target.value);
+}
 
+function search(text) {
     // filter all the books objects (remove unnecessary leaf + if not leaf && not necessary -> remove !)
 
-    const searchStr = e.target.value;
+    const searchStr = text;
     console.log("searching for", searchStr)
 
     let copy = structuredClone(getBookList());
