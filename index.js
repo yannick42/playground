@@ -45,18 +45,31 @@ window.onload = function() {
     }
 }
 
+let hashForTargetPage = '';
+
 function onHashChange() {
     const hash = window.location.hash;
+    
+    hashForTargetPage = ''; // reinit
+
     //console.log("hash changed to", window.location.hash);
     if(hash) { // changed to this
 
-        const hashEl = hash.split('|').join(',').split('%7C').join(',').split(',');
+        // split on | or its url-encode version %7C
+        const hashEl = hash.split('|').join(';').split('%7C').join(';').split(';');
+
+        console.log("onHashChanged:", hashEl);
 
         hashEl.reverse().forEach(hash => {
 
             if(hash == '0') {
                 closeMenu();
-                return;
+                return; // skip to next hash "element"
+            }
+
+            if(hash.includes(',')) {
+                console.warn("TODO: keep", hash, "for the target page!");
+                hashForTargetPage += '|' + hash;
             }
     
             const aLink = document.querySelector(hash);
@@ -71,9 +84,7 @@ function onHashChange() {
 
 window.addEventListener('hashchange', onHashChange, false);
 
-searchInputEl.addEventListener('input', (e) => {
-    search(e.target.value);
-});
+searchInputEl.addEventListener('input', (e) => search(e.target.value));
 
 function search(text) {
     searchText = text;
@@ -136,7 +147,7 @@ function goTo(id) {
     //const aLink = document.querySelector("#" + id);
     //aLink?.click(); // click on demo
 
-    history.pushState(null, null, '#' + id + (isClosedMenu ? '|0' : '')); // ???
+    history.pushState(null, null, '#' + id + (isClosedMenu ? '|0' : '') + (hashForTargetPage ? hashForTargetPage : '')); // ???
 
     // from, to
     changeSelected(currentHash, '#' + id); // change color to see which tool is selected

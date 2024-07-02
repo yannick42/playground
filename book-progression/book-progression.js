@@ -32,6 +32,25 @@ const ctx = canvas.getContext("2d");
 function main() {
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
     redraw(getBookList()); // get all books
+
+
+
+
+    const hashElements = window.parent.location.hash.split('|');
+    console.log("hashElements:", hashElements)
+    hashElements.forEach(element => {
+        const el = element.split(',')
+        if(el[0] === 'search') {
+            searchEl.value = el[1];
+            // send ENTER ! to run search
+            const keyEvent = new KeyboardEvent("keyup", {
+                key: "ArrowLeft",
+                bubbles: true,
+                cancelable: true
+            })
+            searchEl.dispatchEvent(keyEvent);
+        }
+    });
 }
 
 
@@ -50,17 +69,14 @@ const arrowsList = [
 async function getBookListFromFirebase() {
     // hard-coded books stored in Firebase Storage (GCS)
     let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
-    console.log("url:", url)
     let fetched = await fetch(url);
     const SICP = await fetched.json();
 
     url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
-    console.log("url:", url)
     fetched = await fetch(url);
     const CG = await fetched.json();
 
     url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
-    console.log("url:", url)
     fetched = await fetch(url);
     const VG = await fetched.json();
 
@@ -70,7 +86,10 @@ async function getBookListFromFirebase() {
     fetched = await fetch('./books/AlgoForOptimization.json');
     const AlgoForOptimization = await fetched.json();
 
-    return [SICP, CG, VG, Cormen, AlgoForOptimization];
+    fetched = await fetch('./books/NumericalRecipes.json');
+    const NumericalRecipes = await fetched.json();
+
+    return [SICP, CG, VG, Cormen, AlgoForOptimization, NumericalRecipes];
 }
 
 function getBookList() {
@@ -164,13 +183,13 @@ function _getLocalStorageObj(itemName) {
 }
 
 function setVisibility(bookId, value) {
-    console.log("setVisibility:", bookId, "to", value)
+    //console.log("setVisibility:", bookId, "to", value)
     const booksProgress = _getLocalStorageObj('book_progress');
     // get and keep unchanged books
     const newObject = booksProgress.filter(prog => prog.id !== bookId);
     // modify current book
     let currentBook = booksProgress.find(prog => prog.id === bookId);
-    console.log("setVis:", currentBook)
+    //console.log("setVis:", currentBook)
     if(currentBook) { // if present
         currentBook['visibility'] = value;
     } else {
@@ -272,6 +291,8 @@ function addEvents() {
  * CLEAN UP this method !
  */
 function searchKeyUp(e) {
+
+    console.log(e)
 
     // filter all the books objects (remove unnecessary leaf + if not leaf && not necessary -> remove !)
 
