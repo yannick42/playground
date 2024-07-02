@@ -159,7 +159,6 @@ function createHtml(book) {
 
 function createLevel(book, content, level) {
     return content.map(el => {
-        console.log("el:", el)
         const isChecked = el.id ? getProgressForId(book.id, el.id) : false;
         return `
         <div class="content ${el.content ? '' : 'leaf'}">
@@ -253,8 +252,6 @@ function removeEvents() {
 }
 
 function clickCheckboxEvent (e) {
-
-    console.log("???");
     
     const bookId = e.target.offsetParent.id; // use nearest positionned parent ? (because of position: relative ?)
     
@@ -265,12 +262,12 @@ function clickCheckboxEvent (e) {
     if(checkbox.checked) {
         e.target.classList.add('checked');
 
-        if(! book.progress.includes(e.target.id)) book.progress.push(e.target.id) // add to completed ids (eg. 1.1.1, ...)
+        if(! book.progress.includes(e.target.parentNode.id)) book.progress.push(e.target.parentNode.id) // add to completed ids (eg. 1.1.1, ...)
 
     } else {
         e.target.classList.remove('checked');
 
-        if(book.progress.includes(e.target.id)) book.progress = book.progress.filter(id => id !== e.target.id); // remove
+        if(book.progress.includes(e.target.parentNode.id)) book.progress = book.progress.filter(id => id !== e.target.parentNode.id); // remove
     }
     // save new progress to localStorage
     setProgress(bookId, book);
