@@ -8,6 +8,7 @@
         "bgColor": "yellow",
         "textColor": "red"
     }],
+    "authors": "William H. Press, Saul A. Teukolsky, William T. Vetterling & Brian P. Flannery",
     "content": [{
         "title": "1 - Preliminaries",
         "start_page": 1,

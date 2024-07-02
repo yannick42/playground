@@ -3,6 +3,7 @@
     "nb_pages": 855,
     "front_cover": "https://m.media-amazon.com/images/I/71BBXQnykuL._SL100_.jpg",
     "id": "SICP",
+    "authors": "Gerald J. Sussman, Hal Abelson & Julie Sussman",
     "content": [{
         "title": "1 - Building Abstractions with Procedures",
         "start_page": 1,

@@ -132,7 +132,7 @@ function createHtml(book) {
         <div id="${book.id}" class="book">
             <div>
 
-                ${book.front_cover ? `<div class="front-cover"><img src="${book.front_cover}" width=46 height=68 /></div>` : ''}
+                ${book.front_cover ? `<div class="front-cover"><img src="${book.front_cover}" width=35 height=55 /></div>` : ''}
                 
                 <div style="width: 100%">
                     <div class="toggle">${getVisibility(book.id) ? '➖' : '➕'}</div>
@@ -140,7 +140,7 @@ function createHtml(book) {
                         return `<span class="tag" style="background-color: ${tag.bgColor}; color: ${tag.textColor}">${tag.text}</span>`
                     }).join('')}</div>` : ''}
 
-                    <div class="title">${book.title}</div>${book.authors ? ` ${book.authors.join(', ')}` : ''}
+                    <div class="title_authors"><span class="title">${book.title}</span>${book.authors ? ` <span class="authors">by ${book.authors}</span>` : ''}</div>
 
                     <div class="progress-bar">
                         <div class="progress"></div>
@@ -252,7 +252,7 @@ function removeEvents() {
 }
 
 function clickCheckboxEvent (e) {
-    
+
     const bookId = e.target.offsetParent.id; // use nearest positionned parent ? (because of position: relative ?)
     
     const checkbox = e.target.querySelector("input[type='checkbox']");

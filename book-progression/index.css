@@ -73,6 +73,17 @@ canvas {
 	width: 93%;
 }
 
+.authors {
+	font-style: italic;
+	text-decoration: none;
+	font-size: smaller;
+}
+
+.title_authors {
+	height: 32px;
+	width: 95%;
+}
+
 .level {
 	display: flex;
 	flex-direction: column;
@@ -146,7 +157,7 @@ canvas {
 
 .progress {
 	width: 0;
-	height: 33px;
+	height: 20px;
 	background-color: #467799;
 	transition: width 0.3s;
 }
@@ -156,8 +167,9 @@ canvas {
     display: inline-block;
     width: 100%;
     position: absolute;
-    top: 49px;
-    font-size: 10pt;
+    top: 44px;
+    font-size: 8pt;
+	margin-left: -33px; /* TODO: fix this */
 }
 
 
@@ -177,7 +189,8 @@ canvas {
 
 .tags {
     position: absolute;
-    right: 25px;
+    right: 5px;
+    top: 23px;
 }
 
 .tag {

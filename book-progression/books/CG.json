@@ -4,6 +4,7 @@
     "id": "CG",
     "front_cover": "https://m.media-amazon.com/images/I/614hApBTToL._AC_UF100,100_QL80_.jpg",
     "tags": [],
+    "authors": "Mark de Berg, Marc van Kreveld, Mark Overmars & Otfried Schwarzkopf",
     "content": [{
         "title": "1 - Computational Geometry",
         "desc": "Introduction",

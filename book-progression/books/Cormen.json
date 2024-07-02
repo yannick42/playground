@@ -4,6 +4,7 @@
     "id": "Cormen",
     "front_cover": "https://m.media-amazon.com/images/I/61Mw06x2XcL._AC_UF100,100_QL80_.jpg",
     "tags": [],
+    "authors": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest & Clifford Stein",
     "content": [{
         "title": "I - Foundations",
         "start_page": 3,
