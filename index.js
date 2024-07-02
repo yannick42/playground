@@ -70,6 +70,7 @@ function onHashChange() {
             if(hash.includes(',')) {
                 console.warn("TODO: keep", hash, "for the target page!");
                 hashForTargetPage += '|' + hash;
+                return;
             }
     
             const aLink = document.querySelector(hash);
