@@ -58,19 +58,213 @@
         "content": [{
             "id": "10",
             "title": "10 - Elementary Data Structures",
-            "start_page": 252
+            "start_page": 252,
+            "content": [{
+                "id": "10.1",
+                "title": "10.1 - Simple array-based data structures: arrays, matrices, stacks, queues",
+                "start_page": 252
+            },{
+                "id": "10.2",
+                "title": "10.2 - Linked lists",
+                "start_page": 258
+            },{
+                "id": "10.3",
+                "title": "10.3 - Representing rooted trees",
+                "start_page": 265
+            }]
         },{
-            "id": "7",
-            "title": "7 - Quicksort",
-            "start_page": 5
+            "id": "1",
+            "title": "11 - Hash Tables",
+            "start_page": 272,
+            "content": [{
+                "id": "11.1",
+                "title": "11.1 - Direct-address tables",
+                "start_page": 273
+            },{
+                "id": "11.2",
+                "title": "11.2 - Hash tables",
+                "start_page": 275
+            },{
+                "id": "11.3",
+                "title": "11.3 - Hash functions",
+                "start_page": 282
+            },{
+                "id": "11.4",
+                "title": "11.4 - Open addressing",
+                "start_page": 293
+            },{
+                "id": "11.5",
+                "title": "11.5 - Practical considerations",
+                "start_page": 301
+            }]
         },{
-            "id": "8",
-            "title": "8 - Sorting in Linear Time",
-            "start_page": 49
+            "id": "12",
+            "title": "12 - Binary Search Trees",
+            "start_page": 312,
+            "content": [{
+                "id": "12.1",
+                "title": "12.1 - What is a binary search tree?",
+                "start_page": 312
+            },{
+                "id": "12.2",
+                "title": "12.2 - Querying a binary search tree",
+                "start_page": 316
+            },{
+                "id": "12.3",
+                "title": "12.3 - Insertion and deletion",
+                "start_page": 321
+            }]
         },{
-            "id": "9",
-            "title": "9 - Medians and Order Statistics",
-            "start_page": 227
+            "id": "13",
+            "title": "13 - Red-Black Trees",
+            "start_page": 331,
+            "content": [{
+                "id": "13.1",
+                "title": "13.1 - Properties of red-black trees",
+                "start_page": 331
+            },{
+                "id": "13.2",
+                "title": "13.2 - Rotations",
+                "start_page": 335
+            },{
+                "id": "13.3",
+                "title": "13.3 - Insertions",
+                "start_page": 338
+            },{
+                "id": "13.4",
+                "title": "13.4 - Deletion",
+                "start_page": 346
+            }]
+        }]
+    },{
+        "title": "IV - Advanced Design and Analysis Techniques",
+        "start_page": 3,
+        "content": [{
+            "id": "14",
+            "title": "14 - Dynamic Programming",
+            "start_page": 262,
+            "content": [{
+                "id": "14.1",
+                "title": "14.1 - Rod Cutting",
+                "start_page": 363
+            },{
+                "id": "14.2",
+                "title": "14.2 - Matrix-chain multiplication",
+                "start_page": 373
+            },{
+                "id": "14.3",
+                "title": "14.3 - Elements of dynamic programming",
+                "start_page": 382
+            },{
+                "id": "14.4",
+                "title": "14.4 - Longest common subsequence",
+                "start_page": 393
+            },{
+                "id": "14.5",
+                "title": "14.5 - Optimal binary search tree",
+                "start_page": 400
+            }]
+        },{
+            "id": "15",
+            "title": "15 - Greedy Algorithms",
+            "start_page": 417,
+            "content": [{
+                "id": "15.1",
+                "title": "15.1 - An activity-selection problem",
+                "start_page": 418
+            },{
+                "id": "15.2",
+                "title": "15.2 - Elements of the greedy strategy",
+                "start_page": 426
+            },{
+                "id": "15.3",
+                "title": "15.3 - Huffman codes",
+                "start_page": 431
+            },{
+                "id": "15.4",
+                "title": "15.4 - Offline caching",
+                "start_page": 440
+            }]
+        },{
+            "id": "16",
+            "title": "16 - Amortized Analysis",
+            "start_page": 448,
+            "content": [{
+                "id": "16.1",
+                "title": "16.1 - Aggregate analysic",
+                "start_page": 449
+            },{
+                "id": "16.2",
+                "title": "16.2 - The accounting method",
+                "start_page": 453
+            },{
+                "id": "16.3",
+                "title": "16.3 - The potential method",
+                "start_page": 456
+            },{
+                "id": "16.4",
+                "title": "16.4 - Dynamic tables",
+                "start_page": 460
+            }]
+        }]
+    },{
+        "title": "V - Advanced Data Structures",
+        "start_page": 3,
+        "content": [{
+            "id": "17",
+            "title": "17 - Augmenting Data Structures",
+            "start_page": 480,
+            "content": [{
+                "id": "17.1",
+                "title": "17.1 - Dynamic order statistics",
+                "start_page": 480
+            },{
+                "id": "17.2",
+                "title": "17.2 - How to augment a data structure",
+                "start_page": 486
+            },{
+                "id": "17.3",
+                "title": "17.3 - Interval trees",
+                "start_page": 489
+            }]  
+        },{
+            "id": "18",
+            "title": "18 - B-Trees",
+            "start_page": 497,
+            "content": [{
+                "id": "18.1",
+                "title": "18.1 - Definition of B-trees",
+                "start_page": 501
+            },{
+                "id": "18.2",
+                "title": "18.2 - Basic operations on B-trees",
+                "start_page": 504
+            },{
+                "id": "18.3",
+                "title": "18.3 - Deleting a key from a B-tree",
+                "start_page": 513
+            }]
+        },{
+            "id": "19",
+            "title": "19 - Data Structures for Disjoint Sets",
+            "start_page": 520,
+            "content": [{
+                "id": "19.1",
+                "title": "19.1 - Disjoint-set operations",
+                "start_page": 520
+            },{
+                "id": "19.2",
+                "title": "19.2 - Linked-list representation of disjoint sets",
+                "start_page": 523
+            },{
+                "id": "19.3",
+                "title": "19.3 - Disjoint-set forests",
+                "start_page": 527
+            },{
+                "id": "19.4",
+                "title": "19.4* - Analysis of union by rank with path compression",
+                "start_page": 460
+            }]
         }]
     }]
 }

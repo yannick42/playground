@@ -205,6 +205,12 @@ function getVisibility(bookId) {
     return booksProgress.find(prog => prog.id === bookId)?.visibility ?? true;
 }
 
+function setBookVisibility(bookId, visible) {
+    const el = document.getElementById(bookId);
+    console.log("el:", el)
+    el.style.display = visible ? 'block' : 'none';
+}
+
 
 function removeEvents() {
 
@@ -307,43 +313,54 @@ function search(text) {
         //console.log("pruning content:", content, "at depth:", depth)
 
         // search & prune list recursively
-        content = content.map(entry => entry.content /* deeper level exists */ ?
-            pruneRecursive(entry, entry.content, depth + 1) // todo ? can be not passing the test but its children yes...
-            : { id: entry.id, title: entry.title, start_page: entry.start_page } // keep as is
+        const flattenedContent = content.map(entry => entry.content /* deeper level exists */ ?
+            pruneRecursive(entry, entry.content, depth + 1) // todo ? may not pass the test, but its children, yes!..
+            : entry
         ).filter(entry => entry); // remove nulls (from pruning)
 
         // list of found matchings
-        const filteredContent = content.filter(entry => {
-            const containsSearch = entry.title.toLowerCase().includes(searchStr.toLowerCase());
-
-            return containsSearch || content.some(entry => entry.content?.length > 0) /*child a child (or grand-child, ...) has it ?*/;
+        const filteredContent = flattenedContent.filter(entry => {
+            const containsSearch = (
+                entry.title.toLowerCase().includes(searchStr.toLowerCase()) ||
+                entry.search_context?.toLowerCase().includes(searchStr.toLowerCase())
+            );
+            return containsSearch
+                /* a child (or grand-child, ...) has it ? */ // BUG ?!
+                || content.some(entry => entry.content?.length > 0);
         });
 
-        return filteredContent.length === 0 // nothing
-            && !book.title.toLowerCase().includes(searchStr.toLowerCase()) ? // and not in this current title
-            null : // nothing found, this "node" will be removed, also its children as they don't have any values in them..
-            { id: book.id, title: book.title, start_page: book.start_page, content: filteredContent };
+        return filteredContent.length === 0 // nothing in child
+            /*&& ! (
+                book.title.toLowerCase().includes(searchStr.toLowerCase())
+                || book.search_context?.toLowerCase().includes(searchStr.toLowerCase())
+            )*/ ? // and not in this current level's title
+                null : // nothing found, this "node" will be removed, also its children as they don't have any values in them..
+                { ...book, content: filteredContent };
     }
 
     if(searchStr) {
         copy.forEach(book => {
-            const res = book.content.map(entry => pruneRecursive(entry, entry.content, 0)).filter(entry => entry); // remove nulls
-            //console.log(">>> res:", res);
-            book.content = res; // filtered content
-
-            setVisibility(book.id, true);
+            // filtered content
+            book.content = book.content.map(entry => pruneRecursive(entry, entry.content, 0)).filter(entry => entry); // remove nulls
         });
-
-        //console.warn("result:", copy);
-    } else {
-        copy.forEach(book => setVisibility(book.id, false));
+        //console.warn("filtered books copy =", copy);
     }
 
     removeEvents();
     // erase all .....
     bookListEl.innerHTML = '';
 
-    redraw(searchStr ? copy : getBookList());
+    const books = searchStr ? copy : getBookList();
+    redraw(books);
+
+    books.forEach(book => {
+        if(searchStr) {
+            setVisibility(book.id, true);
+            setBookVisibility(book.id, book.content.length > 0);
+        } else {
+            setVisibility(book.id, false)
+        }
+    })
 }
 
 
@@ -351,7 +368,7 @@ function updateArrows()
 {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    setUpCanvas(ctx, canvas.width, canvas.height, 'white')
+    setUpCanvas(ctx, canvas.width, canvas.height, 'white');
 
     const pointSize = 5, color = "#467799";
 

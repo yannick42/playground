@@ -64,11 +64,13 @@
             },{
                 "id": "1.2.5",
                 "title": "1.2.5 - Greatest Common Divisors",
-                "start_page": 62
+                "start_page": 62,
+                "search_context": "GCD, Euclid's algorithm, Lamé's Theorem"
             },{
                 "id": "1.2.6",
                 "title": "1.2.6 - Example: Testing for Primality",
-                "start_page": 65
+                "start_page": 65,
+                "search_context": "Fermat test, Fermat's Little theorem, Probabilistic method, Miller-Rabin test (1976, 1980)"
             }]
         },{
             "title": "1.3 - Formulating Abstractions with Higher-Order Procedures",
