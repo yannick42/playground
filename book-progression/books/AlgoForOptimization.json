@@ -11,11 +11,443 @@
     "content": [{
         "id": "1",
         "title": "1 - Introduction",
-        "start_page": 3,
+        "start_page": 1,
         "content": [{
             "id": "1.1",
             "title": "1.1 - A History",
+            "start_page": 2
+        },{
+            "id": "1.2",
+            "title": "1.2 - Optimization Process",
+            "start_page": 4
+        },{
+            "id": "1.3",
+            "title": "1.3 - Basic Optimization Problem",
             "start_page": 5
+        },{
+            "id": "1.4",
+            "title": "1.4 - Constraints",
+            "start_page": 6
+        },{
+            "id": "1.5",
+            "title": "1.5 - Critical Points",
+            "start_page": 7
+        },{
+            "id": "1.6",
+            "title": "1.6 - Conditions for Local Minima",
+            "start_page": 8
+        },{
+            "id": "1.7",
+            "title": "1.7 - Contour Plots",
+            "start_page": 11
+        },{
+            "id": "1.8",
+            "title": "1.8 - Overview",
+            "start_page": 11
+        },{
+            "id": "1.9",
+            "title": "1.9 - Summary",
+            "start_page": 17
+        },{
+            "id": "1.10",
+            "title": "1.10 - Exercises",
+            "start_page": 17
         }]
+    },{
+        "id": "2",
+        "title": "2 - Derivatives and Gradients",
+        "start_page": 19,
+        "content": [{
+            "id": "2.1",
+            "title": "2.1 - Derivatives",
+            "start_page": 19
+        },{
+            "id": "2.2",
+            "title": "2.2 - Derivatives in Multiple Dimensions",
+            "start_page": 21
+        },{
+            "id": "2.3",
+            "title": "2.3 - Numerical Differentiation",
+            "start_page": 23
+        },{
+            "id": "2.4",
+            "title": "2.4 - Automatic Differentiation",
+            "start_page": 27
+        },{
+            "id": "2.5",
+            "title": "2.5 - Summary",
+            "start_page": 32
+        },{
+            "id": "2.6",
+            "title": "2.6 - Exercises",
+            "start_page": 33
+        }]
+    },{
+        "id": "3",
+        "title": "3 - Bracketing",
+        "start_page": 35,
+        "content": [{
+            "id": "3.1",
+            "title": "3.1 - Unimodality",
+            "start_page": 35
+        },{
+            "id": "3.2",
+            "title": "3.2 - Finding an Initial Bracket",
+            "start_page": 35
+        },{
+            "id": "3.3",
+            "title": "3.3 - Fibonacci Search",
+            "start_page": 37
+        },{
+            "id": "3.4",
+            "title": "3.4 - Golden Section Search",
+            "start_page": 39
+        },{
+            "id": "3.5",
+            "title": "3.5 - Quadratic Fit Search",
+            "start_page": 43
+        },{
+            "id": "3.6",
+            "title": "3.6 - Shubert-Piyavskii Method",
+            "start_page": 45
+        },{
+            "id": "3.7",
+            "title": "3.7 - Bisection Method",
+            "start_page": 49
+        },{
+            "id": "3.8",
+            "title": "3.8 - Summary",
+            "start_page": 51
+        },{
+            "id": "3.9",
+            "title": "3.9 - Exercises",
+            "start_page": 51
+        }]
+    },{
+        "id": "4",
+        "title": "4 - Local Descent",
+        "start_page": 53,
+        "content": [{
+            "id": "4.1",
+            "title": "4.1 - Descent Direction Iteration",
+            "start_page": 53
+        },{
+            "id": "4.2",
+            "title": "4.2 - Line Search",
+            "start_page": 54
+        },{
+            "id": "4.3",
+            "title": "4.3 - Approximate Line Search",
+            "start_page": 55
+        },{
+            "id": "4.4",
+            "title": "4.4 - Trust Region Methods",
+            "start_page": 61
+        },{
+            "id": "4.5",
+            "title": "4.5 - Termination Conditions",
+            "start_page": 63
+        },{
+            "id": "4.6",
+            "title": "4.6 - Summary",
+            "start_page": 66
+        },{
+            "id": "4.7",
+            "title": "4.7 - Exercises",
+            "start_page": 66
+        }]
+    },{
+        "id": "5",
+        "title": "5 - First-Order Methods",
+        "start_page": 69,
+        "content": [{
+            "id": "5.1",
+            "title": "5.1 - Gradient Descent",
+            "start_page": 69
+        },{
+            "id": "5.2",
+            "title": "5.2 - Conjugate Gradient",
+            "start_page": 70
+        },{
+            "id": "5.3",
+            "title": "5.3 - Momentum",
+            "start_page": 75
+        },{
+            "id": "5.4",
+            "title": "5.4 - Nesterov Momentum",
+            "start_page": 76
+        },{
+            "id": "5.5",
+            "title": "5.5 - Adagrad",
+            "start_page": 77
+        },{
+            "id": "5.6",
+            "title": "5.6 - RMSProp",
+            "start_page": 78
+        },{
+            "id": "5.7",
+            "title": "5.7 - Adadelta",
+            "start_page": 78
+        },{
+            "id": "5.8",
+            "title": "5.8 - Adam",
+            "start_page": 79
+        },{
+            "id": "5.9",
+            "title": "5.9 - Hypergradient Descent",
+            "start_page": 80
+        },{
+            "id": "5.10",
+            "title": "5.10 - Summary",
+            "start_page": 84
+        },{
+            "id": "5.11",
+            "title": "5.11 - Exercises",
+            "start_page": 84
+        }]
+    },{
+        "id": "6",
+        "title": "6 - Second-Order Methods",
+        "start_page": 87,
+        "content": [{
+            "id": "6.1",
+            "title": "6.1 - Newton's Method",
+            "start_page": 87
+        },{
+            "id": "6.2",
+            "title": "6.2 - Secant Method",
+            "start_page": 91
+        },{
+            "id": "6.3",
+            "title": "6.3 - Quasi-Netwon Methods",
+            "start_page": 91
+        },{
+            "id": "6.4",
+            "title": "6.4 - Summary",
+            "start_page": 95
+        },{
+            "id": "6.5",
+            "title": "6.5 - Exercises",
+            "start_page": 95
+        }]
+    },{
+        "id": "7",
+        "title": "7 - Direct Methods",
+        "start_page": 99,
+        "content": [{
+            "id": "7.1",
+            "title": "7.1 - Cyclic Coordinate Search",
+            "start_page": 99
+        },{
+            "id": "7.2",
+            "title": "7.2 - Powell's Method",
+            "start_page": 100
+        },{
+            "id": "7.3",
+            "title": "7.3 - Hooke-Jeeves",
+            "start_page": 102
+        },{
+            "id": "7.4",
+            "title": "7.4 - Generalized Pattern Search",
+            "start_page": 103
+        },{
+            "id": "7.5",
+            "title": "7.5 - Nelder-Mead Simplex Method",
+            "start_page": 105
+        },{
+            "id": "7.6",
+            "title": "7.6 - Divided Rectangles",
+            "start_page": 108
+        },{
+            "id": "7.7",
+            "title": "7.7 - Summary",
+            "start_page": 120
+        },{
+            "id": "7.8",
+            "title": "7.8 - Exercises",
+            "start_page": 123
+        }]
+    },{
+        "id": "8",
+        "title": "8 - Stochastic Methods",
+        "start_page": 125,
+        "content": [{
+            "id": "8.1",
+            "title": "8.1 - Noisy Descent",
+            "start_page": 125
+        },{
+            "id": "8.2",
+            "title": "8.2 - Mesh Adaptative Direct Search",
+            "start_page": 126
+        },{
+            "id": "8.3",
+            "title": "8.3 - Simulated Annealing",
+            "start_page": 128
+        },{
+            "id": "8.4",
+            "title": "8.4 - Cross-Entropy Method",
+            "start_page": 133
+        },{
+            "id": "8.5",
+            "title": "8.5 - Natural Evolution Strategies",
+            "start_page": 137
+        },{
+            "id": "8.6",
+            "title": "8.6 - Covariance Matrix Adaptation",
+            "start_page": 138
+        },{
+            "id": "8.7",
+            "title": "8.7 - Summary",
+            "start_page": 142
+        },{
+            "id": "8.8",
+            "title": "8.8 - Exercises",
+            "start_page": 142
+        }]
+    },{
+        "id": "9",
+        "title": "9 - Population Methods",
+        "start_page": 147,
+        "content": [{
+            "id": "9.1",
+            "title": "9.1 - ",
+            "start_page": 125
+        },{
+            "id": "9.2",
+            "title": "9.2 - ",
+            "start_page": 126
+        },{
+            "id": "9.3",
+            "title": "9.3 - ",
+            "start_page": 128
+        },{
+            "id": "9.4",
+            "title": "9.4 - ",
+            "start_page": 133
+        },{
+            "id": "9.5",
+            "title": "9.5 - ",
+            "start_page": 137
+        },{
+            "id": "9.6",
+            "title": "9.6 - ",
+            "start_page": 138
+        },{
+            "id": "9.7",
+            "title": "9.7 - ",
+            "start_page": 142
+        },{
+            "id": "9.8",
+            "title": "9.8 - Summary",
+            "start_page": 142
+        },{
+            "id": "9.9",
+            "title": "9.9 - Exercises",
+            "start_page": 142
+        }]
+    },{
+        "id": "10",
+        "title": "10 - Constraints",
+        "start_page": 167,
+        "content": [{
+            "id": "10.1",
+            "title": "10.1 - ",
+            "start_page": 125
+        },{
+            "id": "10.2",
+            "title": "10.2 - ",
+            "start_page": 126
+        },{
+            "id": "10.3",
+            "title": "10.3 - ",
+            "start_page": 128
+        },{
+            "id": "10.4",
+            "title": "10.4 - ",
+            "start_page": 133
+        },{
+            "id": "10.5",
+            "title": "10.5 - ",
+            "start_page": 137
+        },{
+            "id": "10.6",
+            "title": "10.6 - ",
+            "start_page": 138
+        },{
+            "id": "10.7",
+            "title": "10.7 - ",
+            "start_page": 142
+        },{
+            "id": "10.8",
+            "title": "10.8 - ",
+            "start_page": 142
+        },{
+            "id": "10.9",
+            "title": "10.9 - ",
+            "start_page": 142
+        },{
+            "id": "10.10",
+            "title": "10.10 - Summary",
+            "start_page": 142
+        },{
+            "id": "10.11",
+            "title": "10.11 - Exercises",
+            "start_page": 142
+        }]
+    },{
+        "id": "11",
+        "title": "11 - Linear Constrained Optimization",
+        "start_page": 189,
+        "content": []
+    },{
+        "id": "12",
+        "title": "12 - Multiobjective Optimization",
+        "start_page": 211,
+        "content": []
+    },{
+        "id": "13",
+        "title": "13 - Sampling Plans",
+        "start_page": 235,
+        "content": []
+    },{
+        "id": "14",
+        "title": "14 - Surrogate Models",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "15",
+        "title": "15 - Probabilistic Surrogate Models",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "16",
+        "title": "16 - Surrogate Optimization",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "17",
+        "title": "17 - Optimization under Uncertainty",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "18",
+        "title": "18 - Uncertainty Propagation",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "19",
+        "title": "19 - Discrete Optimization",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "20",
+        "title": "20 - Expression Optimization",
+        "start_page": 125,
+        "content": []
+    },{
+        "id": "21",
+        "title": "21 - Multidisciplinary Optimization",
+        "start_page": 125,
+        "content": []
     }]
 }

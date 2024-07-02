@@ -43,16 +43,16 @@
             "start_page": 49,
             "content": [{
                 "id": "3.1",
-                "title": "3.1 - ",
-                "start_page": 5
+                "title": "3.1 - O-notation, -notation, and -notation",
+                "start_page": 50
             },{
                 "id": "3.2",
-                "title": "3.2 - ",
-                "start_page": 12
+                "title": "3.2 - Asymptotic notation: formal definitions",
+                "start_page": 53
             },{
                 "id": "3.3",
-                "title": "3.3 - ",
-                "start_page": 12
+                "title": "3.3 - Standard notations and common functions",
+                "start_page": 63
             }]
         },{
             "id": "4",
@@ -111,7 +111,7 @@
         }]
     },{
         "title": "II - Sorting and Order Statistics",
-        "start_page": 3,
+        "start_page": 157,
         "content": [{
             "id": "6",
             "title": "6 - Heapsort",
@@ -186,7 +186,7 @@
             "content": [{
                 "id": "9.1",
                 "title": "9.1 - Minimum and maximum",
-                "start_page": 5
+                "start_page": 228
             },{
                 "id": "9.2",
                 "title": "9.2 - Selection in expected linear time",
@@ -199,7 +199,7 @@
         }]
     },{
         "title": "III - Data Structures",
-        "start_page": 3,
+        "start_page": 249,
         "content": [{
             "id": "10",
             "title": "10 - Elementary Data Structures",
@@ -283,11 +283,11 @@
         }]
     },{
         "title": "IV - Advanced Design and Analysis Techniques",
-        "start_page": 3,
+        "start_page": 361,
         "content": [{
             "id": "14",
             "title": "14 - Dynamic Programming",
-            "start_page": 262,
+            "start_page": 362,
             "content": [{
                 "id": "14.1",
                 "title": "14.1 - Rod Cutting",
@@ -354,7 +354,7 @@
         }]
     },{
         "title": "V - Advanced Data Structures",
-        "start_page": 3,
+        "start_page": 477,
         "content": [{
             "id": "17",
             "title": "17 - Augmenting Data Structures",

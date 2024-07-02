@@ -34,9 +34,6 @@ function main() {
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
     redraw(visibleBooks); // get all books
 
-
-
-
     const hashElements = window.parent.location.hash.split('|');
     console.log("hashElements:", hashElements)
     hashElements.forEach(element => {
@@ -67,29 +64,58 @@ const arrowsList = [
  * TODO: get it from localStorage too ! (or backend ?!)
  */
 async function getBookListFromFirebase() {
-    // hard-coded books stored in Firebase Storage (GCS)
-    let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
-    let fetched = await fetch(url);
-    const SICP = await fetched.json();
 
-    url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
-    fetched = await fetch(url);
-    const CG = await fetched.json();
+    const books = [];
 
-    url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
-    fetched = await fetch(url);
-    const VG = await fetched.json();
+    if(false) {
+        // hard-coded books stored in Firebase Storage (GCS)
+        let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
+        let fetched = await fetch(url);
+        books.push(await fetched.json());
 
-    fetched = await fetch('./books/Cormen.json');
-    const Cormen = await fetched.json();
+        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
+        fetched = await fetch(url);
+        books.push(await fetched.json());
 
-    fetched = await fetch('./books/AlgoForOptimization.json');
-    const AlgoForOptimization = await fetched.json();
+        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
+        fetched = await fetch(url);
+        books.push(await fetched.json());
 
-    fetched = await fetch('./books/NumericalRecipes.json');
-    const NumericalRecipes = await fetched.json();
+        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
+        fetched = await fetch(url);
+        books.push(await fetched.json());
 
-    return [SICP, CG, VG, Cormen, AlgoForOptimization, NumericalRecipes];
+        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
+        fetched = await fetch(url);
+        books.push(await fetched.json());
+
+        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
+        fetched = await fetch(url);
+        books.push(await fetched.json());
+
+    }
+    else
+    {
+        let fetched = await fetch('./books/SICP.json');
+        books.push(await fetched.json());
+
+        fetched = await fetch('./books/CG.json');
+        books.push(await fetched.json());
+
+        fetched = await fetch('./books/VG.json');
+        books.push(await fetched.json());
+
+        fetched = await fetch('./books/Cormen.json');
+        books.push(await fetched.json());
+
+        fetched = await fetch('./books/AlgoForOptimization.json');
+        books.push(await fetched.json());
+
+        fetched = await fetch('./books/NumericalRecipes.json');
+        books.push(await fetched.json());
+    }
+
+    return books;
 }
 
 function getBookList() {
@@ -133,12 +159,16 @@ function createHtml(book) {
 
 function createLevel(book, content, level) {
     return content.map(el => {
+        console.log("el:", el)
         const isChecked = el.id ? getProgressForId(book.id, el.id) : false;
         return `
         <div class="content ${el.content ? '' : 'leaf'}">
 
-            <span${el.id ? ' id="'+el.id+'"' : ''} class="content_title_${level}${isChecked ? ' checked' : ''}">
-                ${el.content ? '' : `<input type="checkbox" ${isChecked ? ' checked' : ''}/>`} ${el.title.replace(new RegExp(searchEl.value, 'ig'), (m) => '<mark>' + m + '</mark>')}
+            <span${el.id ? ' id="'+el.id+'"' : ''} class="content_title_${level}">
+                <span ${isChecked ? 'class="checked"' : ''}>
+                    ${el.content ? '' : `<input type="checkbox" ${isChecked ? ' checked' : ''}/>`} ${el.title.replace(new RegExp(searchEl.value, 'ig'), (m) => '<mark>' + m + '</mark>')}
+                </span>
+                ${el.tooltip ? '<span class="info" title="' + el.tooltip + '">🛈</span>' : ''}
             </span>
             <span class="start_page">${el.start_page}</span>
 
@@ -352,7 +382,8 @@ function search(text) {
             const filteredContent = flattenedContent.filter(entry => {
                 const containsSearch = (
                     entry.title.toLowerCase().includes(searchStr.toLowerCase()) ||
-                    entry.search_context?.toLowerCase().includes(searchStr.toLowerCase())
+                    entry.search_context?.toLowerCase().includes(searchStr.toLowerCase()) ||
+                    entry.tooltip?.toLowerCase().includes(searchStr.toLowerCase())
                 );
                 return containsSearch
                     /* a child (or grand-child, ...) has it ? */

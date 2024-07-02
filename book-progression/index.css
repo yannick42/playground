@@ -124,6 +124,11 @@ canvas {
 	text-decoration: line-through;
 }
 
+.info {
+	color: #3a4f2f;
+	margin-left: 5px;
+}
+
 .book > div:nth-child(1) {
 	display: flex;
 }
