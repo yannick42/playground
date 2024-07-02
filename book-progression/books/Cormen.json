@@ -3,34 +3,111 @@
     "nb_pages": 1226,
     "id": "Cormen",
     "front_cover": "https://m.media-amazon.com/images/I/61Mw06x2XcL._AC_UF100,100_QL80_.jpg",
-    "tags": [{
-        "text": "incomplete",
-        "bgColor": "yellow",
-        "textColor": "red"
-    }],
+    "tags": [],
     "content": [{
         "title": "I - Foundations",
         "start_page": 3,
         "content": [{
             "id": "1",
             "title": "1 - The Role of Algorithms in Computing",
-            "start_page": 5
+            "start_page": 5,
+            "content": [{
+                "id": "1.1",
+                "title": "1.1 - Algorithms",
+                "start_page": 5
+            },{
+                "id": "1.2",
+                "title": "1.2 - Algorithms as a technology",
+                "start_page": 12
+            }]
         },{
             "id": "2",
             "title": "2 - Getting Started",
-            "start_page": 17
+            "start_page": 17,
+            "content": [{
+                "id": "2.1",
+                "title": "2.1 - Insertion sort",
+                "start_page": 17
+            },{
+                "id": "2.2",
+                "title": "2.2 - Analyzing algorithms",
+                "start_page": 25
+            },{
+                "id": "2.3",
+                "title": "2.3 - Designing algorithms",
+                "start_page": 34
+            }]
         },{
             "id": "3",
             "title": "3 - Characterizing Running Times",
-            "start_page": 49
+            "start_page": 49,
+            "content": [{
+                "id": "3.1",
+                "title": "3.1 - ",
+                "start_page": 5
+            },{
+                "id": "3.2",
+                "title": "3.2 - ",
+                "start_page": 12
+            },{
+                "id": "3.3",
+                "title": "3.3 - ",
+                "start_page": 12
+            }]
         },{
             "id": "4",
             "title": "4 - Divide-and-Conquer",
-            "start_page": 76
+            "start_page": 76,
+            "content": [{
+                "id": "4.1",
+                "title": "4.1 - Multiplying square matrices",
+                "start_page": 80
+            },{
+                "id": "4.2",
+                "title": "4.2 - Strassen's algorithm for matrix multiplication",
+                "start_page": 85
+            },{
+                "id": "4.3",
+                "title": "4.3 - The substitution method for solving recurrences",
+                "start_page": 90
+            },{
+                "id": "4.4",
+                "title": "4.4 - The recursion-tree method for solving recurrences",
+                "start_page": 95
+            },{
+                "id": "4.5",
+                "title": "4.5 - The master method for solving recurrences",
+                "start_page": 101
+            },{
+                "id": "4.6",
+                "title": "4.6* - Proof of the continuous master theorem",
+                "start_page": 107
+            },{
+                "id": "4.7",
+                "title": "4.7* - Akra-Bazzi recurrences",
+                "start_page": 115
+            }]
         },{
             "id": "5",
             "title": "5 - Probabilistic Analysis and Randomized Algorithms",
-            "start_page": 126
+            "start_page": 126,
+            "content": [{
+                "id": "5.1",
+                "title": "5.1 - The hiring problem",
+                "start_page": 126
+            },{
+                "id": "5.2",
+                "title": "5.2 - Indicator random variables",
+                "start_page": 130
+            },{
+                "id": "5.3",
+                "title": "5.3 - Randomized algorithms",
+                "start_page": 134
+            },{
+                "id": "5.4",
+                "title": "5.4 - Probabilistic analysis and further uses of indicator random variables",
+                "start_page": 140
+            }]
         }]
     },{
         "title": "II - Sorting and Order Statistics",
@@ -38,19 +115,87 @@
         "content": [{
             "id": "6",
             "title": "6 - Heapsort",
-            "start_page": 161
+            "start_page": 161,
+            "content": [{
+                "id": "6.1",
+                "title": "6.1 - Heaps",
+                "start_page": 161
+            },{
+                "id": "6.2",
+                "title": "6.2 - Maintaining the heap property",
+                "start_page": 164
+            },{
+                "id": "6.3",
+                "title": "6.3 - Building a heap",
+                "start_page": 167
+            },{
+                "id": "6.4",
+                "title": "6.4 - The heapsort algorithm",
+                "start_page": 170
+            },{
+                "id": "6.5",
+                "title": "6.5 - Priority queues",
+                "start_page": 172
+            }]
         },{
             "id": "7",
             "title": "7 - Quicksort",
-            "start_page": 182
+            "start_page": 182,
+            "content": [{
+                "id": "7.1",
+                "title": "7.1 - Description of quicksort",
+                "start_page": 183
+            },{
+                "id": "7.2",
+                "title": "7.2 - Performance of quicksort",
+                "start_page": 187
+            },{
+                "id": "7.3",
+                "title": "7.3 - A randomized version of quicksort",
+                "start_page": 191
+            },{
+                "id": "7.4",
+                "title": "7.4 - Analysis of quicksort",
+                "start_page": 193
+            }]
         },{
             "id": "8",
             "title": "8 - Sorting in Linear Time",
-            "start_page": 205
+            "start_page": 205,
+            "content": [{
+                "id": "8.1",
+                "title": "8.1 - Lower bounds for sorting",
+                "start_page": 205
+            },{
+                "id": "8.2",
+                "title": "8.2 - Counting sort",
+                "start_page": 208
+            },{
+                "id": "8.3",
+                "title": "8.3 - Radix sort",
+                "start_page": 211
+            },{
+                "id": "8.4",
+                "title": "8.4 - Bucket sort",
+                "start_page": 215
+            }]
         },{
             "id": "9",
             "title": "9 - Medians and Order Statistics",
-            "start_page": 227
+            "start_page": 227,
+            "content": [{
+                "id": "9.1",
+                "title": "9.1 - Minimum and maximum",
+                "start_page": 5
+            },{
+                "id": "9.2",
+                "title": "9.2 - Selection in expected linear time",
+                "start_page": 12
+            },{
+                "id": "9.3",
+                "title": "9.3 - Selection in worst-case linear time",
+                "start_page": 236
+            }]
         }]
     },{
         "title": "III - Data Structures",
@@ -263,7 +408,343 @@
             },{
                 "id": "19.4",
                 "title": "19.4* - Analysis of union by rank with path compression",
-                "start_page": 460
+                "start_page": 531
+            }]
+        }]
+    },{
+        "title": "VI - Graph Algorithms",
+        "start_page": 547,
+        "content": [{
+            "id": "20",
+            "title": "20 - Elementary Graph Algorithms",
+            "start_page": 549,
+            "content": [{
+                "id": "20.1",
+                "title": "20.1 - Representations of graphs",
+                "start_page": 549
+            },{
+                "id": "20.2",
+                "title": "20.2 - Breadth-first search",
+                "start_page": 554
+            },{
+                "id": "20.3",
+                "title": "20.3 - Depth-first search",
+                "start_page": 563
+            },{
+                "id": "20.4",
+                "title": "20.4 - Topological sort",
+                "start_page": 573
+            },{
+                "id": "20.5",
+                "title": "20.5 - Strongly connected components",
+                "start_page": 576
+            }]  
+        },{
+            "id": "21",
+            "title": "21 - Minimum Spanning Trees",
+            "start_page": 585,
+            "content": [{
+                "id": "21.1",
+                "title": "21.1 - Growing a minimum spanning tree",
+                "start_page": 586
+            },{
+                "id": "21.2",
+                "title": "21.2 - The algorithms of Kruskal and Prim",
+                "start_page": 591
+            }]
+        },{
+            "id": "22",
+            "title": "22 - Single-Source Shortest Paths",
+            "start_page": 604,
+            "content": [{
+                "id": "22.1",
+                "title": "22.1 - The Bellman-Ford algorithm",
+                "start_page": 612
+            },{
+                "id": "22.2",
+                "title": "22.2 - Single-source shortest paths in directed acyclic graphs",
+                "start_page": 616
+            },{
+                "id": "22.3",
+                "title": "22.3 - Dijkstra's algorithm",
+                "start_page": 620
+            },{
+                "id": "22.4",
+                "title": "22.4 - Difference constraints and shortest paths",
+                "start_page": 626
+            },{
+                "id": "22.5",
+                "title": "22.5 - Proofs of shortest-path properties",
+                "start_page": 633
+            }]
+        },{
+            "id": "23",
+            "title": "23 - All-Pairs Shortest Paths",
+            "start_page": 646,
+            "content": [{
+                "id": "23.1",
+                "title": "23.1 - Shortest paths and matrix multiplication",
+                "start_page": 648
+            },{
+                "id": "23.2",
+                "title": "23.2 - The Floyd-Warshall algorithm",
+                "start_page": 655
+            },{
+                "id": "23.3",
+                "title": "23.3 - Johnson's algorithm for sparse graphs",
+                "start_page": 662
+            }]
+        },{
+            "id": "24",
+            "title": "24 - Maximum Flow",
+            "start_page": 670,
+            "content": [{
+                "id": "24.1",
+                "title": "24.1 - Flow networks",
+                "start_page": 671
+            },{
+                "id": "24.2",
+                "title": "24.2 - The Ford-Fulkerson method",
+                "start_page": 676
+            },{
+                "id": "24.3",
+                "title": "24.3 - Maximum bipartite matching",
+                "start_page": 693
+            }]
+        },{
+            "id": "25",
+            "title": "25 - Matchings in Bipartite Graphs",
+            "start_page": 704,
+            "content": [{
+                "id": "25.1",
+                "title": "25.1 - Maximum bipartite matching (revisited)",
+                "start_page": 705
+            },{
+                "id": "25.2",
+                "title": "25.2 - The stable-marriage problem",
+                "start_page": 716
+            },{
+                "id": "25.3",
+                "title": "25.3 - The Hungarian algorithm for the assignment problem",
+                "start_page": 723
+            }]
+        }]
+    },{
+        "title": "VII - Selected Topics",
+        "start_page": 745,
+        "content": [{
+            "id": "26",
+            "title": "26 - Parallel Algorithms",
+            "start_page": 748,
+            "content": [{
+                "id": "26.1",
+                "title": "26.1 - The basics of fork-join parallelism",
+                "start_page": 750
+            },{
+                "id": "26.2",
+                "title": "26.2 - Parallel matrix multiplication",
+                "start_page": 770
+            },{
+                "id": "26.3",
+                "title": "26.3 - Parallel merge sort",
+                "start_page": 775
+            }]  
+        },{
+            "id": "27",
+            "title": "27 - Online Algorithms",
+            "start_page": 791,
+            "content": [{
+                "id": "27.1",
+                "title": "27.1 - Waiting for an elevator",
+                "start_page": 792
+            },{
+                "id": "27.2",
+                "title": "27.2 - Maintaining a search list",
+                "start_page": 795
+            },{
+                "id": "27.3",
+                "title": "27.3 - Online caching",
+                "start_page": 802
+            }]
+        },{
+            "id": "28",
+            "title": "28 - Matrix Operations",
+            "start_page": 819,
+            "content": [{
+                "id": "28.1",
+                "title": "28.1 - Solving systems of linear equations",
+                "start_page": 819
+            },{
+                "id": "28.2",
+                "title": "28.2 - Inverting matrices",
+                "start_page": 833
+            },{
+                "id": "28.3",
+                "title": "28.3 - Symmetric positive-definite matrices and least-squares approximation",
+                "start_page": 838
+            }]
+        },{
+            "id": "29",
+            "title": "29 - Linear Programming",
+            "start_page": 850,
+            "content": [{
+                "id": "29.1",
+                "title": "29.1 - Linear programming formulations and algorithms",
+                "start_page": 853
+            },{
+                "id": "29.2",
+                "title": "29.2 - Formulating problems as linear programs",
+                "start_page": 860
+            },{
+                "id": "29.3",
+                "title": "29.3 - Duality",
+                "start_page": 866
+            }]
+        },{
+            "id": "30",
+            "title": "30 - Polynomials and the FFT",
+            "start_page": 877,
+            "content": [{
+                "id": "30.1",
+                "title": "30.1 - Representing polynomials",
+                "start_page": 879
+            },{
+                "id": "30.2",
+                "title": "30.2 - The DFT and FFT",
+                "start_page": 885
+            },{
+                "id": "30.3",
+                "title": "30.3 - FFT circuits",
+                "start_page": 894
+            }]
+        },{
+            "id": "31",
+            "title": "31 - Number-Theoretic Algorithms",
+            "start_page": 903,
+            "content": [{
+                "id": "31.1",
+                "title": "31.1 - Elementary number-theoretic notions",
+                "start_page": 904
+            },{
+                "id": "31.2",
+                "title": "31.2 - Greatest common divisor",
+                "start_page": 911
+            },{
+                "id": "31.3",
+                "title": "31.3 - Modular arithmetic",
+                "start_page": 916
+            },{
+                "id": "31.4",
+                "title": "31.4 - Solving modular linear equations",
+                "start_page": 924
+            },{
+                "id": "31.5",
+                "title": "31.5 - The Chinese remainder theorem",
+                "start_page": 928
+            },{
+                "id": "31.6",
+                "title": "31.6 - Powers of an element",
+                "start_page": 932
+            },{
+                "id": "31.7",
+                "title": "31.7 - The RSA public-key cryptosystem",
+                "start_page": 936
+            },{
+                "id": "31.8",
+                "title": "31.8* - Primality testing",
+                "start_page": 942
+            }]
+        },{
+            "id": "32",
+            "title": "32 - String Matching",
+            "start_page": 957,
+            "content": [{
+                "id": "32.1",
+                "title": "32.1 - The naive string-matching algorithm",
+                "start_page": 960
+            },{
+                "id": "32.2",
+                "title": "32.2 - The Rabin-Karp algorithm",
+                "start_page": 962
+            },{
+                "id": "32.3",
+                "title": "32.3 - String matching with finite automata",
+                "start_page": 967
+            },{
+                "id": "32.4",
+                "title": "32.4* - The Knuth-Morris-Pratt algorithm",
+                "start_page": 975
+            },{
+                "id": "32.5",
+                "title": "32.5 - Suffix arrays",
+                "start_page": 985
+            }]
+        },{
+            "id": "33",
+            "title": "33 - Machine-Learning Algorithms",
+            "start_page": 1003,
+            "content": [{
+                "id": "33.1",
+                "title": "33.1 - Clustering",
+                "start_page": 1005
+            },{
+                "id": "33.2",
+                "title": "33.2 - Multiplicative-weights algorithms",
+                "start_page": 1015
+            },{
+                "id": "33.3",
+                "title": "33.3 - Gradient descent",
+                "start_page": 1022
+            }]
+        },{
+            "id": "34",
+            "title": "34 - NP-Completeness",
+            "start_page": 1042,
+            "content": [{
+                "id": "34.1",
+                "title": "34.1 - Polynomial time",
+                "start_page": 1048
+            },{
+                "id": "34.2",
+                "title": "34.2 - Polynomial-time verification",
+                "start_page": 1056
+            },{
+                "id": "34.3",
+                "title": "34.3 - NP-completeness and reducibility",
+                "start_page": 1061
+            },{
+                "id": "34.4",
+                "title": "34.4 - NP-completeness proofs",
+                "start_page": 1072
+            },{
+                "id": "34.5",
+                "title": "34.5 - NP-completeness problems",
+                "start_page": 1080
+            }]
+        },{
+            "id": "35",
+            "title": "35 - Approximation Algorithms",
+            "start_page": 1104,
+            "content": [{
+                "id": "35.1",
+                "title": "35.1 - The vertex-cover algorithm",
+                "start_page": 1106
+            },{
+                "id": "35.2",
+                "title": "35.2 - The traveling-salesperson problem",
+                "start_page": 1109
+            },{
+                "id": "35.3",
+                "title": "35.3 - The set-covering problem",
+                "start_page": 1115
+            },{
+                "id": "35.4",
+                "title": "35.4 - Randomization and linear programming",
+                "start_page": 1119
+            },{
+                "id": "35.5",
+                "title": "35.5 - The subset-sum problem",
+                "start_page": 1124
             }]
         }]
     }]
