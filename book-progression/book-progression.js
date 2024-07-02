@@ -58,9 +58,8 @@ function main() {
  * Links
  */
 const arrowsList = [
-    ['SICP', 'CG', 'solid'],
-    ['CG', 'VG', 'dashed'],
-    ['Cormen', 'AlgoForOptimization', 'solid']
+    ['Cormen', 'AlgoForOptimization', 'solid'],
+    ['Cormen', 'NumericalRecipes', 'solid'],
 ]
 
 /**
