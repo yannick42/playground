@@ -25,11 +25,13 @@
             },{
                 "id": "1.1.4",
                 "title": "1.1.4 - Compound Procedures",
-                "start_page": 15
+                "start_page": 15,
+                "tooltip": "formal parameters"
             },{
                 "id": "1.1.5",
                 "title": "1.1.5 - The Substitution Model for Procedure Application",
-                "start_page": 18
+                "start_page": 18,
+                "tooltip": "Applicative order, normal order"
             },{
                 "id": "1.1.6",
                 "title": "1.1.6 - Conditional Expressions and Predicates",
@@ -41,7 +43,8 @@
             },{
                 "id": "1.1.8",
                 "title": "1.1.8 - Procedures as Black-Box Abstractions",
-                "start_page": 33
+                "start_page": 33,
+                "tooltip": "local names, block structure"
             }]
         },{
             "title": "1.2 - Procedures and the Processes They Generate",
@@ -49,11 +52,13 @@
             "content": [{
                 "id": "1.2.1",
                 "title": "1.2.1 - Linear Recursion and Iteration",
-                "start_page": 41
+                "start_page": 41,
+                "tooltip": "Linear iterative process, deferred operations, tail recursive, Ackermann's function"
             },{
                 "id": "1.2.2",
                 "title": "1.2.2 - Tree recursion",
-                "start_page": 47
+                "start_page": 47,
+                "tooltip": "Another common pattern of computation. Counting change. Pascal's triangle"
             },{
                 "id": "1.2.3",
                 "title": "1.2.3 - Orders of Growth",
@@ -61,18 +66,19 @@
             },{
                 "id": "1.2.4",
                 "title": "1.2.4 - Exponentiation",
-                "start_page": 57
+                "start_page": 57,
+                "tooltip": "using a log(n) procedure"
             },{
                 "id": "1.2.5",
                 "title": "1.2.5 - Greatest Common Divisors",
                 "start_page": 62,
-                "search_context": "GCD, Euclid's algorithm, Lamé's Theorem"
+                "tooltip": "GCD, Euclid's algorithm, Lamé's Theorem"
             },{
                 "id": "1.2.6",
                 "title": "1.2.6 - Example: Testing for Primality",
                 "start_page": 65,
                 "search_context": "Fermat test, Fermat's Little theorem, Probabilistic method, Miller-Rabin test (1976, 1980)",
-                "tooltip": "Fermat's Little theorem, Fermat test, Miller-Rabin primality test"
+                "tooltip": "Fermat's Little theorem, Fermat test, Miller-Rabin primality test, probabilistic methods"
             }]
         },{
             "title": "1.3 - Formulating Abstractions with Higher-Order Procedures",
@@ -80,19 +86,23 @@
             "content": [{
                 "id": "1.3.1",
                 "title": "1.3.1 - Procedures as Arguments",
-                "start_page": 76
+                "start_page": 76,
+                "tooltip": "Simpson's Rule, Wallis formula. Sum, integral, accumulate, filter."
             },{
                 "id": "1.3.2",
                 "title": "1.3.2 - Constructing Procedures using lambda",
-                "start_page": 83
+                "start_page": 83,
+                "tooltip": "let keyword, ..."
             },{
                 "id": "1.3.3",
                 "title": "1.3.3 - Procedures as General Methods",
-                "start_page": 89
+                "start_page": 89,
+                "tooltip": "Finding zeros by half-interval method, fixed points of functions (average damping), k-terms finite continued fraction, tangent function (Lambert, 1770)"
             },{
                 "id": "1.3.4",
                 "title": "1.3.4 - Procedures as Returned Values",
-                "start_page": 97
+                "start_page": 97,
+                "tooltip": "Newton's method, n-th fold smoothed function, iterative improvement"
             }]
         }]
     },{

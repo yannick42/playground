@@ -6,9 +6,9 @@ import { matMul } from '../common/math.helper.js';
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-let cameraXPos = 275;
-let cameraYPos = 265;
-let cameraZPos = -250;
+let cameraXPos = 285;
+let cameraYPos = 290;
+let cameraZPos = -115;
 
 let cameraOrientationTheta = 0; // roll ?
 let cameraOrientationPhi = 0; // pitch ?
