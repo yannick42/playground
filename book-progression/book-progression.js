@@ -31,6 +31,9 @@ const ctx = canvas.getContext("2d");
 
 function main() {
     visibleBooks = getBookList();
+
+    console.warn(JSON.stringify(visibleBooks))
+
     //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
     redraw(visibleBooks); // get all books
 
@@ -58,7 +61,10 @@ function main() {
 const arrowsList = [
     ['Cormen', 'AlgoForOptimization', 'solid'],
     ['Cormen', 'NumericalRecipes', 'solid'],
+    ['AlgoForOptimization', 'AlgoForDecisionMaking', 'solid'],
 ]
+
+const bookIds = ['SICP', 'CG', 'VG', 'Cormen', 'AlgoForOptimization', 'NumericalRecipes', 'AlgoForDecisionMaking'];
 
 /**
  * TODO: get it from localStorage too ! (or backend ?!)
@@ -68,53 +74,22 @@ async function getBookListFromFirebase() {
     const books = [];
 
     if(false) {
-        // hard-coded books stored in Firebase Storage (GCS)
-        let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
-        let fetched = await fetch(url);
-        books.push(await fetched.json());
-
-        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
-        fetched = await fetch(url);
-        books.push(await fetched.json());
-
-        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
-        fetched = await fetch(url);
-        books.push(await fetched.json());
-
-        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/SICP.json'));
-        fetched = await fetch(url);
-        books.push(await fetched.json());
-
-        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/CG.json'));
-        fetched = await fetch(url);
-        books.push(await fetched.json());
-
-        url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/VG.json'));
-        fetched = await fetch(url);
-        books.push(await fetched.json());
-
+        for (const bookId of bookIds) {
+            // hard-coded books stored in Firebase Storage (GCS)
+            let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/' + bookId + '.json'));
+            let fetched = await fetch(url);
+            books.push(await fetched.json());
+        };
     }
     else
     {
-        let fetched = await fetch('./books/SICP.json');
-        books.push(await fetched.json());
-
-        fetched = await fetch('./books/CG.json');
-        books.push(await fetched.json());
-
-        fetched = await fetch('./books/VG.json');
-        books.push(await fetched.json());
-
-        fetched = await fetch('./books/Cormen.json');
-        books.push(await fetched.json());
-
-        fetched = await fetch('./books/AlgoForOptimization.json');
-        books.push(await fetched.json());
-
-        fetched = await fetch('./books/NumericalRecipes.json');
-        books.push(await fetched.json());
+        for (const bookId of bookIds) {
+            let fetched = await fetch('./books/'+bookId+'.json');
+            books.push(await fetched.json());
+        }
     }
 
+    console.warn(books);
     return books;
 }
 
@@ -135,11 +110,15 @@ function createHtml(book) {
                 ${book.front_cover ? `<div class="front-cover"><img src="${book.front_cover}" width=35 height=55 /></div>` : ''}
                 
                 <div style="width: 100%">
-                    <div class="toggle">${getVisibility(book.id) ? '➖' : '➕'}</div>
-                    ${book.tags?.length ? `<div class="tags">${book.tags?.map(tag => {
-                        return `<span class="tag" style="background-color: ${tag.bgColor}; color: ${tag.textColor}">${tag.text}</span>`
-                    }).join('')}</div>` : ''}
-
+                    <div class="top-right">
+                        ${book.main_url ? `<div class="outside_link"><a target="_blank" href="${book.main_url}">URL</a></div>` : ''}
+                        ${book.pdf_url ? `<div class="outside_link"><a target="_blank" href="${book.pdf_url}">PDF</a></div>` : ''}
+                        <div class="toggle">${getVisibility(book.id) ? '➖' : '➕'}</div>
+                        ${book.tags?.length ? `<div class="tags">${book.tags?.map(tag => {
+                            return `<span class="tag" style="background-color: ${tag.bgColor}; color: ${tag.textColor}">${tag.text}</span>`
+                        }).join('')}</div>` : ''}
+                    </div>
+                    
                     <div class="title_authors"><span class="title">${book.title}</span>${book.authors ? ` <span class="authors">by ${book.authors}</span>` : ''}</div>
 
                     <div class="progress-bar">
@@ -279,14 +258,17 @@ function clickCheckboxEvent (e) {
  * on +/- click
  */
 const toggleEventFn = function(e) {
-    const bookId = e.target.offsetParent.id;
-    const currentVisibility = getVisibility(bookId);
+    const bookId = e.target.offsetParent.id; // parent having a position (absolution or relative ?)
+    const parentEl = e.target.parentNode.parentNode.parentNode.parentNode; // to reach the DOM element with the book id ...
 
+    const currentVisibility = getVisibility(bookId);
     const newVisibility = setVisibility(bookId, !currentVisibility);
 
+    //console.log("parentEl:", parentEl)
+
     if(newVisibility) {
-        e.target.offsetParent.querySelector('.level').classList.remove('toggled'); // opened
-        e.target.innerText = '➖';
+        parentEl.querySelector('.level').classList.remove('toggled'); // opened
+        parentEl.querySelector(".toggle").innerText = '➖';
         // toggle/close all the others if open !
         const test = visibleBooks
             .filter(book => book.id !== bookId && getVisibility(book.id)) // only on the others if open
@@ -294,11 +276,11 @@ const toggleEventFn = function(e) {
                 setVisibility(book.id, false);
                 const el = document.querySelector("#" + book.id + " > .level");
                 el.classList.add('toggled'); // close them
-                el.innerText = '➕';
+                parentEl.querySelector(".toggle").innerText = '➕';
             });
     } else {
-        e.target.offsetParent.querySelector('.level').classList.add('toggled'); // closed
-        e.target.innerText = '➕';
+        parentEl.querySelector('.level').classList.add('toggled'); // closed
+        parentEl.querySelector(".toggle").innerText = '➕';
     }
 
     updateArrows();
@@ -503,13 +485,19 @@ function updateProgressBar(book) {
     
     let count = 0;
 
+    console.log(">", book.id, getBookList().map(o => o.id));
     const bookItem = getBookList().find(b => b.id == book.id);
-    countIds(bookItem.content);
+    console.log(bookItem)
+    if(bookItem) {
+        countIds(bookItem.content);
 
-    const value = Math.round(count ? (book.progress?.length ?? 0) / count * 100 : 0);
+        const value = Math.round(count ? (book.progress?.length ?? 0) / count * 100 : 0);
 
-    document.querySelector("#"+bookItem.id+" .progress").style.width = value + '%';
-    document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value} %`;
+        document.querySelector("#"+bookItem.id+" .progress").style.width = value + '%';
+        document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value} %`;
+    } else {
+        console.error("What ?!", book, "not found")
+    }
 }
 
 
@@ -527,8 +515,11 @@ function redraw(books) {
     // update initial progress (if present in localStorage ?!)
     const bookProgress = JSON.parse(localStorage.getItem('book_progress') ?? '[]');
     bookProgress.forEach(b => {
-        const book = getProgress(b.id);
-        updateProgressBar(book);
+        console.log("b:", b)
+        if(b) {
+            const book = getProgress(b.id);
+            updateProgressBar(book);
+        }
     });
 
     updateArrows(); // to keep them at their position

@@ -5,6 +5,8 @@
     "front_cover": "https://m.media-amazon.com/images/I/61JWMNiYWoL._AC_UF100,100_QL80_.jpg",
     "tags": [],
     "authors": "Mykel J. Kochenderfer & Tim A. Wheeler",
+    "main_url": "https://algorithmsbook.com/optimization/",
+    "pdf_url": "https://algorithmsbook.com/optimization/files/optimization.pdf",
     "content": [{
         "id": "1",
         "title": "1 - Introduction",
@@ -216,7 +218,7 @@
             "start_page": 91
         },{
             "id": "6.3",
-            "title": "6.3 - Quasi-Netwon Methods",
+            "title": "6.3 - Quasi-Newton Methods",
             "start_page": 91
         },{
             "id": "6.4",

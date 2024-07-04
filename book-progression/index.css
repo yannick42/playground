@@ -66,6 +66,14 @@ canvas {
 	pointer-events: none;
 }
 
+.top-right {
+	width: 10%;
+    height: 16px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .title {
 	text-decoration: underline;
 	text-overflow: ellipsis;
@@ -81,7 +89,11 @@ canvas {
 
 .title_authors {
 	height: 32px;
-	width: 95%;
+	width: 90%;
+}
+
+.outside_link {
+	font-size: 8pt;
 }
 
 .level {
