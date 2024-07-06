@@ -4,6 +4,8 @@
     "front_cover": "https://m.media-amazon.com/images/I/71BBXQnykuL._SL100_.jpg",
     "id": "SICP",
     "authors": "Gerald J. Sussman, Hal Abelson & Julie Sussman",
+    "pdf_url": "https://web.mit.edu/6.001/6.037/sicp.pdf",
+    "main_url": "https://en.wikipedia.org/wiki/Structure_and_Interpretation_of_Computer_Programs",
     "content": [{
         "title": "1 - Building Abstractions with Procedures",
         "start_page": 1,

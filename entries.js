@@ -1,4 +1,11 @@
 export const entries = [{
+    id: 'trees',
+    href: './trees/',
+    name: 'BST & Segment intersections',
+    desc: "Naive vs. plane sweep algorithm",
+    searchContext: '',
+    creationDate: '5/07/2024',
+},{
     id: 'two-sat',
     href: './2-sat/',
     name: '2-SAT',
@@ -120,6 +127,13 @@ export const entries = [{
         type: 'draft',
         text: 'DRAFT'
     }]
+},{
+    id: 'random-sampling',
+    href: './random-sampling/',
+    name: 'Random Sampling',
+    desc: "Uniform, Poisson disk sampling, acceptance-rejection method, ...",
+    searchContext: '',
+    creationDate: '17/03/2024'
 },{
     id: 'gray-scott',
     href: './gray-scott/',

@@ -21,13 +21,10 @@ const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
 const storage = getStorage(app);
 
-
-
 const bookListEl = document.getElementById("book_list");
 const searchEl = document.querySelector("input[type='search']");
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-
 
 function main() {
     visibleBooks = getBookList();
@@ -62,7 +59,7 @@ const arrowsList = [
     ['Cormen', 'AlgoForOptimization', 'solid'],
     ['Cormen', 'NumericalRecipes', 'solid'],
     ['AlgoForOptimization', 'AlgoForDecisionMaking', 'solid'],
-]
+];
 
 const bookIds = ['SICP', 'CG', 'VG', 'Cormen', 'AlgoForOptimization', 'NumericalRecipes', 'AlgoForDecisionMaking'];
 

@@ -2,6 +2,7 @@
 import { setUpCanvas, drawPointAt, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
 import { matMul, transpose, showShape, round } from '../common/math.helper.js';
+import { rejectionSampling, gaussian } from '../common/stats.helper.js';
 
 const SQUARE_SIZE = 25,
     dataPoints = [];
@@ -29,44 +30,6 @@ function main() {
 
     redraw();
 }
-
-// https://en.wikipedia.org/wiki/Normal_distribution
-function gaussian(x, sigma=1, mean=0) {
-    return 1 / (sigma * Math.sqrt(2 * Math.PI)) * Math.exp(-1/2 * Math.pow((x - mean) / sigma, 2));
-}
-
-//
-// __Rejection sampling__ to get random values following a given probability distribution
-//  -> the most basic Monte-Carlo sampler (but less efficient than other methods : MCMCs, SMCs ??)
-//  -> it's trivially parallelizable !
-// p(x) is a target distribution => here, Gaussian (with mean = 0 and sigma = 1)
-// q(x) is the proposal distribution = uniform only in JS ...
-//
-function rejectionSampling(proposalDist, targetDist) {
-    let reject = true; // init.
-
-    let randomX = proposalDist(); // uniform: -0.5 to 0.5 along the x-axis
-    let randomY = proposalDist(); // uniform: -0.5 to 0.5 along the y-axis
-    //console.log("at:", randomX);
-    let y = targetDist(randomX); // true y-value of the target p(x)
-
-    let i = 0;
-    while(reject && i < 10) {
-        if(randomY > y) {
-            // reject, and try again!
-            randomX = proposalDist();
-            randomY = proposalDist();
-            y = targetDist(randomX);
-        } else {
-            // accept
-            reject = false;
-        }
-        i++;
-    }
-
-    return randomY;
-}
-
 
 /**
  * Batch GD !
@@ -228,13 +191,13 @@ function redraw() {
     const step = (to - from) / (nb_points - 0.5); // why 0.5... ?
     for (let i = from; i < to; i += step) {
 
-        //const randX = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
-        const randY = rejectionSampling((min=-4, max=4) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
-        //console.warn(randX, randY);
+        const randX = rejectionSampling((min=-6, max=6) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+        const randY = rejectionSampling((min=-6, max=6) => Math.random() * (max - min) + min, (x) => gaussian(x, SIGMA, MEAN));
+        console.warn(randX, randY);
 
         // in graph-coordinates
-        const valueX = i; // + randX;
-        const valueY = a * i + b + randY * 0.5;
+        const valueX = i + randX;
+        const valueY = a * i + b + randY;
 
         const [pixelX, pixelY] = convertToCanvasCoords(canvas, valueX, valueY, SQUARE_SIZE);
         
