@@ -5,6 +5,7 @@ export const entries = [{
     desc: "Naive vs. plane sweep algorithm",
     searchContext: '',
     creationDate: '5/07/2024',
+    classes: ['disabled-entry'],
 },{
     id: 'two-sat',
     href: './2-sat/',

@@ -24,18 +24,27 @@
 			<!-- TODO: visualization of trees ? -->
 			<canvas width=500 height=500></canvas>
 
-			<button id="refresh">Retry</button>
-			<br/>
-
 			<div>
 				Method: <select id="method">
-					<option value="naive" selected>Naive O(n^2)</option>
-					<option value="sweep" disabled>Plane sweep algorithm O((n+I)\log(n))</option>
+					<option value="naive">Naive O(n^2)</option>
+					<option value="sweep" selected>Plane sweep algorithm O((n+I)log(n))</option>
 				</select>
+				<button id="refresh">Run</button>
+				<button id="prev_step_button"><< Previous step</button>
+				<button id="step_button">Step >></button>
+
+				<br/>
+				<button id="new">New set of segments</button>
+
+				<br/><br/>
+
+				Number of intersections found : <span id="nb_intersection">-</span>
 			</div>
 			
+			<br/>
+			<u>Debugging informations :</u>
 			<div id="debug">
-
+				-
 			</div>
         </div>
 

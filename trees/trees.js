@@ -1,35 +1,86 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { randInt, randFloat } from '../common/common.helper.js';
 import { BST } from '../common/bst.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 const debugEl = document.getElementById("debug");
+const stepButtonEl = document.getElementById("step_button");
+const prevStepButtonEl = document.getElementById("prev_step_button");
+const retryButtonEl = document.getElementById("refresh");
+const methodEl = document.getElementById("method");
+const newSetEl = document.getElementById("new");
+
+const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'],
+    NB_SEGMENTS = 6;
+
+let segments = [],
+    intersections = [],
+    Q, // event points
+    T, // sweep line status
+    untilStep = 1,
+    debugHTML = '',
+    xMin, xMax, yMin, yMax;
 
 function main() {
-    document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    retryButtonEl.addEventListener('click', (e) => {
+        untilStep = null; // all step at once
+        redraw();
+    });
+    stepButtonEl.addEventListener('click', (e) => {
+        untilStep += 1;
+        redraw();
+    });
+    prevStepButtonEl.addEventListener('click', (e) => {
+        untilStep -= 1;
+        redraw();
+    })
+    methodEl.addEventListener('click', (e) => {
+        stepButtonEl.disabled = e.target.value == "naive";
+        untilStep = 1;
+    });
+    newSetEl.addEventListener('click', (e) => {
+        createRandomSegments(false);
+        redraw();
+    })
 
+    createRandomSegments(); // default segments list
     redraw();
 }
 
-const segments = [];
-const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'];
+function createRandomSegments(fixed=true)
+{
+    segments = []; // reinit.
+    if(fixed) {
+        segments = [[[7.5,2.2],[4.4,3.1],"red"],[[3.4,0.9],[5.1,8.5],"orange"],[[5.4,1.2],[0.7,2],"blue"],[[8.1,2.3],[2.6,2.5],"green"]];
+    } else {
+        for(let i = 0; i < NB_SEGMENTS; i++) {
+            const pt1 = [
+                Math.round(randFloat(0, 10) * 10) / 10,
+                Math.round(randFloat(0, 10) * 10) / 10
+            ];
+            const pt2 = [
+                Math.round(randFloat(0, 10) * 10) / 10,
+                Math.round(randFloat(0, 10) * 10) / 10
+            ];
+            const points = [pt1, pt2];
+            
+            // order from upper-left to down-right
+            points.sort((a, b) => {
+                const yDiff = b[1] - a[1];
+                if(yDiff > 0) {
+                    return -1;
+                } else if(yDiff < 0) {
+                    return 1;
+                } else {
+                    return b[0] - a[0] > 0 ? -1 : 1;
+                }
+            })
 
-function createRandomSegments() {
-    segments.splice(0, segments.length);
-    for(let i = 0; i < 6; i++) {
-        segments.push([
-            [
-                randInt(0, 10),
-                randInt(0, 10)
-            ],[
-                randInt(0, 10),
-                randInt(0, 10)
-            ],
-            colors[i]
-        ])
+            segments.push([points[0], points[1], colors[i]]);
+        }
     }
 }
 
@@ -39,58 +90,50 @@ function getSegmentByColor(color) {
 
 function redraw() {
 
-    setUpCanvas(ctx, canvas.width, canvas.height, "white")
-    createRandomSegments();
+    setUpCanvas(ctx, canvas.width, canvas.height, "white");
 
-    const bst = new BST();
-
-    const keys = [1, 100, 2, 20, 75, 50];
-    const values = ['one', 'one hundred', 'two', 'twenty', 'seventy five', 'fifty'];
-
-    keys.forEach((key, i) => {
-        console.log("adding:", key, "(value =", values[i], ")")
-        bst.insert(key, values[i]);
-    })
-
-    const   inOrder = [],
-            preOrder = [],
-            postOrder = [];
-
-    bst.printInOrder(bst.root, inOrder);
-    console.log("In-order:", inOrder);
-
-    bst.printPreOrder(bst.root, preOrder);
-    console.log("Pre-order:", preOrder);
-
-    bst.printPostOrder(bst.root, postOrder);
-    console.log("Post-order:", postOrder);
-
-    console.log("delete key=2")
-    bst.delete(2);
-
-    const newInOrder = []
-    bst.printInOrder(bst.root, newInOrder);
-    console.log("In-order:", newInOrder);
+    debugHTML = '<table id="debug-table"><thead><td><b>Event</b></td><td><b>Details</b></td></thead>'; // clear
 
     drawSegments(canvas, segments);
-
 
     //
     // naive version
     //
+    console.clear();
+    console.log("method =", methodEl.value);
 
-    for(let i = 0; i < segments.length; i += 1) {
-        for(let j = 0; j < segments.length; j += 1) {
-            if(i !== j) {
-                has_intersection(segments[i], segments[j]);
+    switch(methodEl.value) {
+        case "naive":
+            intersections = [];
+            for(let i = 0; i < segments.length; i += 1) {
+                for(let j = i; j < segments.length; j += 1) {
+                    if(i !== j) {
+                        const inter = has_intersection(segments[i], segments[j]);
+                        if(inter) {
+                            console.log(i, j)
+                            intersections.push(inter);
+                        }
+                    }
+                }
             }
-        }
+            break;
+        case "sweep":
+            intersections = lineSegmentIntersections(segments)?.map(i => i.at);
+            break
     }
 
-    //const intersections = lineSegmentIntersections(segments);
+    document.getElementById("nb_intersection").innerText = intersections.length;
 
+    // draw them
+    intersections.forEach((inter) => {
+        drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 5, "black");
+        drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 3, "white");
+    });
+
+    debugHTML += '</table>';
+
+    debugEl.innerHTML = debugHTML;
 }
-
 
 const scaleX = (x) => {
     const scale = (canvas.width - 2*15) / (xMax - xMin);
@@ -102,32 +145,27 @@ const scaleY = (y) => {
     return (y - yMin) * scale + 15 /*margin*/
 }
 
-let xMin, xMax, yMin, yMax;
+function drawSegments(canvas, segments_) {
 
-function drawSegments(canvas, segments) {
-
-    const context = canvas.getContext("2d");
-
-    xMin = Math.min(...segments.map(([start, end]) => Math.min(start[0], end[0])));
-    xMax = Math.max(...segments.map(([start, end]) => Math.max(start[0], end[0])));
-    yMin = Math.min(...segments.map(([start, end]) => Math.min(start[1], end[1])));
-    yMax = Math.max(...segments.map(([start, end]) => Math.max(start[1], end[1])));
-
+    xMin = Math.min(...segments_.map(([start, end]) => Math.min(start[0], end[0])));
+    xMax = Math.max(...segments_.map(([start, end]) => Math.max(start[0], end[0])));
+    yMin = Math.min(...segments_.map(([start, end]) => Math.min(start[1], end[1])));
+    yMax = Math.max(...segments_.map(([start, end]) => Math.max(start[1], end[1])));
     //console.log("xMin:", xMin, "xMax:", xMax, "yMin:", yMin, "yMax:", yMax);
 
-    segments.forEach(([start, end, color]) => {
+    segments_.forEach(([start, end, color]) => {
+        console.log("segment:", start, end, color)
         const startScaledX = scaleX(start[0]);
         const startScaledY = scaleY(start[1]);
         const endScaledX = scaleX(end[0]);
         const endScaledY = scaleY(end[1]);
         //console.log(">", startScaledX, startScaledY, endScaledX, endScaledY)
 
-        drawPointAt(context, startScaledX, startScaledY, 5, color);
-        drawPointAt(context, endScaledX, endScaledY, 5, color);
-
-        drawLine(context, startScaledX, startScaledY, endScaledX, endScaledY, 3, color);
-    })
-
+        // draw!
+        drawPointAt(ctx, startScaledX, startScaledY, 5, color);
+        drawPointAt(ctx, endScaledX, endScaledY, 5, color);
+        drawLine(ctx, startScaledX, startScaledY, endScaledX, endScaledY, 3, color);
+    });
 }
 
 
@@ -139,17 +177,17 @@ function has_intersection(segment1, segment2) {
     let intersect = false;
 
     const dx1 = segment1[1][0] - segment1[0][0];
-    const dx2 = segment2[1][0] - segment2[0][0]
-    const dy1 = segment1[1][1] - segment1[0][1]
-    const dy2 = segment2[1][1] - segment2[0][1]
+    const dx2 = segment2[1][0] - segment2[0][0];
+    const dy1 = segment1[1][1] - segment1[0][1];
+    const dy2 = segment2[1][1] - segment2[0][1];
 
     const det = dx1 * dy2 - dx2 * dy1; // can be 0 if lines are parallel
 
-    const dx3 = segment1[0][0] - segment2[0][0]
+    const dx3 = segment1[0][0] - segment2[0][0];
     const dy3 = segment1[0][1] - segment2[0][1];
 
-    const det1 = dx1 * dy3 - dx3 * dy1
-    const det2 = dx2 * dy3 - dx3 * dy2
+    const det1 = dx1 * dy3 - dx3 * dy1;
+    const det2 = dx2 * dy3 - dx3 * dy2;
 
     if(det1 == 0) {
         const s = segment2[0][0] / dx1;
@@ -168,8 +206,8 @@ function has_intersection(segment1, segment2) {
     const Iy = segment1[0][1] + t * dy1;
 
     if(intersect) {
-        drawPointAt(ctx, scaleX(Ix), scaleY(Iy), 5, "black");
-        drawPointAt(ctx, scaleX(Ix), scaleY(Iy), 3, "white");
+        //drawPointAt(ctx, scaleX(Ix), scaleY(Iy), 5, "black");
+        //drawPointAt(ctx, scaleX(Ix), scaleY(Iy), 3, "white");
     } else {
         // may intersect, but outside their segment
     }
@@ -177,130 +215,12 @@ function has_intersection(segment1, segment2) {
     return intersect ? [Ix, Iy] : false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /**
  * using a sweep line algorithm (not "continuously"...)
  */
 function lineSegmentIntersections(segments) {
 
-    function findNewEvent(s_l, s_r, p) {
-        /**
-         * INTERSECTION TEST : check if 2 segments intersect
-         */
-        const intersect = has_intersection(s_l, s_r);
-
-        // check if s_l & s_r intersect below the sweep line (or to the right of p, if horizontal)
-        if(intersect != false) {
-            if(intersect[1] > p[1]) { // if below the line ? TODO: Check
-                // insert the "intersection point" as event point (in Q)
-                Q.insert(intersect[1], [s_l, s_r]);
-            } else {
-                // if above, it has been detected already
-            }
-        }
-    }
-
-
-    /**
-     * set of segments whose upper endpoint is p
-     * 
-     * for an horizontal line, it is the left endpoint
-     */
-    function U(p) {
-        return segments.filter(segment => p[0] === segment[0][0] && p[1] === segment[0][1])
-    }
-    function L(segs, p) {
-        return segs.filter(segment => p[0] === segment[1][0] && p[1] === segment[1][1])
-    }
-    // segments that contains p in their interior
-    function C(segs, p) {
-        return segs.filter(segment => {
-            p[0] === segment[1][0] && p[1] === segment[1][1]
-        })
-    }
-
-
-    /**
-     * p = [4, 5] ?? TODO: add associated segments (2 at least...)
-     */
-    function handleEventPoint(p)
-    {
-        const U_p = U(p);
-
-        // T is ordered by x-axis value ? => order of the segments at the sweep line
-        const segmentsThatContainsP = T.find(p); // they are adjacent in T
-
-        const L_p = L(segmentsThatContainsP, p); // as lower point
-        const C_p = C(segmentsThatContainsP, p); // as a contained point..
-
-        // if contains more than one segment
-        if([...L_p, ...C_p, ...U_p].length >= 2) {
-            // report "p" as an intersection, together with L(p), U(p), and C(p)
-            // ???
-        }
-
-        [...L_p, ...C_p].forEach(segment => {
-            T.delete(segment); // delete from the "status" T as it stops intersecting the sweep line
-        })
-
-
-        // TODO: order the segment as they intersect the sweep line (x-axis)
-        //
-        // beware the horizontal lines
-        //
-        U_union_C = [...U_p, ...C_p];
-        U_union_C.sort((a, b) => {
-            // TODO: find the x -> intersection with the sweep line (order with that...)
-
-            return a[0] - b[0]
-        }).forEach(segment => {
-            T.insert(segment);
-            // U_p are the new segment crossing the line l ?
-        })
-
-
-
-        //
-        // INFO: deleting and reinserting the segments of C(p) reverses their order !!
-        //
-
-
-
-        if(U_union_C.length == 0) {
-            const s_l = p . left // left neighbor in T
-            const s_r = p . right // right neighbor in T
-            if(s_l && s_r) {
-                findNewEvent(s_l, s_r, p);
-            }
-        } else {
-            const s_prime = ''; // the leftmost segment in U(p) union C(p) in T
-            const s_l = ''; // left neighbor of s_prime in T
-            if(s_prime && s_l) {
-                findNewEvent(s_prime, s_l, p);
-            }
-
-            const s_prime_prime = ''; // the rightmost segment of U(p) union C(p) in T
-            const s_r = ''; // right neighbor of s_prime_prime in T
-            if(s_prime_prime && s_r) {
-                findNewEvent(s_prime_prime, s_r, p);
-            }
-        }
-
-    }
-
-
-
-
+    intersections = [];
     /**
      * inserting and deleting takes O(log m) time (m=number of events in Q)
      * 
@@ -309,28 +229,390 @@ function lineSegmentIntersections(segments) {
      * 
      */
 
-    const Q = new BST(); // queue: event point (those are endpoints of the segments)
-    const T = new BST(); // status (start empty) -> it is the ordered (x-axis) segments intersecting the sweep line
+    Q = new BST(); // queue: event point (those are endpoints of the segments)
+    T = new BST(); // status (start empty) -> it is the ordered (x-axis) segments intersecting the sweep line
     // -> used to access the neighbors of a given segment s, to test them for intersection with s
     // -> BST can store any set of elements (in .value), as long as their is an order on the elements (y, then x if "tie")
     // ----> "ordered in the leaves ?!?"
 
-    // fill it with endpoints ?
-    segments.forEach(segment => {
-        Q.insert(segment[0][1], [segment]);
-        Q.insert(segment[1][1], [segment]);
+    // fill it with endpoints
+    // TODO: order them from up-left to down-right !
+    const copy = structuredClone(segments); // /!\ or else some segments disapears ?!
+    copy.forEach(segment => {
+        Q.insert(segment[0][1], { x: segment[0][0], y: segment[0][1], segments: [segment] }); // "starting" point
+        Q.insert(segment[1][1], { x: segment[1][0], y: segment[1][1], segments: [segment] }); // "ending" point
+    });
+
+    console.log(">>> INITIAL SEGMENTS :", JSON.stringify(segments))
+
+    let i = 0;
+    while(
+        ! Q.isEmpty() // still point to process ?
+        && (untilStep === null || (untilStep !== null && i < untilStep)) // "step-by-step" mode
+    )
+    {
+        processNextPoint();
+        i += 1;
+    }
+    return intersections;
+}
+
+
+
+function processNextPoint() {
+
+    // if same y-coordinate, take the left most (TODO ?)
+    const eventPoint = Q.min(); // retrieve it in the BST, it's the highest event below the sweep line
+
+    const p = eventPoint.value; // { x: ..., y: ..., segments: [...] }
+
+    const x = Array.isArray(eventPoint.value.x) ? Math.min(...eventPoint.value.x) : eventPoint.value.x;
+    const y = eventPoint.key; // as it is indexed by horizontal line
+
+    handleEventPoint([x, y]);
+
+    drawStepAtY(y); // (refresh) update sweep line, ...
+
+    //
+    // write debugging information on screen
+    //
+    const out = [];
+    T.printInOrder(T.root, out);
+    debugHTML += `<tr><td><b><i>Sweep line</i></b> 'status' (ordered) at y=${y}</td><td>${JSON.stringify(out.map(e => {
+        return e[1][2] + ' (' + e[0] + ')';
+    }))}</td></tr>`;
+
+
+    // now, delete it as it now has been processed
+    Q.delete(eventPoint.key);
+
+    const out2 = [];
+    Q.printInOrder(Q.root, out2);
+    debugHTML += `<tr><td>Remaining points at loop end after delete</td><td><mark>${Q.counter}</mark></td></tr>`;
+
+    // separator
+    debugHTML += '<tr><td></td><td></td></tr>';
+    debugHTML += '<tr><td></td><td></td></tr>';
+    debugHTML += '<tr><td></td><td></td></tr>';
+}
+
+// redraw
+function drawStepAtY(y) {
+    setUpCanvas(ctx, canvas.width, canvas.height, "white")
+
+    console.log("(drawStepAtY)", segments.length, "segments");
+    drawSegments(canvas, segments.slice(0));
+
+    // draw sweep line
+    drawLine(ctx, 0, scaleY(y), canvas.width, scaleY(y), 1, "black");
+
+    // draw current intersections
+    intersections.forEach((inter) => {
+        drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 5, "black");
+        drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 3, "white");
     })
+}
 
-    while(!Q.isEmpty()) {
 
-        const nextEvent = Q.delete(); // should retrieve it ! (while deleting it)
+/**
+ * p = [4, 5] ?? TODO: add associated segments (2 at least...)
+ */
+function handleEventPoint(p)
+{
+    console.log("-----------------------")
 
-        console.log("nextEvent:", nextEvent); // it's the highest event below the sweep line
-        // TODO: if same y-coordinate, take the left most
+    addDebug(["Analyzing event point <b>p</b>", "x="+p.join(' y=')])
 
-        handleEventPoint(p);
+    //
+    // T is ordered by x-axis value ? => order of the segments at the sweep line
+    //
+    const Tp = T.get(p[0]);
+    const segmentsThatMayContainsP = []; // they are adjacent in T => ?
+    if(Tp?.value) {
+        segmentsThatMayContainsP.push(Tp.value); // "value" contains 1 segment
     }
 
+    let key = Tp?.key;
+
+    // if nothing search in T ... (O(log n))
+    if(segmentsThatMayContainsP.length === 0) {
+        let node = T.root;
+        while(node) {
+            addDebug(['searching node in T, at x=' + p[0], JSON.stringify(node ?? '-')])
+            if(p[0] > node.key) {
+                if(node.right) {
+                    node = node.right;
+                } else {
+                    break; // stop, this "current" node is the nearest ?
+                }
+            } else if (p[0] < node.key) {
+                if(node.left) {
+                    node = node.left;
+                } else {
+                    break; // stop
+                }
+            } else {
+                break; // exact ?!
+            }
+        }
+
+
+        if(node?.key) {
+            addDebug(['This ?', "x=" + node.key + " / value=<span style='color: " + node.value[2] + "'>" + node.value[2] + '</span>']);
+            segmentsThatMayContainsP.push(node.value);
+            key = node.key;
+        }
+    }
+
+    addDebug(['Finding nearest (rightess if any?) x-key in sweep line T', key ?? '-']);
+
+    let predPredKey, predKey, succKey;
+
+    if(key) {
+        succKey = T.getSuccessorOf(key);
+        addDebug(['succKey (of '+key+')', succKey]);
+        const rightSegment = succKey ? T.get(succKey) : null;
+        if(rightSegment) {
+            segmentsThatMayContainsP.push(rightSegment?.value);
+        }
+    }
+
+    if(key) {
+        predKey = T.getPredecessorOf(key);
+        addDebug(['predKey (of '+key+')', predKey]);
+
+        const leftSegment = predKey ? T.get(predKey) : null;
+        if(leftSegment) {
+            segmentsThatMayContainsP.push(leftSegment?.value);
+        }
+    }
+
+    if(segmentsThatMayContainsP.length <= 2 && predKey) {
+        const predPredKey = T.getPredecessorOf(predKey);
+        addDebug(['predPredKey (of '+predKey+')', predPredKey]);
+
+        const leftLeftSegment = predPredKey ? T.get(predPredKey) : null;
+        if(leftLeftSegment) {
+            segmentsThatMayContainsP.push(leftLeftSegment?.value);
+        }
+    }
+
+    addDebug([`Segments (in T) that contains p(${p[0]},${p[1]}) "inside" them, are :`, segmentsThatMayContainsP]);
+
+
+
+    const L_p = L(segmentsThatMayContainsP, p) ?? []; // as lower point
+    const U_p = U(p); // get the list of segments having "p" as it upper endpoint
+    const C_p = (C(segmentsThatMayContainsP, p) ?? []).filter(seg => !L_p.includes(seg)); // as a contained point..
+    
+    addDebug(['p is <b>Upper</b> ?', U_p]);
+    addDebug(['p is <b>Lower</b> ?', L_p]);
+    addDebug(['p is <b>"Center"</b> ?', C_p]); // TODO? : missing segments on the same horizontal ?! to reorder by x-key...
+
+    const LCU_p = [...L_p, ...C_p, ...U_p];
+
+    // if contains more than one segment -> intersection found..? (????)
+    if(LCU_p.length > 1) {
+        // report "p" as an intersection, together with L(p), U(p), and C(p) ...
+        
+        addDebug(['LCU contains more than 1 segment', LCU_p])
+
+        /*
+        intersections.push({
+            type: 'what?',
+            at: p,
+            segments: LCU_p
+        });
+        */
+
+        Q.insert(p[1], { x: p[0], y: p[1], segments: LCU_p });
+    }
+
+    //console.warn("BEFOR:", L_p, C_p);
+
+    /**
+     * Delete from the sweep if : the line is no more present below (=L_p)
+     *      OR      
+     */
+    [...L_p, ...C_p].forEach(segment => {
+        const key = segment[0][0]; // using UpperLeft point !?
+
+        //const key = p[0];
+        addDebug(['<mark>Deleting a <b>Lower</b> point or a <b>Center</b> point...</mark>', segment])
+        //console.log("delete from T :", segment, "x-key=", key)
+        T.delete(key); // delete from the "status" T as it stops intersecting the sweep line
+    })
+
+
+    // TODO: order the segment as they intersect the sweep line (x-axis)
+    //
+    // beware: handle the horizontal segments !
+    //
+    const U_union_C = [...U_p, ...C_p];
+    addDebug(['p is <b>Upper</b> ∪ <b>Center</b> ?', U_union_C]);
+
+
+
+    //T = new BST(); // erase all ?! NO!
+
+    U_union_C.sort((a, b) => {
+        // TODO: find the x -> check intersection with the sweep line (order with those "x" values ?)
+        console.warn("a:", a, "b:", b)
+
+        // a bit below the sweep line ...
+        const y = p[1] + 0.01;
+
+        const intersectA = has_intersection([a[0], a[1]], [[0, y], [10, y]]);
+        const intersectB = has_intersection([b[0], b[1]], [[0, y], [10, y]]);
+        console.log("intersectA", intersectA)
+        console.log("intersectB", intersectB)
+
+        return intersectB !== false ? intersectA[0] - intersectB[0] : -1;
+    }).forEach((segment, i) => {
+        const previousKey = segment[0][0]; // Upper endpoint ??
+        const key = p[0]; // + 0.01*i; // or current point...
+        if(T.get(previousKey)) {
+            T.delete(previousKey);
+        }
+        T.insert(key, segment);
+        addDebug([
+            'insert a (ordered) segment in sweep line T at X='+key,
+            '<span style="color: '+ segment[2] + '">' + segment[2] + ' segment</span>'
+        ]);
+        // INFO: the "U_p" segment(s) are the new/arriving segments crossing the sweep line
+    })
+
+
+
+
+
+    //
+    // INFO: deleting and reinserting the segments of C(p) reverses their order !!?? sure?
+    //
+
+
+
+
+
+    if(U_union_C.length == 0) {
+
+        const predKey = T.getPredecessorOf(p[0]);
+        const s_l = T.get(predKey)?.value;    // left neighbor in T
+        const s_r = T.get(T.getSuccessorOf(predKey))?.value;      // right neighbor in T
+        //console.error("search left/right segments of p.x=", p[0], s_l, s_r)
+        if(s_l && s_r) {
+            findNewEvent(s_l, s_r, p);
+        }
+
+    } else {
+
+        const s_prime = U_union_C[0]; // the leftmost segment in U(p) union C(p)      in T?
+        const leftNeighKey = T.getPredecessorOf(s_prime[0][0]);
+        //console.log("precessor of ", s_prime[0][0], "is leftNeighKey =", leftNeighKey);
+        const s_l = T.get(leftNeighKey)?.value; // left neighbor of s_prime in T
+
+        if(s_prime) {
+            //console.warn("s_prime:", s_prime); // segment...
+            //console.warn("s_l:", s_l)
+            if(s_prime && s_l) {
+                findNewEvent(s_prime, s_l, p);
+            }
+        }
+
+        const s_prime_prime = U_union_C[U_union_C.length - 1]; // the rightmost segment of U(p) union C(p) in T
+        const rightNeighKey = T.getSuccessorOf(s_prime_prime[0][0]);
+        //console.log("successor of ", s_prime_prime[0][0], "is rightNeighKey =", rightNeighKey);
+        const s_r = T.get(rightNeighKey)?.value; // right neighbor of s_prime_prime in T
+
+        if(s_prime_prime) {
+            //console.warn("s_prime_prime:", s_prime_prime); // a segment [ptUL, ptDR, color] ??
+            //console.warn("s_r:", s_r)
+            if(s_prime_prime && s_r && s_prime != s_prime_prime && s_l != s_r) {
+                findNewEvent(s_prime_prime, s_r, p);
+            }
+        }
+    }
 }
+
+
+function findNewEvent(s_l, s_r, p) {
+    /**
+     * INTERSECTION TEST : check if 2 segments intersect
+     */
+
+    //console.warn("search intersection of:", s_l, "and", s_r)
+    const intersect = has_intersection(s_l, s_r);
+    
+    // check if s_l & s_r intersect below the sweep line (or to the right of p, if horizontal)
+    if(intersect != false) {
+        if(intersect[1] > p[1]) { // if below the line ? TODO: Check
+            // insert the "intersection point" as event point (in Q)
+
+            //console.warn(`NEW INTERSECTION POINT at x:${intersect[0]}, y:${intersect[1]}`)
+
+            Q.insert(intersect[1], { x: intersect[0], y: intersect[1], segments: [s_l, s_r] });
+
+            debugHTML += `<tr><td><mark>New intersection</mark></td><td>${JSON.stringify(intersect)}</td></tr>`;
+
+            // save it...?
+            intersections.push({
+                type: 'intersection',
+                at: intersect,
+                segments: [s_l, s_r]
+            });
+        } else {
+            // if above, it has been detected already
+        }
+    }
+}
+
+
+/**
+ * set of segments whose upper endpoint is p
+ * 
+ * for an horizontal line, it is the left endpoint
+ */
+function U(p) {
+    const eventPoint = Q.get(p[1]); // O(log n) ?
+    //console.error("segs:", eventPoint?.value.segments);
+    return eventPoint?.value.segments.filter(seg => p[0] == seg[0][0] && p[1] == seg[0][1]);
+}
+
+function isInsideSegment(pt, linePt1, linePt2) {
+
+    const isCollinear = (pt, linePt1, linePt2) => {
+        const v1 = (pt[1] - linePt1[1]) * (linePt2[0] - linePt1[0]);
+        const v2 = (linePt2[1] - linePt1[1]) * (pt[0] - linePt1[0]);
+        const value = Math.round(v1 * 1000) / 1000 === Math.round(v2 * 1000) / 1000;
+        //console.log("isCollinear:", pt, linePt1, linePt2, "->", v1, v2, value);
+        return value;
+    };
+
+    const isWithinBounds = (pt, linePt1, linePt2) => Math.min(linePt1[0], linePt2[0]) <= pt[0]
+        && Math.max(linePt1[0], linePt2[0]) >= pt[0]
+        && Math.min(linePt1[1], linePt2[1]) <= pt[1]
+        && Math.max(linePt1[1], linePt2[1]) >= pt[1]
+
+    return isCollinear(pt, linePt1, linePt2) && isWithinBounds(pt, linePt1, linePt2);
+}
+
+function L(segs, p) {
+    //console.log("L: segs=", segs, p)
+    return segs?.filter(segment => p[0] === segment[1][0] && p[1] === segment[1][1])
+}
+// segments that contains p in their interior
+function C(segs, p) {
+    //console.log("C: segs=", segs, p)
+    return segs?.filter(segment => {
+        const isInside = isInsideSegment(p, segment[0], segment[1]);
+        //console.log(p, segment[2], isInside);
+        return isInside;
+    })
+}
+
+function addDebug(arr) {
+    debugHTML += '<tr><td>' + arr.join('</td><td>') + '</td></tr>';
+}
+
 
 main();

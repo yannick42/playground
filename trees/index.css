@@ -31,3 +31,16 @@ canvas {
 	border: 1px solid black;
 	margin: 5px;
 }
+
+#debug-table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+#debug-table td {
+	border: 1px solid black;
+}
+
+#debug-table thead td {
+	text-align: center;
+}
