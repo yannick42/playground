@@ -25,16 +25,22 @@
 			<canvas width=500 height=500></canvas>
 
 			<div>
-				Method: <select id="method">
+				Method:
+				<select id="method">
 					<option value="naive">Naive O(n^2)</option>
 					<option value="sweep" selected>Plane sweep algorithm O((n+I)log(n))</option>
 				</select>
 				<button id="refresh">Run</button>
-				<button id="prev_step_button"><< Previous step</button>
-				<button id="step_button">Step >></button>
 
-				<br/>
-				<button id="new">New set of segments</button>
+				<br/><br/>
+				
+				<div>
+					<button id="prev_step_button"><< Previous step</button>
+					<button id="step_button">Step >></button>
+				</div>
+
+				<br/><br/>
+				<button id="new">Generate new set of segments</button> number: <input type="number" id="number" />
 
 				<br/><br/>
 

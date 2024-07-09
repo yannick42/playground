@@ -1,5 +1,5 @@
 :root {
-	--canvas-size: 550px;
+	--canvas-size: 250px;
 }
 
 body {
@@ -28,6 +28,7 @@ body {
 
 #canvas_2d {
 	border: 1px solid black;
+	width: 100%;
 }
 
 #canvas_3d {
@@ -37,4 +38,22 @@ body {
 
 #debug {
 	display: none;
+}
+
+#controls {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+
+#setting {
+	margin: 5px;
+}
+
+#sliders {
+	display: flex;
+}
+
+#reset {
+	margin: 5px;
 }

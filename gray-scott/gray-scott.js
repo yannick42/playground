@@ -1,25 +1,21 @@
-// execute : `python3 -m http.server 5000`
 
-const GRID_SIZE = 350,
-			DT = 1,
-			D_a = 1.0,
-			D_b = 0.5,
-			//feed = 0.055,
-			feed = 0.07976,
-			//kill = 0.062,
-			kill = 0.05923;
+const GRID_SIZE = 150,
+	D_a = 1,
+	D_b = 0.5,
+	discrete_laplacian_2D = [
+		[0.05, 	0.2,	0.05],
+		[0.2, 	-1, 	0.2],
+		[0.05, 	0.2,	0.05]
+	];
 
-let canvas,
-		ctx,
-		gl,
-		intervalId,
-		grid;
-
-const discrete_laplacian_2D = [
-	[0.05, 	0.2,	0.05],
-	[0.2, 	-1, 	0.2],
-	[0.05, 	0.2,	0.05]
-];
+let ctx,
+	gl,
+	intervalId,
+	grid,
+	frame = 0,
+	feed = 0.028,
+	kill = 0.062,
+	DT = 0.25;
 
 class Cell {
 	constructor(A, B) {
@@ -28,18 +24,96 @@ class Cell {
 	}
 }
 
+const settings = {
+	'mitosis': [0.028, 0.062],
+	'spiral': [0.014, 0.047],
+	'U-skate': [0.062, 0.061],
+	'maze': [0.029, 0.057],
+	'soliton': [0.03, 0.06],
+	'test': [0.055, 0.062],
+}
+
+
+const canvas = document.querySelector('canvas');
+canvas.width = GRID_SIZE;
+canvas.height = GRID_SIZE;
+
+const feedValueEl = document.getElementById('feed_value');
+const killValueEl = document.getElementById('kill_value');
+const speedValueEl = document.getElementById('speed_value');
+const feedEl = document.getElementById('feed');
+const killEl = document.getElementById('kill');
+const speedEl = document.getElementById('speed');
+const resetButtonEl = document.getElementById('reset');
+const settingSelectEl = document.getElementById('setting');
+
+function setSetting(feed_, kill_) {
+	feed = feed_;
+	kill = kill_;
+
+	feedEl.value = feed;
+	feedEl.value = kill;
+
+	feedValueEl.innerText = feed;
+	killValueEl.innerText = kill;
+}
+
 function main() {
 
-	canvas = document.querySelector('canvas');
-	canvas.width = GRID_SIZE;
-	canvas.height = GRID_SIZE;
+	feedValueEl.value = feed;
+	feedValueEl.value = kill;
+	feedEl.addEventListener('input', (e) => {
+		feed = e.target.value;
+		feedValueEl.innerText = feed;
+	});
+	killEl.addEventListener('input', (e) => {
+		kill = e.target.value;
+		killValueEl.innerText = kill;
+	});
+	speedEl.addEventListener('input', (e) => {
+		DT = e.target.value;
+		speedValueEl.innerText = DT;
+	});
+	resetButtonEl.addEventListener('click', (e) => {
+		reset();
+	})
+	settingSelectEl.addEventListener('input', (e) => {
+		setSetting(...settings[e.target.value]);
+		reset();
+	})
+	canvas.addEventListener('click', (e) => {
 
+		const rect = canvas.getBoundingClientRect();
+		const scaleX = canvas.width / rect.width;
+		const scaleY = canvas.height / rect.height;
+		const x = (event.clientX - rect.left) * scaleX
+		const y = (event.clientY - rect.top) * scaleY
+
+		console.log(rect, x, y);
+		const size = getRandomInt(5, 8);
+		drop(
+			Math.round(y),
+			Math.round(x),
+			size
+		);
+	})
+
+	// init
+	feedValueEl.innerText = feed;
+	killValueEl.innerText = kill;
+	speedValueEl.innerText = DT;
+	feedEl.value = feed;
+	killEl.value = kill;
+	speedEl.value = DT;
+
+	reset();
+}
+
+function reset() {
 	const radioButton = document.querySelector('input[name=context]:checked');
 	const currentContext = radioButton.id;
-
 	console.log("context:", currentContext);
 	ctx = canvas.getContext(currentContext);
-
 	if (currentContext == '2d') {
 		init_2D();
 	} else {
@@ -64,22 +138,29 @@ function main() {
 	});
 }
 
+
+
 function init_2D() {
 	
-	grid = Array(GRID_SIZE).fill().map(()=>Array(GRID_SIZE).fill())
+	grid = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill());
+
 	for (let x = 0; x < GRID_SIZE; x++) {
 		for (let y = 0; y < GRID_SIZE; y++) {
-			grid[x][y] = new Cell(1, 0);
+			grid[x][y] = new Cell(1, 0); // fill all with uniform "color"
 		}
 	}
 	
-	// x2
 	for (let nb = 0; nb < 15; nb++) {
-		const size = getRandomInt(3, 5);
-		drop(getRandomInt(size, GRID_SIZE - size), getRandomInt(size, GRID_SIZE - size), size);
+		const size = getRandomInt(5, 8);
+		drop(
+			getRandomInt(size, GRID_SIZE - size),
+			getRandomInt(size, GRID_SIZE - size),
+			size
+		);
 	}
 	
-	intervalId = setInterval(compute_frame, 1000 / (24 * 100));
+	// run simulation
+	intervalId = setInterval(compute_frame, 20);
 	//window.requestAnimationFrame(compute_frame);
 }
 
@@ -103,8 +184,10 @@ function laplace_2D_discrete(grid, letter, x, y) {
 function drop(x, y, radius = 5) {
 	for(let i = x - radius; i < x + radius; i++) {
 		for(let j = y - radius; j < y + radius; j++) {
-	    grid[i][j].A = 0
-	    grid[i][j].B = 1
+			if((i - x) * (i - x) + (j - y) * (j - y) < radius * radius) {
+				grid[i][j].A = 0;
+				grid[i][j].B = 1;	// -> the other color
+			}
 		}
 	}
 }
@@ -120,7 +203,8 @@ function compute_frame()
 		{
 			const idx = x * canvas.width + y;
 			const offset = idx * 4;
-			if(x == 0 || y == 0 || x == GRID_SIZE - 1 || y == GRID_SIZE - 1) {
+			if(x == 0 || y == 0 || x == GRID_SIZE - 1 || y == GRID_SIZE - 1)
+			{
 				data[offset] = 255;
 				data[offset + 1] = 255;
 				data[offset + 2] = 255;
@@ -128,32 +212,52 @@ function compute_frame()
 				// update
 				const A = grid[x][y].A;
 				const B = grid[x][y].B;
+
+				if(frame % 100 == 0) {
+					//console.log((D_a * laplace_2D_discrete(grid, 'A', x, y) - A * B * B + feed * (1 - A)) * DT);
+				}
+
 				const newA = A + (D_a * laplace_2D_discrete(grid, 'A', x, y) - A * B * B + feed * (1 - A)) * DT
 				const newB = B + (D_b * laplace_2D_discrete(grid, 'B', x, y) + A * B * B - (kill + feed) * B) * DT
+
+				// update
 				grid[x][y].A = newA;
 				grid[x][y].B = newB;
 	
 				data[offset] = Math.floor(155 * (1 - newA)) + 100;
-				data[offset + 1] = 130;
+				data[offset + 1] = 50;
 				data[offset + 2] = Math.floor(110 * newB) + 100;
 			}
 			data[offset + 3] = 255; // alpha/opacity
 		}
 	}
 	
-	const imageData = new ImageData(data, canvas.width, canvas.height);
-	ctx.putImageData(imageData, 0, 0);	
-	//window.requestAnimationFrame(compute_frame);
+	if(frame % 5 === 0) {
+		//console.log("show!")
+		const imageData = new ImageData(data, canvas.width, canvas.height);
+		ctx.putImageData(imageData, 0, 0);
+	}
+	frame += 1;
 
 	const t1 = performance.now();
-	//console.log(`Time : ${t1 - t0}, Frequency : ${1000 / (t1 - t0)} Hz.`);
+	//console.log(`Time : ${t1 - t0} ms., Frequency : ${1000 / (t1 - t0)} Hz.`);
+
+
+
+	//window.requestAnimationFrame(compute_frame);
 }
+
+
+
+
+
+
 
 function init_3D() {
 	// stop 2d
-	if(intervalId) {
+	/*if(intervalId) {
 		clearInterval(intervalId);
-	}
+	}*/
 	
 	gl = ctx;
 	

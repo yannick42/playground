@@ -1,6 +1,6 @@
 
 :root {
-	--canvas-size: 500px;
+	--canvas-size: 800px;
 }
 
 body {
@@ -27,24 +27,13 @@ body {
 	align-self: start;	
 }
 
-canvas {
-	border: 1px solid black;
-	margin: 5px;
-}
-
-#debug-table {
-	border: 1px solid black;
-	border-collapse: collapse;
-}
-
-#debug-table td {
+#error, #function {
 	border: 1px solid black;
 }
 
-#debug-table thead td {
-	text-align: center;
+#from, #to {
+	width: 100px;
 }
-
-#number {
-	width: 50px;
+#n {
+	width: 40px;
 }

@@ -150,37 +150,42 @@ export function addVerticalAt(canvas, canvasYPos, width=0.25) {
 
 // function to convert from canvas coordinate to graph coordinates
 export function convertToGraphCoords(canvas, x, y, canvasSquareSize=25) {
-	return [((x - canvas.width * 0.25)) / canvasSquareSize, -((y - canvas.height * 0.75)) / canvasSquareSize];
+	return [((x - canvas.width * percFromLeft_)) / canvasSquareSize, -((y - canvas.height * percFromTop_)) / canvasSquareSize];
 }
 
 export function convertToCanvasCoords(canvas, x, y, canvasSquareSize=25) {
 	return [
-		x * canvasSquareSize + canvas.width * 0.25, 
-		-(y * canvasSquareSize) + canvas.height * 0.75
+		x * canvasSquareSize + canvas.width * percFromLeft_, 
+		-(y * canvasSquareSize) + canvas.height * percFromTop_
 	]
 }
 
-export function drawAxis(canvas, canvasSquareSize=25) {
+let percFromTop_, percFromLeft_;
+
+export function drawAxis(canvas, canvasSquareSize=25, percFromTop=0.75, percFromLeft=0.25) {
   const context = canvas.getContext("2d");
 
+  percFromTop_ = percFromTop;
+  percFromLeft_ = percFromLeft;
+
 	// add (xy)-axis
-	addHorizontalAt(canvas, canvas.height * 0.75, 2) // from top
-	addVerticalAt(canvas, canvas.width * 0.25, 2) // from left
+	addHorizontalAt(canvas, canvas.height * percFromTop, 2) // from top
+	addVerticalAt(canvas, canvas.width * percFromLeft, 2) // from left
 	
 	// add a grid (lighter)
 		// horizontal
-	for(let i = 0; (canvas.height * 0.75) + canvasSquareSize * i <= canvas.height; i++) {
-		addHorizontalAt(canvas, (canvas.height * 0.75) + canvasSquareSize * i);
+	for(let i = 0; (canvas.height * percFromTop) + canvasSquareSize * i <= canvas.height; i++) {
+		addHorizontalAt(canvas, (canvas.height * percFromTop) + canvasSquareSize * i);
 	}
-	for(let i = 0; (canvas.height * 0.75) - canvasSquareSize * i >= 0; i++) {
-		addHorizontalAt(canvas, (canvas.height * 0.75) - canvasSquareSize * i);
+	for(let i = 0; (canvas.height * percFromTop) - canvasSquareSize * i >= 0; i++) {
+		addHorizontalAt(canvas, (canvas.height * percFromTop) - canvasSquareSize * i);
 	}
 		// vertical
-	for(let i = 0; (canvas.width * 0.25) + canvasSquareSize * i <= canvas.width; i++) {
-		addVerticalAt(canvas, (canvas.width * 0.25) + canvasSquareSize * i);
+	for(let i = 0; (canvas.width * percFromLeft) + canvasSquareSize * i <= canvas.width; i++) {
+		addVerticalAt(canvas, (canvas.width * percFromLeft) + canvasSquareSize * i);
 	}
-	for(let i = 0; (canvas.width * 0.25) - canvasSquareSize * i >= 0; i++) {
-		addVerticalAt(canvas, (canvas.width * 0.25) - canvasSquareSize * i);
+	for(let i = 0; (canvas.width * percFromLeft) - canvasSquareSize * i >= 0; i++) {
+		addVerticalAt(canvas, (canvas.width * percFromLeft) - canvasSquareSize * i);
 	}
 }
 

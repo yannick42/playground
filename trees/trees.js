@@ -1,6 +1,7 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
 import { randInt, randFloat } from '../common/common.helper.js';
+import { round } from '../common/math.helper.js';
 import { BST } from '../common/bst.js';
 
 const canvas = document.querySelector("canvas");
@@ -12,9 +13,10 @@ const prevStepButtonEl = document.getElementById("prev_step_button");
 const retryButtonEl = document.getElementById("refresh");
 const methodEl = document.getElementById("method");
 const newSetEl = document.getElementById("new");
+const numberEl = document.getElementById("number");
 
-const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'],
-    NB_SEGMENTS = 6;
+const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'];
+let NB_SEGMENTS = 10;
 
 let segments = [],
     intersections = [],
@@ -25,6 +27,9 @@ let segments = [],
     xMin, xMax, yMin, yMax;
 
 function main() {
+
+    numberEl.value = NB_SEGMENTS;
+
     retryButtonEl.addEventListener('click', (e) => {
         untilStep = null; // all step at once
         redraw();
@@ -45,6 +50,9 @@ function main() {
         createRandomSegments(false);
         redraw();
     })
+    numberEl.addEventListener('input', (e) => {
+        NB_SEGMENTS = e.target.value;
+    })
 
     createRandomSegments(); // default segments list
     redraw();
@@ -55,7 +63,8 @@ function createRandomSegments(fixed=true)
     segments = []; // reinit.
     if(fixed) {
         //segments = [[[7.5,2.2],[4.4,3.1],"red"],[[3.4,0.9],[5.1,8.5],"orange"],[[5.4,1.2],[0.7,2],"blue"],[[8.1,2.3],[2.6,2.5],"green"]];
-        segments = [[[8.9,1.1],[3,6.9],"red"],[[8.1,1.2],[5.9,2.5],"purple"],[[8.5,2.2],[4.5,4.8],"pink"]];
+        //segments = [[[8.9,1.1],[3,6.9],"red"],[[8.1,1.2],[5.9,2.5],"purple"],[[8.5,2.2],[4.5,4.8],"pink"]];
+        segments = [[[2.1,4.3],[3.5,9.9],"red"],[[7,6.5],[6.9,7],"orange"],[[3.9,6.1],[8.8,8.3],"blue"],[[1.3,5.5],[5.3,9.2],"green"],[[0.8,0],[8.2,3.3],"purple"],[[4.8,3.2],[0.2,7.6],"pink"]];
     } else {
         for(let i = 0; i < NB_SEGMENTS; i++) {
             const pt1 = [
@@ -80,7 +89,7 @@ function createRandomSegments(fixed=true)
                 }
             })
 
-            segments.push([points[0], points[1], colors[i]]);
+            segments.push([points[0], points[1], colors[i % colors.length]]);
         }
     }
 }
@@ -103,6 +112,7 @@ function redraw() {
     console.clear();
     console.log("method =", methodEl.value);
 
+    const t0 = window.performance.now();
     switch(methodEl.value) {
         case "naive":
             intersections = [];
@@ -111,7 +121,7 @@ function redraw() {
                     if(i !== j) {
                         const inter = has_intersection(segments[i], segments[j]);
                         if(inter) {
-                            console.log(i, j)
+                            //console.log(i, j)
                             intersections.push(inter);
                         }
                     }
@@ -123,7 +133,9 @@ function redraw() {
             break
     }
 
-    document.getElementById("nb_intersection").innerText = intersections.length;
+    const duration_ms = window.performance.now() - t0;
+
+    document.getElementById("nb_intersection").innerText = intersections.length + ' (in ' + round(duration_ms, 2) + ' ms.)';
 
     // draw them
     intersections.forEach((inter) => {
@@ -155,7 +167,7 @@ function drawSegments(canvas, segments_) {
     //console.log("xMin:", xMin, "xMax:", xMax, "yMin:", yMin, "yMax:", yMax);
 
     segments_.forEach(([start, end, color]) => {
-        console.log("segment:", start, end, color)
+        //console.log("segment:", start, end, color)
         const startScaledX = scaleX(start[0]);
         const startScaledY = scaleY(start[1]);
         const endScaledX = scaleX(end[0]);
@@ -279,10 +291,10 @@ function processNextPoint() {
     //
     const out = [];
     T.printInOrder(T.root, out);
-    debugHTML += `<tr><td><b><i>Sweep line</i></b> 'status' (ordered) at y=${y}</td><td>${JSON.stringify(out.map(e => {
-        console.log(">", e)
+    addDebug([`<b><i>Sweep line</i></b> 'status' (ordered) at y=${y}`, `${JSON.stringify(out.map(e => {
+        //console.log(">", e)
         return e[1].segments.map(seg => seg[2]).join(",") + ' (' + e[0] + ')';
-    }))}</td></tr>`;
+    }))}`]);
 
 
     // now, delete it as it now has been processed
@@ -290,19 +302,19 @@ function processNextPoint() {
 
     const out2 = [];
     Q.printInOrder(Q.root, out2);
-    debugHTML += `<tr><td>Remaining points at loop end after delete</td><td><mark>${Q.counter}</mark></td></tr>`;
+    addDebug(['Remaining points at loop end after delete', `<mark>${Q.counter}</mark>`]);
 
     // separator
-    debugHTML += '<tr><td></td><td></td></tr>';
-    debugHTML += '<tr><td></td><td></td></tr>';
-    debugHTML += '<tr><td></td><td></td></tr>';
+    addDebug(['<hr/>', ``]);
+    addDebug(['<hr/>', ``]);
+    addDebug(['<hr/>', ``]);
 }
 
 // redraw
 function drawStepAtY(y) {
     setUpCanvas(ctx, canvas.width, canvas.height, "white")
 
-    console.log("(drawStepAtY)", segments.length, "segments");
+    //console.log("(drawStepAtY)", segments.length, "segments");
     drawSegments(canvas, segments.slice(0));
 
     // draw sweep line
@@ -321,7 +333,7 @@ function drawStepAtY(y) {
  */
 function handleEventPoint(p)
 {
-    console.log("-----------------------")
+    //console.log("-----------------------")
 
     addDebug(["Analyzing event point <b>p</b>", "x="+p.join(' y=')])
 
@@ -447,7 +459,7 @@ function handleEventPoint(p)
         
         const test = T.get(key);
 
-        console.error("keyyy:", key, "nb segments at this :", test?.value?.segments?.length);
+        //console.error("keyyy:", key, "nb segments at this :", test?.value?.segments?.length);
 
         if(test?.value?.segments?.length > 1)
         {
@@ -461,12 +473,20 @@ function handleEventPoint(p)
 
             // predecessor & key     /      key & successor ?
 
+            const predKey = T.getPredecessorOf(key);
+            const succKey = T.getSuccessorOf(key);
 
+            // check for intersection (for its 2 neighbors)
 
-            ???
-
-
-            
+            const s_l = T.get(predKey)?.value?.segments[0];
+            const s_r = T.get(succKey)?.value?.segments[0];
+            const s_m = test?.value?.segments[0];
+            if(s_l && s_m) {
+                findNewEvent(s_l, s_m, p);
+            }
+            if(s_m && s_r) {
+                findNewEvent(s_m, s_r, p);
+            }
 
         } else {
 
@@ -480,7 +500,7 @@ function handleEventPoint(p)
 
             const s_l = T.get(predKey)?.value?.segments[0];
             const s_r = T.get(succKey)?.value?.segments[0];
-            console.log(">>>>>>>>>>>>>", s_l, s_r)
+            //console.log(">>>>>>>>>>>>>", s_l, s_r)
             if(s_l && s_r) {
                 findNewEvent(s_l, s_r, p); // what if multiple segments at pred or succ ? TODO !
                 // TODO : for all ...
@@ -502,15 +522,15 @@ function handleEventPoint(p)
 
     U_union_C.sort((a, b) => {
         // TODO: find the x -> check intersection with the sweep line (order with those "x" values ?)
-        console.warn("a:", a, "b:", b)
+        //console.warn("a:", a, "b:", b)
 
         // a bit below the sweep line ...
         const y = p[1] + 0.01;
 
         const intersectA = has_intersection([a[0], a[1]], [[0, y], [10, y]]);
         const intersectB = has_intersection([b[0], b[1]], [[0, y], [10, y]]);
-        console.log("intersectA", intersectA)
-        console.log("intersectB", intersectB)
+        //console.log("intersectA", intersectA)
+        //console.log("intersectB", intersectB)
 
         return intersectB !== false ? intersectA[0] - intersectB[0] : -1;
     }).forEach((segment, i) => {
@@ -540,7 +560,7 @@ function handleEventPoint(p)
     //
 
 
-    console.log(">", U_union_C)
+    //console.log(">", U_union_C)
 
 
     if(U_union_C.length == 0) {
@@ -560,7 +580,7 @@ function handleEventPoint(p)
         //console.log("precessor of ", s_prime[0][0], "is leftNeighKey =", leftNeighKey);
         const s_l = T.get(leftNeighKey)?.value?.segments[0]; // left neighbor of s_prime in T
 
-        console.log(s_prime, s_l);
+        //console.log(s_prime, s_l);
 
         if(s_prime) {
             //console.warn("s_prime:", s_prime); // segment...
@@ -648,7 +668,7 @@ function isInsideSegment(pt, linePt1, linePt2) {
 }
 
 function L(segs, p) {
-    console.log("L: segs=", segs, p)
+    //console.log("L: segs=", segs, p)
     return segs?.filter(segment => p[0] === segment[1][0] && p[1] === segment[1][1])
 }
 // segments that contains p in their interior
@@ -662,7 +682,9 @@ function C(segs, p) {
 }
 
 function addDebug(arr) {
-    debugHTML += '<tr><td>' + arr.join('</td><td>') + '</td></tr>';
+    if(false) {
+        debugHTML += '<tr><td>' + arr.join('</td><td>') + '</td></tr>';
+    }
 }
 
 

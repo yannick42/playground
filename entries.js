@@ -1,10 +1,21 @@
 export const entries = [{
+    id: 'numerical-integration',
+    href: './numerical-integration/',
+    name: 'Numerical Integration',
+    desc: "Trapezoidal rule, Simpson's rules, ...",
+    searchContext: '',
+    creationDate: '09/07/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'trees',
     href: './trees/',
     name: 'BST & Segment intersections',
     desc: "Naive vs. plane sweep algorithm",
     searchContext: '',
-    creationDate: '5/07/2024',
+    creationDate: '05/07/2024',
     classes: ['disabled-entry'],
 },{
     id: 'two-sat',
@@ -26,6 +37,10 @@ export const entries = [{
     name: 'Leaflet Playground',
     desc: "GLMarkers, ...",
     searchContext: 'map',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
 },{
     id: 'douglas-peucker',
     href: './douglas-peucker/',
@@ -142,9 +157,6 @@ export const entries = [{
     desc: 'reaction-diffusion model.',
     searchContext: 'Coding Train',
     chips: [{
-        type: 'info',
-        text: 'slow'
-    },{
         type: 'draft',
         text: 'DRAFT'
     }]

@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Numerical Integration</div>
+			<div id="subtitle"><u>Goal</u>: to understand methods to approximate integrals numerically</div>
+
+			<div id="desc">
+            </div>
+
+			<br/>
+
+			<div>
+				Choose a function : <select id="fn">
+					<option value="sin" selected>y=sin(x)</option>
+					<option value="cos">y=cos(x)</option>
+					<option value="poly">y=x^2 - x + 1</option>
+				</select>
+				<br/>
+
+				<label>from: <input id="from" value="0" /></label>
+				<label>to: <input id="to" value="3.141592653589793" /></label>
+				<br/>
+				<label>N: <input type="number" step="1" id="n" value="30" /></label>
+			</div>
+
+			<br/>
+			<div id="debug"></div>
+
+			<button id="refresh">Run</button>
+			<br/>
+
+			<span>
+				<b>Error</b> vs. <b>N</b>
+			</span>
+			<canvas id="error" width=800 height=250></canvas>
+
+			<canvas id="function" width=800 height=250></canvas>
+			
+        </div>
+
+        <script type="module" src="./numerical-integration.js"></script>
+    </body>
+</html>
