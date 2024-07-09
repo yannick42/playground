@@ -68,15 +68,21 @@ export class BST {
                     console.log("key = segments", node.value[key])
                     if(node.value[key]) {
                         // replace "color" ...
-                        node.value[key] = node.value[key].filter(seg => seg[2] !== newNode.value[key][2])
-                        console.log("add:", newNode.value[key]);
+                        node.value[key] = node.value[key].filter(seg => seg[2] !== newNode.value[key][2]);
+
+                        console.log("add:", newNode.value[key], "to", node.value[key]);
                         node.value[key] = [...node.value[key], ...newNode.value[key]];
                     } else {
                         console.log(">", newNode.value[key]);
                         node.value[key] = [...newNode.value[key]]
                     }
                 } else {
-                    node.value[key] = newNode.value[key];
+                    //if (node.value[key]) {
+                    //    console.log(">>>>>", node.value, key);
+                    //    node.value[key].push(newNode.value[key]);
+                    //} else {
+                        node.value[key] = newNode.value[key];
+                    //}
                 }
             });
         }
