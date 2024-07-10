@@ -23,17 +23,17 @@
 			<div id="title">Random sampling</div>
 			<div id="subtitle"><u>Methods</u>: uniform, Poisson disk sampling, acceptance-rejection method</div>
 
-			<br/>
 			<div id="desc">
-				<i><b>Poisson disk sampling</b></i> allows to maintain an user-defined minimal spacing between the points
+				<ul id="bullet_points">
+					<li><i><b>Poisson disk sampling</b></i> allows to maintain an user-defined minimal spacing between the random points</li>
 
-				<br/><br/>
-
-                The <i><b>acceptance-<a target="_blank" href="https://en.wikipedia.org/wiki/Rejection_sampling">rejection</a> algorithm</b></i> uses an <mark>uniform</mark> distribution as the proposal distribution,
-				and use the PDF (density function) of the <mark>Gaussian</mark> (µ=0, σ=1) as the desired/target distribution (centered on the canvas)
+                	<li>The <i><b>acceptance-<a target="_blank" href="https://en.wikipedia.org/wiki/Rejection_sampling">rejection</a> algorithm</b></i>
+				uses an <mark>uniform</mark> distribution (JS Math.random()) as the proposal distribution, and use the PDF (density function) of the
+				<mark>Gaussian</mark> (µ=0, σ=1) as the desired/target distribution (centered on the canvas). It needs two values x and y.
+					</li>
+					<li><mark>TODO ?</mark> stratified sampling, Gibbs sampling (1984), importance sampling (1978), ...</li>
+				</ul>
             </div>
-
-			<br/>
 
 			<canvas width=500 height=500></canvas>
 
@@ -45,13 +45,12 @@
 					<option value="rejection">rejection sampling</option>
 				</select>
 
-				<fieldset>
+				<fieldset id="options">
 					<legend>Poisson disk sampling</legend>
 					<label><input type="checkbox" id="show_circles"> Show circles</label>
 				</fieldset>
 			</div>
 
-			<br/>
 			<div id="debug"></div>
 			
         </div>

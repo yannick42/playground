@@ -13,6 +13,7 @@ const debugEl = document.getElementById("debug");
 
 function main() {
     document.querySelector("#resample").addEventListener('click', (e) => redraw());
+    randomMethodEl.addEventListener('change', (e) => redraw());
 
     redraw();
 }
@@ -25,6 +26,7 @@ const WIDTH = 500,
     CELL_SIZE = R / Math.sqrt(N), // R / 1.41
     BACKGROUND_COLOR = 'transparent',
     POINT_COLOR = 'darkgreen',
+    POINT_CIRCLE_COLOR = 'lightgreen',
     POINT_FILL_COLOR = 'transparent',
     GRID_COLOR = 'lightgray',
     DISPLAY_GRID = false;
@@ -186,7 +188,7 @@ function redraw() {
             // draw it on canvas
             addPoint(ctx, randX, randY, POINT_COLOR);
             if(showCircleEl.checked) {
-                addCircle(ctx, randX, randY, R, POINT_COLOR, POINT_FILL_COLOR);
+                addCircle(ctx, randX, randY, R, POINT_CIRCLE_COLOR, POINT_FILL_COLOR);
             }
 
             activeList = [];
@@ -231,7 +233,7 @@ function redraw() {
                         
                         addPoint(ctx, new_point[0], new_point[1], POINT_COLOR);
                         if(showCircleEl.checked) {
-                            addCircle(ctx, new_point[0], new_point[1], R, POINT_COLOR, POINT_FILL_COLOR);
+                            addCircle(ctx, new_point[0], new_point[1], R, POINT_CIRCLE_COLOR, POINT_FILL_COLOR);
                         }
                         activeList.push(new_point);
                         points.push(new_point);
@@ -246,7 +248,7 @@ function redraw() {
                     if(failed === K) { // reject
                         activeList.splice(randomIndex, 1); // remove from "queue"
                         
-                        if(showCircleEl.checked) { // erase ?
+                        if(showCircleEl.checked) { // erase !
                             addPoint(ctx,new_point[0], new_point[1], BACKGROUND_COLOR);
                             addCircle(ctx, new_point[0], new_point[1], R, BACKGROUND_COLOR, POINT_FILL_COLOR);
                         }

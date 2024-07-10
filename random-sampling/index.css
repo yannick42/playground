@@ -31,3 +31,11 @@ canvas {
 	border: 1px solid black;
 	margin: 5px;
 }
+
+#options {
+	margin: 5px;
+}
+
+#bullet_points {
+	text-align: justify;
+}

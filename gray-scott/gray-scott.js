@@ -232,7 +232,7 @@ function compute_frame()
 		}
 	}
 	
-	if(frame % 5 === 0) {
+	if(frame % 2 === 0) {
 		//console.log("show!")
 		const imageData = new ImageData(data, canvas.width, canvas.height);
 		ctx.putImageData(imageData, 0, 0);
