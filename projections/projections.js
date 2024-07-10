@@ -153,18 +153,26 @@ function redraw() {
 
     // /!\ orderer from least visible to front ...
 
-    // back face
-    squares.push(new Square(300, 300, 100 /*z*/, 50, 50, 'X', 'red'));
-    // right face
-    squares.push(new Square(350, 300, 0 /*z*/, 50, 100, 'Y', 'fuchsia'));
-    // top face
-    squares.push(new Square(300, 300, 0 /*z*/, 100, 50, 'Z', 'lightgreen'));
-    // bottom face
-    squares.push(new Square(300, 350, 0 /*z*/, 100, 50, 'Z', 'darkorange'));
-    // left face
-    squares.push(new Square(300, 300, 0 /*z*/, 50, 100, 'Y', 'blue'));
-    // front face
-    squares.push(new Square(300, 300, 0 /*z*/, 50, 50, 'X', 'purple'));
+
+    function cube(width, height, depth, x, y, z) {
+        // back face
+        squares.push(new Square(x, y, z + depth /*z*/, width, height, 'X', 'red'));
+        // right face
+        squares.push(new Square(x + width, y, z, height, depth, 'Y', 'fuchsia'));
+        // top face
+        squares.push(new Square(x, y, z, depth, width, 'Z', 'lightgreen'));
+        // bottom face
+        squares.push(new Square(x, y + height, z, depth, width, 'Z', 'darkorange'));
+        // left face
+        squares.push(new Square(x, y, z, height, depth, 'Y', 'blue'));
+        // front face
+        squares.push(new Square(x, y, z, width, height, 'X', 'purple'));
+    }
+
+    cube(50, 50, 100, 300, 300, 0); // left
+    cube(50, 50, 100, 375, 300, 0); // right
+    cube(10, 10, 10, 357.5, 320, 0); // front
+    cube(10, 10, 10, 357.5, 300, 20); // bottom - up
 
     console.log("squares:", squares);
     const nbOfSquares = squares.length;    
@@ -254,6 +262,11 @@ function redraw() {
 
     // around horizontal x-axis / vertical y-axis / perpendicular z-axis
     const rotationAngles = [45, 45, 45];
+
+
+    ctx.fillStyle = 'black';
+    ctx.font = "12pt Arial";
+    ctx.fillText("Front view", 322.5, 295);
 
     squares.forEach(square => {
 
