@@ -32,8 +32,56 @@ body {
 }
 
 #from, #to {
-	width: 100px;
+	width: 80px;
 }
+
 #n {
-	width: 40px;
+	width: 50px;
+}
+
+#debug {
+	border: 1px solid black;
+	border-radius: 5px;
+	background-color: antiquewhite;
+	padding: 5px;
+	margin: 5px;
+}
+
+#debug table thead {
+	text-decoration: underline;
+	font-size: 12pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+#debug td {
+	font-size: 9pt;
+}
+
+#debug td:nth-of-type(2) {
+	text-align: center;
+}
+
+.info {
+	cursor: pointer;
+}
+
+#controls {
+	display: flex;
+}
+
+#params {
+	padding: 10px 15px 0;
+}
+
+#refresh {
+	background-color: mediumturquoise;
+}
+
+#true-value {
+	font-weight: bold;
+}
+
+canvas {
+	margin: 5px;
 }

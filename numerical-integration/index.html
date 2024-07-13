@@ -2,6 +2,8 @@
 	<head>
 		<link rel="stylesheet" href="index.css" />
 
+		<base target="_blank">
+
 		<!-- no cache ... -->
 		<meta http-Equiv="Cache-Control" Content="no-cache" />
 		<meta http-Equiv="Pragma" Content="no-cache" />
@@ -23,36 +25,37 @@
 			<div id="title">Numerical Integration</div>
 			<div id="subtitle"><u>Goal</u>: to understand methods to approximate integrals numerically</div>
 
+			<br/>
 			<div id="desc">
+				See: <a href="https://en.wikipedia.org/wiki/Newton%E2%80%93Cotes_formulas">Newton-Cotes formulas</a>,
+				<a href="https://numerical.recipes/">Numerical Recipes (2007)</a>
             </div>
 
 			<br/>
+			<div id="controls">
+				<div id="params">
+					Choose a function : <br/>
+					<select id="fn">
+						<option value="sin" selected>y=sin(x)</option>
+						<option value="cos">y=cos(x)</option>
+						<option value="poly">y=x^2 - x + 1</option>
+						<option value="gaussian">N(0,1)</option>
+					</select>
+					<button id="refresh">Run</button>
+					<br/><br/>
 
-			<div>
-				Choose a function : <select id="fn">
-					<option value="sin" selected>y=sin(x)</option>
-					<option value="cos">y=cos(x)</option>
-					<option value="poly">y=x^2 - x + 1</option>
-				</select>
-				<br/>
+					<label>from=<input id="from" value="0" /></label><br/>
+					<label>to=<input id="to" value="3.14" /></label><br/>
+					<label>n=<input type="number" step="1" id="n" value="100" /></label>
+				</div>
 
-				<label>from: <input id="from" value="0" /></label>
-				<label>to: <input id="to" value="3.141592653589793" /></label>
-				<br/>
-				<label>N: <input type="number" step="1" id="n" value="30" /></label>
+				<div id="debug"></div>
 			</div>
 
-			<br/>
-			<div id="debug"></div>
-
-			<button id="refresh">Run</button>
-			<br/>
-
-			<span>
-				<b>Error</b> vs. <b>N</b>
-			</span>
+			<span><b>Error</b> vs. <b>N</b></span>
 			<canvas id="error" width=800 height=250></canvas>
 
+			<span>Function y=f(x)</span>
 			<canvas id="function" width=800 height=250></canvas>
 			
         </div>

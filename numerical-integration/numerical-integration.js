@@ -2,15 +2,57 @@
 import { setUpCanvas, drawPointAt, drawArrow, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
 import { round } from '../common/math.helper.js';
+import { gaussian } from '../common/stats.helper.js';
 
 const canvas = document.getElementById("error");
 const ctx = canvas.getContext("2d");
+const fnCanvas = document.getElementById("function");
+const fnCtx = fnCanvas.getContext("2d");
 
 const debugEl = document.getElementById('debug');
 const fnEl = document.getElementById('fn');
 const fromEl = document.getElementById('from');
 const toEl = document.getElementById('to');
 const nEl = document.getElementById('n');
+
+const methods = {
+    rectangle: {
+        name: 'Rectangle/midpoint rule',
+        color: 'DarkSlateGray',
+    },
+    trapezoidal: {
+        name: 'Trapezoidal method',
+        color: 'MediumOrchid',
+    },
+    'simpson-1-3': {
+        name: "Simpson's rule 1/3",
+        color: 'Tomato',
+    },
+    'simpson-3-8': {
+        name: "Simpson's rule 3/8",
+        color: 'DarkTurquoise',
+    },
+    'boole': {
+        name: "Boole's rule",
+        //color: '',
+    },
+    'romberg': {
+        name: "Romberg's method (1955)",
+        //color: 'CadetBlue',
+        info: 'uses Richardson extrapolation'
+    },
+    'gaussian-quad': {
+        name: '(n=2)-point Gaussian quadrature rule',
+        color: 'red',
+        info: 'Gauss (1814). Jacobi (1826) using orthogonal polynomials. Points are no longer equally spaced, ...'
+    },
+    'clenshaw': {
+        name: 'Clenshaw-Curtis quadrature (1960)',
+        info: 'uses Chebyshev nodes/polynomial, DCT, cosine series, FFT'
+    }
+};
+
+const nb_methods = Object.keys(methods).length;
 
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
@@ -25,6 +67,14 @@ function integrate(method, f, a, b, N) {
     let sum;
 
     switch(method) {
+        case "rectangle":
+
+            sum = 0;
+            for(let k = 1; k <= N; k++) {
+                sum += f(a + h*k) * h;
+            }
+
+            break;
         case "trapezoidal":
 
             sum = 0;
@@ -37,10 +87,12 @@ function integrate(method, f, a, b, N) {
         case "simpson-1-3": // composite "version" (n>2)
             // faster convergence the trapezoidal in general
             // based on quadratic interpolation ?
+            if((N+1) % 2 !== 0) return;
+
             sum = f(a) + f(b); // x_0=a / x_n=b
             for(let k = 1; k <= N - 1; k++) {
                 const x_k = a + h*k
-                sum += (k % 2 === 0 ? 2 : 4 ) * f(x_k)
+                sum += (k % 2 === 0 ? 2 : 4) * f(x_k)
             }
             sum *= 1/3 * h;
 
@@ -48,14 +100,51 @@ function integrate(method, f, a, b, N) {
         
         case "simpson-3-8": // composite "version" (n>2)
             // based on cubic interpolation ?
+            if((N+1) % 2 !== 0) return;
+
             sum = f(a) + f(b); // x_0=a / x_n=b
             for(let k = 1; k <= N - 1; k++) {
                 const x_k = a + h*k
-                sum += (k % 3 === 0 ? 2 : 3 ) * f(x_k)
+                sum += (k % 3 === 0 ? 2 : 3) * f(x_k)
             }
             sum *= 3/8 * h;
 
             break;
+        
+        case "gaussian-quad":
+            //
+            // see Section 4.6 of Numerical Recipes (2007)
+            //
+            const xs = [
+                0.1488743389816312,
+                0.4333953941292472,
+                0.6794095682990244,
+                0.8650633666889845,
+                0.9739065285171717
+            ];
+
+            const ws = [
+                0.2955242247147529,
+                0.2692667193099963,
+                0.2190863625159821,
+                0.1494513491505806,
+                0.0666713443086881
+            ];
+
+            const xm = (b+a)/2,
+                  xr = (b-a)/2;
+            
+            sum = 0;
+            for(let j = 0; j < 5; j++) {
+                const dx = xr * xs[j];
+                sum += ws[j] * (f(xm+dx) + f(xm-dx));
+            }
+            sum *= xr; // scale the result to the range of integration
+
+            //console.log("sum:", sum); // TODO: n-points !
+            break;
+        default:
+            return;
     }
     return sum;
 }
@@ -66,11 +155,12 @@ function redraw() {
 
     debugEl.innerHTML = '';
 
-    const N_MAX = nEl.value ?? 30;
+    const N_MAX = (nEl.value ?? 30) + 1;
 
     let fn,
         a = fromEl.value,
         b = toEl.value;
+
     switch(fnEl.value) {
         case "sin":
             fn = (x) => Math.sin(x);
@@ -81,48 +171,137 @@ function redraw() {
         case "poly":
             fn = (x) => Math.pow(x, 2) - x + 1
             break;
+        case "gaussian":
+            fn = (x) => gaussian(x) // default : mean=0, sigma=1
+            break;
     }
 
-    let values1 = [], values2 = [], values3 = [];
-    for(let n = 2; n <= N_MAX; n++) {
-        values1.push(integrate('trapezoidal', fn, a, b, n-1));
-        values2.push(integrate('simpson-1-3', fn, a, b, n-1));
-        values3.push(integrate('simpson-3-8', fn, a, b, n-1));
-    }
+    Object.keys(methods).forEach(method => {
+        methods[method].values = [];
+        if(methods[method].color) {
+            for(let n = 2; n <= N_MAX; n++) {
+                methods[method].values.push( // stored to show error's evolution with N
+                    integrate(method, fn, a, b, n-1)
+                );
+            }
+        }
+    });
 
-    // use best method ?
-    const trueValue = integrate('simpson-3-8', fn, a, b, 10000);
+    // use the current best(?) method
+    const trueValue = round(integrate('simpson-3-8', fn, a, b, 10001), 4);
 
-    debugEl.innerHTML += `<table>
-        <tr> <td> Method </td> <td> value found with n=${N_MAX} </td> </tr>
-        <tr> <td> <b style="color: #ff0000">Trapezoidal method</b> :</td> <td> ${round(values1[values1.length - 1], 6)} </td> </tr>
-        <tr> <td> <b style="color: #00ff00">Simpson's rule 1/3</b> :</td> <td> ${round(values2[values2.length - 1], 6)} </td> </tr>
-        <tr> <td> <b style="color: #0000ff">Simpson's rule 3/8</b> :</td> <td> ${round(values3[values3.length - 1], 6)} </td> </tr>
-        <tr> <td> <b>True value</b> :</td> <td> ${round(trueValue, 6)} </td> </tr>
+
+    //
+    // Debugging info
+    //
+    let debugMessage = `<table>
+        <thead> <td> Method </td> <td> value found </td> <td> error </td> </thead>
+    `;
+    Object.keys(methods).forEach(method => {
+        const methodObj = methods[method];
+        const values = methodObj.values;
+        const lastIndexWithData = values[values.length - 1] != undefined ? values.length - 1 : values.length - 2;
+        debugMessage += `<tr>
+            <td> <b style="color: ${methodObj.color}">${methodObj.name}</b> ${methodObj.info ? ' <span class="info" title="' + methodObj.info + '">🛈</span>' : ''}</td>
+            <td> ${methodObj.color ? round(values[lastIndexWithData], 6) : '<mark>TODO...</mark>'} </td>
+            <td> ${methodObj.color ?  round(Math.abs(values[lastIndexWithData] - trueValue), 6) : ''} </td>
+        </tr>`;
+    })
+    debugMessage += `
+        <tr> <td> <hr/> </td> <td> <hr/> </td> <td> <hr/> </td> </tr>
+        <tr> <td> <b><i>True value</i></b> </td> <td> <span id='true-value'><i>${round(trueValue, 6)}</i></span> </td> </tr>
     </table>`;
+    debugEl.innerHTML = debugMessage;
 
-    // TODO: draw evolution with N in canvas
+    //
+    // draw evolution of the error with growing N values
+    //
+    // if 25px -> 1 in gradation
+	drawAxis(canvas, 25, 0.66, 0.025); // 0.05 = 5% = 1 square => 15px / width
 
-	drawAxis(canvas, 15, 0.66, 0.025); // 0.05 = 5% = 1 square => 15px / width
+    const magnifyY = 3; // temp
+    const lineWidth = 3;
 
-    const magnifyY = 1; // temp
+    Object.keys(methods).forEach((method, index) => {
+        const methodObj = methods[method];
+        const values = methodObj.values;
+        const color = methodObj.color;
+        values.forEach((yValue, i) => {
+            if(yValue != null) // if null, skip
+            {
+                const error = trueValue - yValue;
+                const [x, y] = convertToCanvasCoords(canvas, i + 2, error * magnifyY, 25); // shifted by 2 (as 0 => 2)
+                drawPointAt(ctx, x, y, 3, color);
 
-    const colors = ['#ff0000', '#00ff00', '#0000ff'];
-
-    ([values1, values2, values3]).forEach((values, index) => {
-        console.log(values);
-        values.forEach((value, i) => {
-            const error = trueValue - value;
-            const [x, y] = convertToCanvasCoords(canvas, i + 2, error * magnifyY, 25);
-            drawPointAt(ctx, x, y, 3, colors[index]);
-
-
-            if(i < values.length - 1) {
-                const [x2, y2] = convertToCanvasCoords(canvas, i + 3, (trueValue - values[i+1]) * magnifyY, 25);
-                drawLine(ctx, x, y, x2, y2, 2, colors[index]);
+                if(i < values.length - 1) {
+                    // where is next value ?
+                    const ii = values[i+1] !== undefined ? 1 : 2;
+                    const nextValue = values[i+ii];
+                    if(nextValue != null) {
+                        const [x2, y2] = convertToCanvasCoords(
+                            canvas,
+                            i + 2 + ii,
+                            (trueValue - nextValue) * magnifyY,
+                            25
+                        );
+                        drawLine(ctx, x, y, x2, y2,
+                            lineWidth,
+                            `color-mix(in srgb, ${color} 50%, transparent)`);
+                    }
+                }
             }
         });
     })
+
+    showFunction(fn, a, b)
+}
+
+
+function showFunction(fn, from, to)
+{
+
+    setUpCanvas(fnCtx, 800, 250, 'white');
+    drawAxis(fnCanvas, 25, 0.5, 0.5); // 0.05 = 5% = 1 square => 15px / width
+
+    const surface = [];
+
+    // Draw interval
+    let [x1, y1] = convertToCanvasCoords(fnCanvas, from, fn(from), 25);
+    let [x2, y2] = convertToCanvasCoords(fnCanvas, from, 0, 25);
+    drawLine(fnCtx, x1, y1, x2, y2, 2, 'orange');
+    surface.push([[x2, y2], [x1, y1]]);
+
+    [x1, y1] = convertToCanvasCoords(fnCanvas, to, fn(to), 25);
+    [x2, y2] = convertToCanvasCoords(fnCanvas, to, 0, 25);
+    drawLine(fnCtx, x1, y1, x2, y2, 2, 'orange');
+
+    const from_ = -16;
+    const to_ = 16;
+    const STEP = (to - from) / 100;
+    const values = []
+    for(let x = from_; x <= to_; x += STEP) {
+        const y = fn(x);
+        if (x > from_) {
+            const [x_, y_] = convertToCanvasCoords(fnCanvas, x - STEP, values[values.length - 1], 25);
+            const [x2, y2] = convertToCanvasCoords(fnCanvas, x, y, 25);
+
+            if(x >= from && x <= to) {
+                surface.push([[x, y_], [x2, y2]]);
+            }
+            drawLine(fnCtx, x_, y_, x2, y2, 2, 'red');
+        }
+        values.push(y);
+    }
+
+    // close interval
+    surface.push([[x1, y1], [x2, y2]]);
+
+    fnCtx.beginPath();
+    fnCtx.moveTo(surface[0][0][0], surface[0][0][1]);
+    surface.forEach(line => fnCtx.lineTo(line[1][0], line[1][1]));
+    fnCtx.fillStyle = 'color-mix(in srgb, orange 40%, transparent)';
+    fnCtx.fill();
+
 }
 
 main();
