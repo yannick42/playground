@@ -190,14 +190,23 @@ function redraw() {
     // use the current best(?) method
     const trueValue = round(integrate('simpson-3-8', fn, a, b, 10001), 4);
 
-
     //
     // Debugging info
     //
     let debugMessage = `<table>
-        <thead> <td> Method </td> <td> value found </td> <td> error </td> </thead>
+        <thead> <td> Best methods </td> <td> value found </td> <td> error </td> </thead>
     `;
-    Object.keys(methods).forEach(method => {
+    Object.keys(methods).sort((a, b) => {
+        const methodObjA = methods[a];
+        const valuesA = methodObjA.values;
+        const lastIndexWithDataA = valuesA[valuesA.length - 1] != undefined ? valuesA.length - 1 : valuesA.length - 2;
+
+        const methodObjB = methods[b];
+        const valuesB = methodObjB.values;
+        const lastIndexWithDataB = valuesB[valuesB.length - 1] != undefined ? valuesB.length - 1 : valuesB.length - 2;
+        
+        return Math.abs(valuesB[lastIndexWithDataB] - trueValue) > Math.abs(valuesA[lastIndexWithDataA] - trueValue) ? -1 : 1;
+    }).forEach(method => {
         const methodObj = methods[method];
         const values = methodObj.values;
         const lastIndexWithData = values[values.length - 1] != undefined ? values.length - 1 : values.length - 2;
@@ -209,7 +218,7 @@ function redraw() {
     })
     debugMessage += `
         <tr> <td> <hr/> </td> <td> <hr/> </td> <td> <hr/> </td> </tr>
-        <tr> <td> <b><i>True value</i></b> </td> <td> <span id='true-value'><i>${round(trueValue, 6)}</i></span> </td> </tr>
+        <tr> <td> <b><i>True value</i></b> </td> <td> <span id='true-value'><i>${round(trueValue, 10)}</i></span> </td> </tr>
     </table>`;
     debugEl.innerHTML = debugMessage;
 
