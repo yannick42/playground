@@ -9,7 +9,7 @@ body {
 
 #content {
 	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
-  margin-top: 15px;
+  	margin-top: 15px;
 	width: calc(var(--canvas-size) + 150px);
 	display: flex;
 	flex-direction: column;
@@ -47,4 +47,17 @@ canvas {
 
 #number {
 	width: 50px;
+}
+
+#buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+#result {
+	background-color: antiquewhite;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid darkgreen;
+	display: inline-block;
 }

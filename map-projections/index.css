@@ -38,3 +38,11 @@ canvas {
 	color: blue;
 	font-style: italic;
 }
+
+#result {
+	width: 100%;
+}
+
+input[type="range"] {
+	width: 500px;
+}

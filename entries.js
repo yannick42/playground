@@ -10,8 +10,8 @@ export const entries = [{
         text: "DRAFT"
     }]
 },{
-    id: 'trees',
-    href: './trees/',
+    id: 'line-intersection',
+    href: './line-intersection/',
     name: 'BST & Segment intersections',
     desc: "Naive vs. plane sweep algorithm",
     searchContext: '',

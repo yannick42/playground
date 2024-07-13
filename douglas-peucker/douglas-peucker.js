@@ -355,6 +355,41 @@ async function loadBySVGId(svgDoc, id, options) {
 
 
 
+    // TODO : check if a transform is present if != gEur
+    console.log("parent group id:", pathElement.parentNode.id); // <g> id=gEur
+    console.log("group transform matrix:", pathElement.parentNode.parentNode.transform.baseVal[0].matrix); // <g> id=Countries
+    //console.log(pathElement.parentNode.parentNode.parentNode); // <SVG> root ?
+
+    // apply transform
+
+    const transformMatrix = pathElement.parentNode.parentNode?.transform?.baseVal[0]?.matrix;
+    if(transformMatrix) {
+        paths = paths.map(path => {
+            path = path.map(point => {
+                //const domMatrix = new SVGMatrix([1, 0, 0, 1, point[0], point[1]]); // DOMMatrix ? more general but don't work here?!
+                
+                const translated = transformMatrix.translate(point[0], point[1]);
+                return [translated.e, translated.f];
+            });
+            return path;
+        });
+    }
+
+
+    let t = transformMatrix.translate(minX, minY);
+    [minX, minY] = [t.e, t.f];
+
+    t = transformMatrix.translate(maxX, maxY);
+    [maxX, maxY] = [t.e, t.f];
+
+
+
+
+
+
+
+
+
 
     //printVar({ pixels, minX, maxX, minY, maxY });
 

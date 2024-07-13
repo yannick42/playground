@@ -33,26 +33,35 @@
 
 				<br/><br/>
 				
-				<div>
+				<div id="buttons">
 					<button id="prev_step_button"><< Previous step</button>
 					<button id="step_button">Step >></button>
 				</div>
 
-				<br/><br/>
+				<br/>
 				<button id="new">Generate new set of segments</button> number: <input type="number" id="number" />
 
-				<br/><br/>
+				<br/>
+				
+				<label><input type="checkbox" id="show_debug" /> show debug information</label>
 
-				Number of intersections found : <span id="nb_intersection">-</span>
+				<br/>
+
+				<span id="result">
+					Number of intersections found : <span id="nb_intersection">-</span>
+				</span>
 			</div>
 			
 			<br/>
+			<br/>
+			<br/>
+
 			<u>Debugging informations :</u>
 			<div id="debug">
 				-
 			</div>
         </div>
 
-        <script type="module" src="./trees.js"></script>
+        <script type="module" src="./line-intersection.js"></script>
     </body>
 </html>

@@ -14,6 +14,7 @@ const retryButtonEl = document.getElementById("refresh");
 const methodEl = document.getElementById("method");
 const newSetEl = document.getElementById("new");
 const numberEl = document.getElementById("number");
+const showDebugEl = document.getElementById("show_debug");
 
 const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'];
 let NB_SEGMENTS = 10;
@@ -24,6 +25,7 @@ let segments = [],
     T, // sweep line status
     untilStep = 1,
     debugHTML = '',
+    showDebug = true,
     xMin, xMax, yMin, yMax;
 
 function main() {
@@ -53,6 +55,8 @@ function main() {
     numberEl.addEventListener('input', (e) => {
         NB_SEGMENTS = e.target.value;
     })
+    showDebugEl.addEventListener('input', (e) => showDebug = e.target.checked);
+    showDebugEl.checked = showDebug;
 
     createRandomSegments(); // default segments list
     redraw();
@@ -64,7 +68,8 @@ function createRandomSegments(fixed=true)
     if(fixed) {
         //segments = [[[7.5,2.2],[4.4,3.1],"red"],[[3.4,0.9],[5.1,8.5],"orange"],[[5.4,1.2],[0.7,2],"blue"],[[8.1,2.3],[2.6,2.5],"green"]];
         //segments = [[[8.9,1.1],[3,6.9],"red"],[[8.1,1.2],[5.9,2.5],"purple"],[[8.5,2.2],[4.5,4.8],"pink"]];
-        segments = [[[2.1,4.3],[3.5,9.9],"red"],[[7,6.5],[6.9,7],"orange"],[[3.9,6.1],[8.8,8.3],"blue"],[[1.3,5.5],[5.3,9.2],"green"],[[0.8,0],[8.2,3.3],"purple"],[[4.8,3.2],[0.2,7.6],"pink"]];
+        //segments = [[[2.1,4.3],[3.5,9.9],"red"],[[1.3,5.5],[5.3,9.2],"green"],[[4.8,3.2],[0.2,7.6],"pink"]];
+        segments = [[[0.3,6.4],[8.6,7.4],"red"],[[5.4,1.6],[1.9,3.6],"orange"],[[5.2,3],[5.8,7.6],"green"],[[2.2,2.1],[6,4.5],"purple"]];
     } else {
         for(let i = 0; i < NB_SEGMENTS; i++) {
             const pt1 = [
@@ -87,8 +92,7 @@ function createRandomSegments(fixed=true)
                 } else {
                     return b[0] - a[0] > 0 ? -1 : 1;
                 }
-            })
-
+            });
             segments.push([points[0], points[1], colors[i % colors.length]]);
         }
     }
@@ -175,6 +179,9 @@ function drawSegments(canvas, segments_) {
         //console.log(">", startScaledX, startScaledY, endScaledX, endScaledY)
 
         // draw!
+        ctx.fillStyle = color;
+        ctx.fillText("<"+start[0]+", "+start[1]+">", startScaledX + 6, startScaledY - 6);
+        ctx.fillText("<"+end[0]+", "+end[1]+">", endScaledX + 6, endScaledY - 6);
         drawPointAt(ctx, startScaledX, startScaledY, 5, color);
         drawPointAt(ctx, endScaledX, endScaledY, 5, color);
         drawLine(ctx, startScaledX, startScaledY, endScaledX, endScaledY, 3, color);
@@ -314,7 +321,6 @@ function processNextPoint() {
 function drawStepAtY(y) {
     setUpCanvas(ctx, canvas.width, canvas.height, "white")
 
-    //console.log("(drawStepAtY)", segments.length, "segments");
     drawSegments(canvas, segments.slice(0));
 
     // draw sweep line
@@ -322,6 +328,9 @@ function drawStepAtY(y) {
 
     // draw current intersections
     intersections.forEach((inter) => {
+        ctx.font = "10px sans-serif";
+        ctx.fillStyle = "black";
+        ctx.fillText("<"+inter[0]+", "+inter[1]+">", scaleX(inter[0]) + 6, scaleY(inter[1]) - 6);
         drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 5, "black");
         drawPointAt(ctx, scaleX(inter[0]), scaleY(inter[1]), 3, "white");
     })
@@ -354,7 +363,7 @@ function handleEventPoint(p)
     if(segmentsThatMayContainsP.length === 0) {
         let node = T.root;
         while(node) {
-            addDebug(['searching node in T, at x=' + p[0], JSON.stringify(node ?? '-')])
+            addDebug(['searching node in T, at x=' + p[0], JSON.stringify({ key: node.key, value: node.value })])
             if(p[0] > node.key) {
                 if(node.right) {
                     node = node.right;
@@ -448,16 +457,30 @@ function handleEventPoint(p)
 
     /**
      * Delete from the sweep if : the line is no more present below (=L_p)
-     *      OR      
+     *      OR      a "center" point
      */
     [...L_p, ...C_p].forEach(segment => {
-        //const key = segment[0][0];
+        //let key = segment[0][0]; // use its upperleft point ?!
+        let test = T.get(key); // utile
+
+        // 
+        
 
         //const key = p[0];
         addDebug(['<mark>Deleting a <b>Lower</b> point or a <b>Center</b> point...</mark>', segment])
+        addDebug(['key', key])
+
         //console.log("delete from T :", segment, "x-key=", key)
         
-        const test = T.get(key);
+        /*
+        let i = 0;
+        while(!test && i < 1) { // find an other one ?!?
+            test = T.getSuccessorOf(test.key);
+            i += 1;
+        }*/
+
+
+        addDebug(['test', JSON.stringify(test)]);
 
         //console.error("keyyy:", key, "nb segments at this :", test?.value?.segments?.length);
 
@@ -468,28 +491,35 @@ function handleEventPoint(p)
             test.value.segments = test.value.segments.filter(seg => seg[2] !== segment[2]); // remove the segment from the sweep line
 
             //
-            // TODO: check intersection, here too ?
+            // check intersection, here too...
             //
 
             // predecessor & key     /      key & successor ?
-
             const predKey = T.getPredecessorOf(key);
             const succKey = T.getSuccessorOf(key);
 
-            // check for intersection (for its 2 neighbors)
+            // check for intersection (for its 2 neighbors... even if many..)
 
-            const s_l = T.get(predKey)?.value?.segments[0];
-            const s_r = T.get(succKey)?.value?.segments[0];
-            const s_m = test?.value?.segments[0];
-            if(s_l && s_m) {
-                findNewEvent(s_l, s_m, p);
-            }
-            if(s_m && s_r) {
-                findNewEvent(s_m, s_r, p);
-            }
+            const s_l_list = T.get(predKey)?.value?.segments;
+            const s_r_list = T.get(succKey)?.value?.segments;
+            const s_m_list = test?.value?.segments;
 
+            s_l_list.forEach(s_l => {
+                s_m_list.forEach(s_m => {
+                    if(s_l && s_m) {
+                        findNewEvent(s_l, s_m, p);
+                    }
+                })
+            });
+            s_m_list.forEach(s_m => {
+                s_r_list.forEach(s_r => {
+                    if(s_m && s_r) {
+                        findNewEvent(s_m, s_r, p);
+                    }
+                })
+            })
+            
         } else {
-
 
             const predKey = T.getPredecessorOf(key);
             const succKey = T.getSuccessorOf(key);
@@ -498,13 +528,13 @@ function handleEventPoint(p)
 
             // check for intersection (for its 2 neighbors)
 
-            const s_l = T.get(predKey)?.value?.segments[0];
-            const s_r = T.get(succKey)?.value?.segments[0];
-            //console.log(">>>>>>>>>>>>>", s_l, s_r)
-            if(s_l && s_r) {
-                findNewEvent(s_l, s_r, p); // what if multiple segments at pred or succ ? TODO !
-                // TODO : for all ...
-            }
+            const s_l_list = T.get(predKey)?.value?.segments;
+            const s_r_list = T.get(succKey)?.value?.segments;
+            s_l_list.forEach(s_l => {
+                s_r_list.forEach(s_r => {
+                    findNewEvent(s_l, s_r, p); // even if multiple segments at pred or succ ... (?)
+                })
+            })
         }
     })
 
@@ -545,11 +575,31 @@ function handleEventPoint(p)
         T.insert(key, { segments: [segment] }); // it merges if other segments are present here (at x = p[0])
 
         addDebug([
-            'Insert a (ordered) segment in sweep line T at X='+key,
-            '<span style="color: '+ segment[2] + '">' + segment[2] + ' segment</span>'
+            `Insert a (ordered) segment in sweep line T at X=${key}`,
+            `<span style="color: ${segment[2]}">${segment[2]} segment</span>`
         ]);
         // INFO: the "U_p" segment(s) are the new/arriving segments crossing the sweep line
-    })
+    });
+
+
+
+    // reorder ?!?
+    if(T.counter) {
+        console.log("-----")
+        let element = T.min();
+        while(element?.key) {
+            console.log(element.key);
+            const el = T.get(T.getSuccessorOf(element.key));
+            if(el.key === element.key) {
+                break;
+            }
+            element = el;
+            console.log(element.key);
+        }
+
+        //console.error(has_intersection([[0, p[1], 10, p[1]]))
+    }
+
 
 
 
@@ -578,29 +628,33 @@ function handleEventPoint(p)
         const s_prime = U_union_C[0]; // the leftmost segment in U(p) union C(p)      in T?
         const leftNeighKey = T.getPredecessorOf(s_prime[0][0]);
         //console.log("precessor of ", s_prime[0][0], "is leftNeighKey =", leftNeighKey);
-        const s_l = T.get(leftNeighKey)?.value?.segments[0]; // left neighbor of s_prime in T
+        const s_l_list = T.get(leftNeighKey)?.value?.segments; // left neighbor of s_prime in T
 
         //console.log(s_prime, s_l);
 
         if(s_prime) {
             //console.warn("s_prime:", s_prime); // segment...
             //console.warn("s_l:", s_l)
-            if(s_prime && s_l) {
-                findNewEvent(s_prime, s_l, p);
+            if(s_prime && s_l_list) {
+                s_l_list.forEach(s_l => {
+                    findNewEvent(s_prime, s_l, p);
+                })
             }
         }
 
         const s_prime_prime = U_union_C[U_union_C.length - 1]; // the rightmost segment of U(p) union C(p) in T
         const rightNeighKey = T.getSuccessorOf(s_prime_prime[0][0]);
         //console.log("successor of ", s_prime_prime[0][0], "is rightNeighKey =", rightNeighKey);
-        const s_r = T.get(rightNeighKey)?.value?.segments[0]; // right neighbor of s_prime_prime in T
+        const s_r_list = T.get(rightNeighKey)?.value?.segments; // right neighbor of s_prime_prime in T
 
         if(s_prime_prime) {
             //console.warn("s_prime_prime:", s_prime_prime); // a segment [ptUL, ptDR, color] ??
             //console.warn("s_r:", s_r)
-            if(s_prime_prime && s_r && s_prime != s_prime_prime && s_l != s_r) {
-                findNewEvent(s_prime_prime, s_r, p);
-            }
+            s_r_list.forEach(s_r => {
+                if(s_prime_prime && s_r && s_prime != s_prime_prime && !s_l_list.includes(s_r)) {
+                    findNewEvent(s_prime_prime, s_r, p);
+                }
+            })
         }
     }
 }
@@ -682,7 +736,7 @@ function C(segs, p) {
 }
 
 function addDebug(arr) {
-    if(false) {
+    if(showDebug) {
         debugHTML += '<tr><td>' + arr.join('</td><td>') + '</td></tr>';
     }
 }

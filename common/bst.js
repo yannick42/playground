@@ -260,15 +260,15 @@ export class BST {
             return n?.key;
         }
 
-        // 2. go up the nearest ancestor with a right subtree
+        // 2. go up the nearest ancestor with a left? subtree
         let root = this.root;
         let successor;
         while(root) {
             if(key < root.key) {
                 successor = root.key;
-                root = root.right
+                root = root.left
             } else if (key > root.key) {
-                root = root.left;
+                root = root.right;
             } else {
                 break;
             }

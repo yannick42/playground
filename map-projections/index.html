@@ -8,14 +8,14 @@
 		<meta http-Equiv="Expires" Content="0" />
 		
 		<!-- for latex (loaded before else..)-->
-		<script>
+		<!--script>
 			window.MathJax = {
 				loader: {load: ['[tex]/color']},
 				tex: {packages: {'[+]': ['color']}}
 			};
 		</script>
 		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script-->
 	</head>
 	<body>
 		
@@ -35,7 +35,22 @@
 			
 			<canvas></canvas>
 
-			<div id="result"></div>
+			<div id="result">
+				<canvas id="new_canvas"></canvas>
+
+				<div>
+					camera (C) z-pos (<span id="czpos_value"></span>) <br/>
+					<input id="czpos" type="range" min="-10500" max="-6350" />
+					<br/>
+
+					display (E) z-pos (<span id="ezpos_value"></span>) <br/>
+					<input id="ezpos" type="range" min="0" max="100" />
+					<br/>
+
+					Lat:<input id="lat_0" type="number" min="-90" max=90 />
+					Lng<input id="lng_0" type="number" min="-180" max=180 />
+				</div>
+			</div>
 			
         </div>
 

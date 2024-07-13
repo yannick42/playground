@@ -5,9 +5,42 @@ import { degToRad } from '../common/math.helper.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
+const czPosValueEl = document.getElementById('czpos_value');
+const ezPosValueEl = document.getElementById('ezpos_value');
+const lat0ValueEl = document.getElementById('lat_0');
+const lng0ValueEl = document.getElementById('lng_0');
+
+const EARTH_RADIUS = 6371; // km
+
+let CZPOS = -10_000,
+    EZPOS = 75,
+    LAT_0 = 0,
+    LNG_0 = 0;
 
 function main() {
-    //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    document.querySelector("#czpos").addEventListener('change', (e) => {
+        CZPOS = e.target.value;
+        czPosValueEl.innerText = CZPOS;
+        draw3DSphere();
+    });
+    document.querySelector("#ezpos").addEventListener('change', (e) => {
+        EZPOS = e.target.value;
+        ezPosValueEl.innerText = EZPOS;
+        draw3DSphere();
+    });
+    document.querySelector("#lat_0").addEventListener('input', (e) => {
+        LAT_0 = e.target.value;
+        draw3DSphere();
+    });
+    document.querySelector("#lng_0").addEventListener('input', (e) => {
+        LNG_0 = e.target.value;
+        draw3DSphere();
+    });
+
+    czPosValueEl.innerText = CZPOS;
+    ezPosValueEl.innerText = EZPOS;
+    lat0ValueEl.value = LAT_0;
+    lng0ValueEl.value = LNG_0;
 
     redraw();
 }
@@ -43,6 +76,60 @@ class Sphere {
 }
 
 
+
+
+
+//
+// project from orthographic projection to 2D-plane
+// 
+function reverseOrthographicProjection(lat, lng) {
+    const lambda_0 = 10 * Math.PI / 180; // long (=x)
+    const phi_0 = 45 * Math.PI / 180; // lat (=y)
+    const x = EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda - lambda_0);
+    const y = EARTH_RADIUS * (Math.cos(phi_0) * Math.sin(phi) - Math.sin(phi_0) * Math.cos(phi) * Math.cos(lambda - lambda_0));
+    return [x, y];
+}
+
+//
+// https://en.wikipedia.org/wiki/Orthographic_map_projection
+//
+function orthographicProjection(x, y, atLat=45, atLng=10) {
+    const lambda_0 = atLng * Math.PI / 180; // long (=x)
+    const phi_0 = atLat * Math.PI / 180; // lat (=y)
+    
+    const rho = Math.sqrt(x*x + y*y);
+    const c = Math.asin(rho / EARTH_RADIUS); // if -pi/2 < c < pi/2 -> OK
+
+    const lat = Math.asin(
+        Math.cos(c) * Math.sin(phi_0) + y * Math.sin(c) * Math.cos(phi_0) / rho
+    );
+    const lng = lambda_0 + Math.atan(x * Math.sin(c) / (rho * Math.cos(c) * Math.cos(phi_0) - y * Math.sin(c) * Math.sin(phi_0)))
+    // TODO: use atan2(y, x) ? (to ensure that the sign is correct in all quadrant ?)
+    // https://en.wikipedia.org/wiki/Atan2
+
+    return [lat, lng];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function redraw() {
 
     // 
@@ -55,8 +142,9 @@ function redraw() {
 
         test(heightmap);
     });
-
 };
+
+let sphere;
 
 function test(heightMap) {
 
@@ -69,7 +157,7 @@ function test(heightMap) {
     const sphereRadius = sphereCircumference / (2 * Math.PI);
 
     // create a sphere
-    const sphere = new Sphere(sphereRadius, degToRad(180));
+    sphere = new Sphere(sphereRadius, degToRad(180));
     console.log("sphere:", sphere);
 
 
@@ -176,7 +264,7 @@ function test(heightMap) {
         return [positionX, positionY];
     }
 
-    console.warn(heightMap.data);
+    //console.warn(heightMap.data);
 
 
     for(let longitude = -180; longitude < 180; longitude++) {
@@ -186,33 +274,29 @@ function test(heightMap) {
             //console.log(latitude, longitude, "->", pixelX, pixelY);
 
             const offset = (pixelY * heightMap.width + pixelX) * 4; // Why first of array is "undefined"
-            sphere.surface[longitude + 180][latitude + 90] = heightMap.data[offset];
+            sphere.surface[longitude + 180][latitude + 90] = 255 - heightMap.data[offset];
 
-            //drawPointAt(ctx, pixelX, pixelY, 3, 'red'); // on a grid ?!
+            //drawPointAt(ctx, pixelX, pixelY, 3, 'red'); // drawn as a grid over the equirectangular map
         }
     };
 
-    console.log(">", sphere.surface);
+    //console.log("sphere.surface: ", sphere.surface);s
 
 
+    draw3DSphere();
+
+}
 
 
-
-
-
-
+function draw3DSphere() {
+    
     // 
-    // use those grey values to color a sphere !
+    // use those grey values map onto a sphere ! (more points at the poles)
     // 
 
-    const newCanvas = document.createElement("canvas");
-    newCanvas.id = "new_canvas"
-    document.querySelector("#result").appendChild(newCanvas);
-
-
-    document.querySelector("#result").style.width = '100%';
-
+    const newCanvas = document.getElementById('new_canvas');
     const newCtx = newCanvas.getContext("2d");
+    setUpCanvas(newCtx, newCanvas.width, newCanvas.height, 'black')
 
     /* // DEBUGGING image
     const data = new Uint8ClampedArray(360 * 180 * 4);
@@ -233,33 +317,33 @@ function test(heightMap) {
     newCtx.putImageData(imageData, 0, 0);
     */
 
-
-
     const projectedPoints = [];
     sphere.surface.forEach((ls, long) => {
         ls.forEach((color, lat) => {
 
-            if(long < 180 || long > 200) return; // DEBUG : show only 20° slice
-
+            lat = (lat + LAT_0 + 180) % 180 - 90; // shift from 0-180 to -90/90 ...
+            long = (long + LNG_0 + 360) % 360;
+            
             // x = longitude angle°
             // y = lat. angle°
 
-            const radius = 50; //6371; // km
-            const x = radius * Math.cos(degToRad(lat)) * Math.cos(degToRad(long));
-            const y = radius * Math.cos(degToRad(lat)) * Math.sin(degToRad(long));
-            const z = radius * Math.sin(degToRad(lat));
+            const x = EARTH_RADIUS * Math.cos(degToRad(lat)) * Math.cos(degToRad(long));
+            const y = EARTH_RADIUS * Math.cos(degToRad(lat)) * Math.sin(degToRad(long));
+            const z = EARTH_RADIUS * Math.sin(degToRad(lat));
 
+            if(z < 0) return; // hide half (hidden) hemisphere
             const pt = [x, y, z];
+            //console.log(x,y,z)
 
             //
             // to control the behavior of the perspective
             //
-            const cameraPosition = [0, 0, -100]; // C (= origin)
+            const cameraPosition = [0, 0, CZPOS]; // C (= origin)
 
             // roll, pitch, yaw (TODO: get "rotate" function !!!)
             const cameraOrientation = [0, 0, 0]; // Tait-Bryan angles (Euler angles)
 
-            const displaySurfacePosition = [0, 0, 1]; // E = display surface relative to C
+            const displaySurfacePosition = [0, 0, EZPOS]; // E = display surface relative to C
 
             // position with respect to the coordinate system defined by the camera
             // d =  Rx * Ry * Rz (A - C)
@@ -288,18 +372,19 @@ function test(heightMap) {
                 displaySurfacePosition[2] / D[2] * D[1] + displaySurfacePosition[1]
             ];
 
+            // 3D to 2D
             projectedPoints.push([projectedPt[0], projectedPt[1], color]); // add color to this...
 
         });
     });
 
+    console.log("Number of points:", projectedPoints.length);
 
     projectedPoints.forEach(pt => {
-        if(pt[2]) { // skip weird points ? (undefined, on the border ?)
-            const color = '#'+pt[2].toString(16)+pt[2].toString(16)+pt[2].toString(16);
-            //console.log(pt[0], pt[1], color);
-            drawPointAt(newCtx, pt[0]*100 + newCanvas.width/2, pt[1]*100 + newCanvas.height/2, 0.1, color);
-        }
+        // pt[2] can be null/undefined ?
+        const color = `#${pt[2].toString(16)}${pt[2].toString(16)}${pt[2].toString(16)}`;
+        // center sphere
+        drawPointAt(newCtx, pt[0] + newCanvas.width/2, pt[1] + newCanvas.height/2, 0.5, color);
     });
 
 
