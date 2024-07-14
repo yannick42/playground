@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<base target="_blank">
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title"><a href="https://en.wikipedia.org/wiki/Doubly_connected_edge_list">Doubly-connected edge list</a> (1978)</div>
+			<div id="subtitle">
+				<u>Goal</u>: understand these kinds of data structures (the older winged-edge, quad-edge, ...)
+				to handle <a href="https://en.wikipedia.org/wiki/Planar_straight-line_graph">planar straight-line graphs</a> (PSLG) :
+				eg. a Voronoi diagram. Used for point location on a map, (thematic) map overlay, ...
+			</div>
+			<br/>
+
+			<div id="desc">	
+            </div>
+			<br/>
+
+			<canvas width=500 height=500></canvas>
+
+			<button id="refresh">Refresh</button>
+
+			<div id="debug">
+				
+			</div>
+			
+        </div>
+
+        <script type="module" src="./DCEL.js"></script>
+    </body>
+</html>

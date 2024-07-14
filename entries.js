@@ -1,4 +1,18 @@
 export const entries = [{
+    id: 'DCEL',
+    href: './DCEL/',
+    name: 'Doubly-connected edge list',
+    desc: "to handle PSLG : voronoi diagram, ...",
+    searchContext: '',
+    creationDate: '14/07/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    },{
+        type: 'buggy',
+        text: 'buggy'
+    }]
+},{
     id: 'numerical-integration',
     href: './numerical-integration/',
     name: 'Numerical Integration',

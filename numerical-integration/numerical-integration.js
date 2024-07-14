@@ -60,7 +60,7 @@ function main() {
     redraw();
 }
 
-function integrate(method, f, a, b, N) {
+function integrate(method, f, a, b, N=2) {
 
     // uniform spacing of xs
     const h = (b - a) / N;
@@ -188,7 +188,7 @@ function redraw() {
     });
 
     // use the current best(?) method
-    const trueValue = round(integrate('simpson-3-8', fn, a, b, 10001), 4);
+    const trueValue = round(integrate('simpson-3-8', fn, a, b, 10001), 6);
 
     //
     // Debugging info
