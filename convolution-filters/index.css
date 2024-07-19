@@ -47,6 +47,10 @@ table, td, th {
 }
 
 /* select */
-#filterName {
+#filter_name {
 	margin: 5px;
+}
+
+#filter_desc {
+	font-weight: bold;
 }
