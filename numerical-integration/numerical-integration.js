@@ -37,9 +37,9 @@ const methods = {
         //color: '',
     },
     'romberg': {
-        name: "Romberg's method (1955)",
+        name: "<a href='https://en.wikipedia.org/wiki/Romberg%27s_method'>Romberg's method</a> (1955)",
         //color: 'CadetBlue',
-        info: 'uses Richardson extrapolation'
+        info: 'applies Richardson extrapolation to accelerate?'
     },
     'gaussian-quad': {
         name: '(n=2)-point Gaussian quadrature rule',
@@ -149,6 +149,8 @@ function integrate(method, f, a, b, N=2) {
     return sum;
 }
 
+const SQUARE_SIZE_1 = 35;
+
 function redraw() {
 
     setUpCanvas(ctx, 800, 250, 'white');
@@ -218,7 +220,7 @@ function redraw() {
     })
     debugMessage += `
         <tr> <td> <hr/> </td> <td> <hr/> </td> <td> <hr/> </td> </tr>
-        <tr> <td> <b><i>True value</i></b> </td> <td> <span id='true-value'><i>${round(trueValue, 10)}</i></span> </td> </tr>
+        <tr> <td> <b><i>True value...</i></b> </td> <td> <span id='true-value'><i>${round(trueValue, 10)}</i></span> </td> </tr>
     </table>`;
     debugEl.innerHTML = debugMessage;
 
@@ -226,9 +228,9 @@ function redraw() {
     // draw evolution of the error with growing N values
     //
     // if 25px -> 1 in gradation
-	drawAxis(canvas, 25, 0.66, 0.025); // 0.05 = 5% = 1 square => 15px / width
+	drawAxis(canvas, SQUARE_SIZE_1, 0.66, 0.025); // 0.05 = 5% = 1 square => 15px / width
 
-    const magnifyY = 3; // temp
+    const magnifyY = 1; // temp
     const lineWidth = 3;
 
     Object.keys(methods).forEach((method, index) => {
@@ -239,7 +241,7 @@ function redraw() {
             if(yValue != null) // if null, skip
             {
                 const error = trueValue - yValue;
-                const [x, y] = convertToCanvasCoords(canvas, i + 2, error * magnifyY, 25); // shifted by 2 (as 0 => 2)
+                const [x, y] = convertToCanvasCoords(canvas, i + 2, error * magnifyY, SQUARE_SIZE_1); // shifted by 2 (as 0 => 2)
                 drawPointAt(ctx, x, y, 3, color);
 
                 if(i < values.length - 1) {
@@ -251,7 +253,7 @@ function redraw() {
                             canvas,
                             i + 2 + ii,
                             (trueValue - nextValue) * magnifyY,
-                            25
+                            SQUARE_SIZE_1
                         );
                         drawLine(ctx, x, y, x2, y2,
                             lineWidth,
@@ -265,34 +267,35 @@ function redraw() {
     showFunction(fn, a, b)
 }
 
+const SQUARE_SIZE = 65;
 
 function showFunction(fn, from, to)
 {
 
     setUpCanvas(fnCtx, 800, 250, 'white');
-    drawAxis(fnCanvas, 25, 0.5, 0.5); // 0.05 = 5% = 1 square => 15px / width
+    drawAxis(fnCanvas, SQUARE_SIZE, 0.5, 0.5); // 0.05 = 5% = 1 square => 15px / width
 
     const surface = [];
 
     // Draw interval
-    let [x1, y1] = convertToCanvasCoords(fnCanvas, from, fn(from), 25);
-    let [x2, y2] = convertToCanvasCoords(fnCanvas, from, 0, 25);
+    let [x1, y1] = convertToCanvasCoords(fnCanvas, from, fn(from), SQUARE_SIZE);
+    let [x2, y2] = convertToCanvasCoords(fnCanvas, from, 0, SQUARE_SIZE);
     drawLine(fnCtx, x1, y1, x2, y2, 2, 'orange');
     surface.push([[x2, y2], [x1, y1]]);
 
-    [x1, y1] = convertToCanvasCoords(fnCanvas, to, fn(to), 25);
-    [x2, y2] = convertToCanvasCoords(fnCanvas, to, 0, 25);
+    [x1, y1] = convertToCanvasCoords(fnCanvas, to, fn(to), SQUARE_SIZE);
+    [x2, y2] = convertToCanvasCoords(fnCanvas, to, 0, SQUARE_SIZE);
     drawLine(fnCtx, x1, y1, x2, y2, 2, 'orange');
 
-    const from_ = -16;
-    const to_ = 16;
-    const STEP = (to - from) / 100;
+    const from_ = -6;
+    const to_ = 6;
+    const STEP = (to - from) / 80;
     const values = []
     for(let x = from_; x <= to_; x += STEP) {
         const y = fn(x);
         if (x > from_) {
-            const [x_, y_] = convertToCanvasCoords(fnCanvas, x - STEP, values[values.length - 1], 25);
-            const [x2, y2] = convertToCanvasCoords(fnCanvas, x, y, 25);
+            const [x_, y_] = convertToCanvasCoords(fnCanvas, x - STEP, values[values.length - 1], SQUARE_SIZE);
+            const [x2, y2] = convertToCanvasCoords(fnCanvas, x, y, SQUARE_SIZE);
 
             if(x >= from && x <= to) {
                 surface.push([[x, y_], [x2, y2]]);
@@ -310,7 +313,6 @@ function showFunction(fn, from, to)
     surface.forEach(line => fnCtx.lineTo(line[1][0], line[1][1]));
     fnCtx.fillStyle = 'color-mix(in srgb, orange 40%, transparent)';
     fnCtx.fill();
-
 }
 
 main();

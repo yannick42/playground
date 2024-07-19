@@ -1,4 +1,11 @@
 export const entries = [{
+    id: 'collisions',
+    href: './collisions/',
+    name: 'Collisions',
+    desc: "Elastic collision physics",
+    searchContext: '',
+    creationDate: '17/07/2024'
+},{
     id: 'DCEL',
     href: './DCEL/',
     name: 'Doubly-connected edge list',
@@ -8,9 +15,6 @@ export const entries = [{
     chips: [{
         type: 'draft',
         text: "DRAFT"
-    },{
-        type: 'buggy',
-        text: 'buggy'
     }]
 },{
     id: 'numerical-integration',
@@ -22,6 +26,9 @@ export const entries = [{
     chips: [{
         type: 'draft',
         text: "DRAFT"
+    },{
+        type: 'buggy',
+        text: 'buggy'
     }]
 },{
     id: 'line-intersection',
@@ -31,6 +38,10 @@ export const entries = [{
     searchContext: '',
     creationDate: '05/07/2024',
     classes: ['disabled-entry'],
+    chips: [{
+        type: 'buggy',
+        text: 'buggy'
+    }]
 },{
     id: 'two-sat',
     href: './2-sat/',
