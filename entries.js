@@ -37,7 +37,6 @@ export const entries = [{
     desc: "Naive vs. plane sweep algorithm",
     searchContext: '',
     creationDate: '05/07/2024',
-    classes: ['disabled-entry'],
     chips: [{
         type: 'buggy',
         text: 'buggy'
@@ -262,11 +261,7 @@ export const entries = [{
     href: './metaballs/',
     name: 'Metaballs',
     desc: 'moving "blob" shapes using implicit function, marching square algorithm and linear interpolation.',
-    searchContext: 'lerp,linear interpolation,2D,3D',
-    chips: [{
-        type: 'buggy',
-        text: 'buggy'
-    }]
+    searchContext: 'lerp,linear interpolation,2D,3D'
 },{
     id: 'shading',
     href: './shading-methods/',

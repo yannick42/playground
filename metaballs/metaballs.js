@@ -22,9 +22,9 @@ import { Hoshen_Kopelman } from './Hoshen-Kopelman.js';
 let LINE_COLOR = 'green'; // transparent|lightgreen|red
 const X_MAX = 800,          // canvas sizes
       Y_MAX = 500,
-      NB_BALLS = 12,
-      MIN_RADIUS = 20,
-      MAX_RADIUS = 40,      // NOT in pixel ... used to cap random radius size
+      NB_BALLS = 10,
+      MIN_RADIUS = 15,
+      MAX_RADIUS = 35,      // NOT in pixel ... used to cap random radius size
       GRID_SIZE = 5,        // lower grid should be SLOWER (must be above 0 !)
                             // must be multiple of X_MAX ?! why ?? FIXME
       DT = 1.4,            // animation speed
@@ -44,7 +44,8 @@ const X_MAX = 800,          // canvas sizes
       // HK = Hoshen-Kopelman algorithm (1976) to color contiguous areas ...
       HK_RELABEL = false,
       HK_GRID = false,
-      HK_GRID_SIZE = 16;
+      HK_GRID_SIZE = 16,
+      SHOW_CONTOUR_GRADIENT = false;
 
 // NOT USED YET
 import tinycolor from "https://esm.sh/tinycolor2";
@@ -152,6 +153,7 @@ function initCache() {
 	cache = _cacheValue;
 }
 
+let myReq;
 
 function main() {
   
@@ -177,7 +179,10 @@ function main() {
   //
   // main animation loop
   //
-	window.requestAnimationFrame(mainLoop);
+  if(myReq) {
+    cancelAnimationFrame(myReq)
+  }
+	myReq = window.requestAnimationFrame(mainLoop);
   //interval = setInterval(mainLoop, 1000/24); // 24 frames per sec.
 
 }
@@ -201,7 +206,7 @@ function mainLoop() {
 		const colors = ["green", "lawngreen", "yellowgreen", "yellow", "orange", "orangered", "red"]
 		const lineWidths = [LINE_WIDTH, 4, 4, 3, 3, 2, 1]
 
-		const shown = [0, 6];
+		const shown = SHOW_CONTOUR_GRADIENT ? [0, 3, 6] : [0];
 	
 		for(let line_idx = 0; line_idx < offsets.length; line_idx++) {
 
@@ -213,16 +218,18 @@ function mainLoop() {
 	    if(UNIFORM_COLOR) {
 	       LINE_COLOR = colors[line_idx];
 	    }
-	    // evaluated function(s) on a grid
-			// first pass to determine ball positions
-	    const coloredGrid = evaluateOnGrid(offsets[line_idx]);
 
-			console.log(coloredGrid);
-			
+      // evaluated function(s) on a grid
+      // first pass to determine ball positions
+      const coloredGrid = evaluateOnGrid(offsets[line_idx]);
+      
 			// find contiguous zones
 	    // TODO: not necessary if UNIFORM_COLOR = true ?!
-	    [segGrid, disjointSet] = Hoshen_Kopelman(coloredGrid, BG_COLOR, HK_RELABEL)
-			
+      if (!UNIFORM_COLOR) {
+        console.log(coloredGrid);     
+        [segGrid, disjointSet] = Hoshen_Kopelman(coloredGrid, BG_COLOR, HK_RELABEL)
+      }
+
 	    ctx.lineWidth = lineWidths[line_idx];
 	    ctx.lineCap = "round"; // round|square -> useful ??
 	
@@ -322,7 +329,7 @@ function mainLoop() {
     if(loop >= MAX_LOOP) {
 			clearInterval(interval);
 		} else {
-			window.requestAnimationFrame(mainLoop);
+			myReq = window.requestAnimationFrame(mainLoop);
 		}
 	
   }

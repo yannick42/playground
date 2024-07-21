@@ -3,22 +3,17 @@ import { round } from '../common/math.helper.js';
 import { RGBToHSL } from '../common/color.js';
 import KDBush from 'https://cdn.jsdelivr.net/npm/kdbush/+esm';
 
-
-
 /*
+
+- use web worker to speed things up at startup : show a progress bar ...
+    * https://richorama.github.io/2018/08/22/rendering-leaflet-tiles-in-the-browser/
+
 
 - inside a perfect "circle" around Lyon ...
 - use a Poisson disk distribution ?
-- find pixel color at given latlng (Image Overlay ?)
-- skip if water... (blue)
-
-
-
-
 
 
 - draw clusters above ? (=last, or on an other group layer ?)
-
 
 */
 
@@ -27,17 +22,23 @@ const mapEl = document.getElementById("map"); // div container
 const debugEl = document.getElementById("debug");
 const percInputEl = document.getElementById("perc_input");
 const percEl = document.getElementById("perc");
+const skipWaterEl = document.getElementById("skip_water");
 
 
-const NB_MARKERS = 25_000; // 500_000 -> 311 ms ?
+const NB_MARKERS = 35_000; // 500_000 -> 311 ms ?
 
 const MARKER_PER_GROUP = 10_000;
 
+let SKIPWATER = true;
+
 let map;
-const center = [45.75, 4.85];
+//const center = [45.75, 4.85]; // Lyon
+const center = [48.8666, 2.3333]; // Paris
 let nbMarkersAtSamePosition = 0;
 let glMarkerGroups = [];
 let index;
+
+let defaultZoom = 12;
 
 let markerPositions = [];
 
@@ -56,95 +57,16 @@ function main() {
         redraw();
     });
 
+    skipWaterEl.addEventListener('change', (e) => {
+        SKIPWATER = e.target.value;
+        redraw();
+    })
+
     percEl.innerText = round(PERC * 100) + "% of points at the same position"; // init.
+    skipWaterEl.checked = SKIPWATER;
 
     redraw();
 }
-
-
-const vertexCode = `
-attribute vec2 aCRSCoords;
-attribute vec2 aExtrudeCoords;
-uniform mat4 uTransformMatrix;
-uniform vec2 uPixelSize;
-
-attribute float size;
-attribute float color;
-varying float vColor;
-
-attribute vec2 a_texcoord;
-varying vec2 v_texcoord;
-
-// A "varying" is a value that passes from the vertex shader to the frag shader.
-// In this case, we want the interpolated extrude coords.
-varying vec2 vExtrudeCoords;
-
-void main(void) {
-	// Copy the input extrude coords to the varying
-    vExtrudeCoords = aExtrudeCoords;
-
-    // Let the frag shader know about the other attribute
-    vColor = color;
-
-	gl_Position =
-		uTransformMatrix * vec4(aCRSCoords, 1.0, 1.0) +
-		vec4(aExtrudeCoords * uPixelSize * size, 0.0, 0.0);
-}
-`;
-
-const fragCode = `
-// All the varyings and variables in the vertex shader should be "high" (24 bit) precision
-precision highp float;
-
-varying float vColor;
-
-
-// Passed in from the vertex shader.
-varying vec2 v_texcoord;
-uniform sampler2D u_texture;
-
-// Get the varying from the vertex shader
-varying vec2 vExtrudeCoords;
-
-void main(void) {
-	// Calculate the (square) distance to the marker's
-	// center
-	float radiusSquared =
-    	vExtrudeCoords.x * vExtrudeCoords.x +
-        vExtrudeCoords.y * vExtrudeCoords.y;
-
-	// Make the pixel opaque only if inside the circle
-    if (radiusSquared <= 1.0) {
-
-        if (radiusSquared <= 0.4) {
-            if(vColor == 1.0) { // green
-                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-            } else if (vColor == 2.0) { // orange
-                gl_FragColor = vec4(1.0, 0.647, 0.0, 1.0);
-            } else if (vColor == 3.0) { // red
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            } else if (vColor == 4.0) { // grey
-                gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
-            }
-        }
-        else // outline
-        {
-            if(vColor == 1.0) { // darkgreen
-                gl_FragColor = vec4(0.0, 0.392, 0.0, 1.0);
-            } else if (vColor == 2.0) { // darkorange
-                gl_FragColor = vec4(1.0, 0.55, 0.0, 1.0);
-            } else if (vColor == 3.0) { // darkred
-                gl_FragColor = vec4(0.545, 0.0, 0.0, 1.0);
-            } else if (vColor == 4.0) { // darkgrey
-                gl_FragColor = vec4(0.25, 0.25, 0.25, 1.0);
-            }
-        }
-    } else {
-		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
-    }
-}
-`;
-
 
 const canvases = {};
 
@@ -155,7 +77,7 @@ function getColorHueAt(lat, lng) {
     var layerPoint = map.project(new L.latLng(lat, lng)).floor();
     var tilePoint = layerPoint.divideBy(256).floor();
 
-    const key = tilePoint.x + ':' + tilePoint.y + ':12';
+    const key = tilePoint.x + ':' + tilePoint.y + ':' + defaultZoom;
     //console.log(key);
     var block = tileLayer._tiles[key]?.el;
 
@@ -187,20 +109,22 @@ function getColorHueAt(lat, lng) {
 
 function createMarkerPositions() {
     markerPositions = [];
-    for(let i = 0; i < NB_MARKERS; i++) {
-        let latitude, longitude;
-
-        let color = choice([1, 2, 3, 4]); // green < orange < red < grey
-
-        let hue, saturation, lightness, hsl;
+    for(let i = 0; i < NB_MARKERS; i++)
+    {
+        let latitude, longitude,
+            color = choice([1, 2, 3, 4]), // green < orange < red < grey
+            hsl,
+                hue,
+                saturation,
+                lightness;
         
         if(markerPositions.length && Math.random() < PERC) {
             // reuse an older one to have them grouped
-            [latitude, longitude] = markerPositions[randInt(0, markerPositions.length - 1)];
+            [latitude, longitude, , ] = markerPositions[randInt(0, markerPositions.length - 1)];
         } else {
 
             do {
-                latitude = center[0] + randFloat(-8/100, 8/100); // bounded
+                latitude = center[0] + randFloat(-8/100, 8/100); // bounding box
                 longitude = center[1] + randFloat(-7/100, 7/100); // 
 
                 hsl = getColorHueAt(latitude, longitude);
@@ -210,8 +134,11 @@ function createMarkerPositions() {
                 }
 
             } while(
-                Math.sqrt(Math.pow(latitude-center[0], 2) + Math.pow(longitude-center[1], 2)) > 0.052
-                || (hue < 240 && hue > 150 /*water*/) || (hue < 70 && hue > 0 /*roads?*/) || !hsl
+                (
+                    Math.sqrt(Math.pow(latitude-center[0], 2) + Math.pow(longitude-center[1], 2)) > 0.052
+                    ||
+                    (!SKIPWATER && (hue < 240 && hue > 150 /*water*/) || !hsl)
+                )
             );
 
         }
@@ -223,35 +150,46 @@ function createMarkerPositions() {
     }
 }
 
-function createGLMarkers(markerPositions) {
+async function createGLMarkers(markerPositions) {
 
     glMarkerGroups.forEach(glGroup => glGroup.remove());
-
     glMarkerGroups = []; // reinit.
     
-    markerPositions.forEach(([latitude, longitude], i) => {
+    for await (let [i, marker] of markerPositions.entries()) {
 
+        let [latitude, longitude] = marker;
+
+        let group;
         // create new group ?
         if (i % MARKER_PER_GROUP === 0) {
             // every SIZE marker -> add a new WebGL marker group layer
-            glMarkerGroups.push(createGroup());
-        }  
+            group = await createGroup();
+            glMarkerGroups.push(group);
+        } else {
+            group = glMarkerGroups[glMarkerGroups.length - 1];
+        }
 
         const neighbors = index.within(latitude, longitude, 0);
 
-        const colorMax = Math.max(...neighbors.map(i => markerPositions[i][2]));
+        const colorMax = Math.max(...neighbors.map(i => markerPositions[i][2])); // use "worst" color !
 
-        glMarkerGroups[glMarkerGroups.length - 1].addMarker(new L.GLMarker(
-            [latitude, longitude],
-            {
-                color: colorMax,
-                size: neighbors.length > 1 ? 9 : 5,
-            }
-        ));
-    });
+        group.addMarker(
+            new L.GLMarker(
+                [latitude, longitude],
+                {
+                    color: colorMax,
+                    size: neighbors.length > 1 ? 9 : 5,
+                }
+            )
+        );
+    };
 }
 
-function createGroup() {
+async function createGroup() {
+
+    const vertexCode = await (await fetch("./shaders/vertex-shader.glsl")).text();
+    const fragCode = await (await fetch("./shaders/fragment-shader.glsl")).text();
+
     return new L.GLMarkerGroup({
         // The "attributes" option lets you write "attribute float megacity",
         // "attribute float rank_min", etc in your vertex shader.
@@ -307,9 +245,11 @@ function addEvents () {
                     .setLatLng(L.latLng(lat, lng))
                     .setContent(`
                         <b>id</b> : ${neighborIds.join(", ")}<br/>
-                        <b style="color: hsl(${tileColor[0]}deg 100% 50%);">Pixel hue</b>: ${tileColor[0]}<br/>
+                        ${neighborIds.length == 1 ? `
+                        <b style="color: hsl(${tileColor[0]}deg 100% 50%);">pixel hue at initial zoom=${defaultZoom}</b>: ${tileColor[0]}<br/>
                         <b style="color: hsl(${tileColor[0]}deg ${tileColor[1]}% 50%);">Pixel saturation</b>: ${tileColor[1]}<br/>
                         <b style="color: hsl(${tileColor[0]}deg ${tileColor[1]}% ${tileColor[2]}%);">Pixel lightness</b>: ${tileColor[2]}<br/>
+                        ` : ''}
                     `)
                     .addTo(map);
             }
@@ -353,13 +293,16 @@ function redraw() {
     nbMarkersAtSamePosition = 0;
 
     if(!map) {
-        map = L.map('map').setView(center, 12);
+        map = L.map('map').setView(center, defaultZoom);
     } else {
         console.info("map already initialized")
     }
     console.log("map:", map);
 
     const t = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        options: {
+            id: 'TileLayer'
+        },
         crossOrigin: true,
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -367,12 +310,12 @@ function redraw() {
     t.addTo(map);
 
     console.log("t:", t)
-    t.on('load', function(e) {
+    t.on('load', async function(e) {
 
         if(!loaded) {
-            start();
-        
+            await start();
             addEvents();
+
             loaded = true;
         }
     
@@ -389,18 +332,23 @@ function redraw() {
 }
 
 
-function start() {
+async function start() {
 
+    console.log("1");
 
     createMarkerPositions();
+
+    console.log("1");
 
     let t0 = window.performance.now();
     // perform the indexing
     index.finish();
     document.getElementById('number_of_markers').innerHTML = "Kd-tree indexation in <b>" + round(window.performance.now() - t0, 1) + " ms.</b> (to speed up point search, when clicking a GlMarker to show a tooltip)";
 
+    console.log("1");
+
     t0 = window.performance.now();
-    createGLMarkers(markerPositions);
+    await createGLMarkers(markerPositions);
     let t1 = window.performance.now();
 
     console.log("number of glMarkerGroups:", glMarkerGroups.length);
@@ -453,6 +401,7 @@ function start() {
     });
 
     markersClusterGroup = L.markerClusterGroup({
+        id: 'markerCluster',
         //spiderfyOnMaxZoom: true, // default
         maxClusterRadius: 1,
         showCoverageOnHover: false,
@@ -504,6 +453,9 @@ function start() {
                 fill: true,
                 fillOpacity: 1,
                 fillColor,
+                options: {
+                    type: 'test'
+                }
             });
             markersClusterGroup.addLayer(marker); // add it to the cluster
 
@@ -519,16 +471,17 @@ function start() {
     let numberOfClusters = 0;
     let c = 0;
     map.eachLayer(layer => {
-        if(layer.getChildCount) {
-            /*console.log(layer)
+        //console.log(layer.options)
+        if(layer.options.id === 'markerCluster') {
+            console.log(layer?.getLayers().length);
             console.log(layer._childClusters?.length)        
-            console.log(layer._childCount);*/
+            console.log(layer._childCount);
             c += layer._childCount;
             numberOfClusters++;
         }
     });
 
-    console.assert(c === nbMarkersAtSamePosition);
+    console.assert(c === nbMarkersAtSamePosition, c, "and", nbMarkersAtSamePosition);
   
     debugEl.innerHTML += `<ul>
         <li>Number of points in the same place : <b>${nbMarkersAtSamePosition}</b> (${round(nbMarkersAtSamePosition/NB_MARKERS*100, 0)}%)</li>
