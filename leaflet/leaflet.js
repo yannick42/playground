@@ -1,27 +1,50 @@
 import { randFloat, randInt, choice } from '../common/common.helper.js';
 import { round } from '../common/math.helper.js';
+import { RGBToHSL } from '../common/color.js';
 import KDBush from 'https://cdn.jsdelivr.net/npm/kdbush/+esm';
 
 
 
 /*
 
-draw clusters above ?
+- inside a perfect "circle" around Lyon ...
+- use a Poisson disk distribution ?
+- find pixel color at given latlng (Image Overlay ?)
+- skip if water... (blue)
+
+
+
+
+
+
+- draw clusters above ? (=last, or on an other group layer ?)
 
 
 */
 
 
-
-
-
-
-//const mapEl = document.getElementById("map");
+const mapEl = document.getElementById("map"); // div container
 const debugEl = document.getElementById("debug");
 const percInputEl = document.getElementById("perc_input");
 const percEl = document.getElementById("perc");
 
-let PERC = 0.2,
+
+const NB_MARKERS = 25_000; // 500_000 -> 311 ms ?
+
+const MARKER_PER_GROUP = 10_000;
+
+let map;
+const center = [45.75, 4.85];
+let nbMarkersAtSamePosition = 0;
+let glMarkerGroups = [];
+let index;
+
+let markerPositions = [];
+
+
+
+let tooltip; // unique tooltip
+let PERC = 0.15,
     markersClusterGroup;
 
 function main() {
@@ -122,31 +145,78 @@ void main(void) {
 }
 `;
 
-const NB_MARKERS = 20_000; // 500_000 -> 311 ms ?
 
-const MARKER_PER_GROUP = 10_000;
+const canvases = {};
 
-let map;
-const center = [45.75, 4.85];
-let nbMarkersAtSamePosition = 0;
-let glMarkerGroups = [];
-let index;
+function getColorHueAt(lat, lng) {
 
-const markerPositions = [];
+    //console.log("map:", map, "tile layer:", tileLayer);
+
+    var layerPoint = map.project(new L.latLng(lat, lng)).floor();
+    var tilePoint = layerPoint.divideBy(256).floor();
+
+    const key = tilePoint.x + ':' + tilePoint.y + ':12';
+    //console.log(key);
+    var block = tileLayer._tiles[key]?.el;
+
+    if(!block) return;
+    
+    var pointInTile = layerPoint.subtract(tilePoint.multiplyBy(256));
+
+    // read in the image
+    let canvas;
+    if(! canvases[key]) {
+        canvas = document.createElement('canvas');
+        canvas.width = block.width;
+        canvas.height = block.height;
+        canvas.getContext('2d').drawImage(block, 0, 0, block.width, block.height);
+        canvases[key] = canvas;
+    } else {
+        canvas = canvases[key];
+    }
+    
+    // Get the rgba color, using the inversion
+    var rgba = canvas.getContext('2d').getImageData(pointInTile.x, pointInTile.y, 1, 1).data;
+
+    const HSL = RGBToHSL(rgba[0], rgba[1], rgba[2]);
+    //console.log("HSL:", HSL)
+
+    return HSL;
+}
+
+
 function createMarkerPositions() {
+    markerPositions = [];
     for(let i = 0; i < NB_MARKERS; i++) {
         let latitude, longitude;
+
+        let color = choice([1, 2, 3, 4]); // green < orange < red < grey
+
+        let hue, saturation, lightness, hsl;
+        
         if(markerPositions.length && Math.random() < PERC) {
             // reuse an older one to have them grouped
             [latitude, longitude] = markerPositions[randInt(0, markerPositions.length - 1)];
         } else {
-            latitude = center[0] + randFloat(-8/100, 8/100);
-            longitude = center[1] + randFloat(-10/100, 10/100);
+
+            do {
+                latitude = center[0] + randFloat(-8/100, 8/100); // bounded
+                longitude = center[1] + randFloat(-7/100, 7/100); // 
+
+                hsl = getColorHueAt(latitude, longitude);
+
+                if(hsl?.length) {
+                    [hue, saturation, lightness] = hsl;
+                }
+
+            } while(
+                Math.sqrt(Math.pow(latitude-center[0], 2) + Math.pow(longitude-center[1], 2)) > 0.052
+                || (hue < 240 && hue > 150 /*water*/) || (hue < 70 && hue > 0 /*roads?*/) || !hsl
+            );
+
         }
 
-        const color = choice([1, 2, 3, 4]); // green < orange < red < grey
-
-        markerPositions.push([latitude, longitude, color]);
+        markerPositions.push([latitude, longitude, color, [hue, saturation, lightness]]);
 
         // add a point in the spatial index
         index.add(latitude, longitude);
@@ -209,8 +279,71 @@ function getNeighborSize(currentZoom) {
     return (currentZoom - 19) * slope + 0.000022;
 }
 
+let tileLayer;
+var canvas = document.createElement('canvas');
+canvas.width = 256;
+canvas.height = 256;
+var ctx = canvas.getContext('2d');
+
+
+function addEvents () {
+
+    //
+    // Open a tooltip if necessary
+    //
+    map.on('click', (e) => {
+        const currentZoom = e.target.getZoom();
+
+        // radius query
+        const neighborIds = index.within(e.latlng.lat, e.latlng.lng, getNeighborSize(currentZoom));
+        //console.log("neighborIds:", neighborIds);
+
+        const first = markerPositions[neighborIds[0]]
+
+        if(first) {
+            const [lat, lng, colorIndex, tileColor] = first;
+            if(neighborIds.length > 0) {
+                tooltip = L.popup()
+                    .setLatLng(L.latLng(lat, lng))
+                    .setContent(`
+                        <b>id</b> : ${neighborIds.join(", ")}<br/>
+                        <b style="color: hsl(${tileColor[0]}deg 100% 50%);">Pixel hue</b>: ${tileColor[0]}<br/>
+                        <b style="color: hsl(${tileColor[0]}deg ${tileColor[1]}% 50%);">Pixel saturation</b>: ${tileColor[1]}<br/>
+                        <b style="color: hsl(${tileColor[0]}deg ${tileColor[1]}% ${tileColor[2]}%);">Pixel lightness</b>: ${tileColor[2]}<br/>
+                    `)
+                    .addTo(map);
+            }
+        }
+    });
+
+    map.on('mousemove', (e) => {
+        const nbMarkersHovered = index.within(e.latlng.lat, e.latlng.lng, getNeighborSize(e.target.getZoom())).length;
+        if(nbMarkersHovered > 0) {
+            map.getContainer().style.cursor = 'pointer';
+        } else {
+            map.getContainer().style.cursor = 'default';
+        }
+    });
+
+    map.on('mouseout', (e) => map.getContainer().style.cursor = 'default');
+
+    markersClusterGroup.on('click', function (event) {
+        console.log('cluster group click event:', event);
+    });
+    
+    markersClusterGroup.on('clusterclick', function (event) {
+        // a.layer is actually a cluster
+        console.log('Number of points in that cluster:', event.layer.getAllChildMarkers().length);
+    });
+
+}
+
+
+let loaded = false;
 
 function redraw() {
+
+    loaded = false;
 
     index = null; // important ?!
     index = new KDBush(NB_MARKERS); // init kd-tree index
@@ -220,18 +353,46 @@ function redraw() {
     nbMarkersAtSamePosition = 0;
 
     if(!map) {
-        map = L.map('map').setView(center, 13);
+        map = L.map('map').setView(center, 12);
     } else {
         console.info("map already initialized")
     }
     console.log("map:", map);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const t = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        crossOrigin: true,
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    });
+    t.addTo(map);
 
-    createMarkerPositions()
+    console.log("t:", t)
+    t.on('load', function(e) {
+
+        if(!loaded) {
+            start();
+        
+            addEvents();
+            loaded = true;
+        }
+    
+    });
+    
+
+    map.eachLayer( function(layer) {
+        if( layer instanceof L.TileLayer ) {
+            console.log("found TileLayer:", layer)
+            tileLayer = layer;
+        }
+    });
+    
+}
+
+
+function start() {
+
+
+    createMarkerPositions();
 
     let t0 = window.performance.now();
     // perform the indexing
@@ -323,6 +484,7 @@ function redraw() {
         },
         chunkedLoading: true,
     });
+
     // if points are exactly at the same spot
     markerPositions.forEach(([latitude, longitude, color], i) => {
         const neighborIds = index.within(latitude, longitude, 0 /* same position */);
@@ -373,57 +535,6 @@ function redraw() {
         <li>Number of glMarkerGroups : <b>${glMarkerGroups.length}</b></li>
         <li>Number of clusters : <b>${numberOfClusters}</b> (with mean nb of point = ${round(nbMarkersAtSamePosition/numberOfClusters, 2)})</li>
     </ul>`;
-
-    let tooltip; // unique tooltip
-   
-    /*
-    map.on('zoom', (event) => {
-        console.log("e:", event);
-        console.log("zoom=", event.target.getZoom())
-    })
-    */
-
-    //
-    // Open a tooltip if necessary
-    //
-    map.on('click', (e) => {
-        const currentZoom = e.target.getZoom();
-
-        // radius query
-        const neighborIds = index.within(e.latlng.lat, e.latlng.lng, getNeighborSize(currentZoom));
-        //console.log("neighborIds:", neighborIds);
-
-        const first = markerPositions[neighborIds[0]]
-
-        if(first) {
-            const [lat, lng, colorIndex] = first;
-            if(neighborIds.length > 0) {
-                tooltip = L.popup()
-                    .setLatLng(L.latLng(lat, lng))
-                    .setContent('<b>id</b> : ' + neighborIds.join(", "))
-                    .addTo(map);
-            }
-        }
-    });
-
-    map.on('mousemove', (e) => {
-        const nbMarkersHovered = index.within(e.latlng.lat, e.latlng.lng, getNeighborSize(e.target.getZoom())).length;
-        if(nbMarkersHovered > 0) {
-            map.getContainer().style.cursor = 'pointer';
-        } else {
-            map.getContainer().style.cursor = 'default';
-        }
-    });
-    map.on('mouseout', (e) => map.getContainer().style.cursor = 'default');
-
-    markersClusterGroup.on('click', function (event) {
-        console.log('cluster group click event:', event);
-    });
-    
-    markersClusterGroup.on('clusterclick', function (event) {
-        // a.layer is actually a cluster
-        console.log('Number of points in that cluster:', event.layer.getAllChildMarkers().length);
-    });
 
 }
 

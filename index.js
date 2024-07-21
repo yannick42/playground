@@ -43,6 +43,13 @@ window.onload = function() {
                 closeMenu();
             }
         }
+    } else {
+        if(!currentHash) {
+            const firstEntry = Object.keys(entries).filter(key => !entries[key].chips?.length)[0]; // if not draft...
+            console.log(firstEntry)
+            document.querySelector("#"+entries[firstEntry].id).click()
+            goTo(entries[firstEntry].id);
+        }
     }
 }
 
