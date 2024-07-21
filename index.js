@@ -117,6 +117,11 @@ function closeMenu() {
     headerEl.style.display = 'none';
     isClosedMenu = true;
     toggleMenuEl.innerText = '⏻';
+
+    // |0 already present ?
+    if(window.location.hash.substring(window.location.hash.length - 2) !== '|0') {
+        window.location.hash += '|0';
+    }
 }
 
 function openMenu() {
@@ -129,6 +134,12 @@ function openMenu() {
     isClosedMenu = false;
     searchInputEl.focus(); // ready to search something !
     toggleMenuEl.innerText = '⏼';
+
+
+    // |0 already present ?
+    if(window.location.hash.substring(window.location.hash.length - 2) == '|0') {
+        window.location.hash = window.location.hash.substring(0, window.location.hash.length - 2);
+    }
 }
 
 
@@ -146,7 +157,7 @@ menu.addEventListener('click', (e) => {
 });
 
 function goTo(id) {
-    console.log("goto :", id, "menu closed?", isClosedMenu);
+    //console.log("goto :", id, "menu closed?", isClosedMenu);
 
     //const aLink = document.querySelector("#" + id);
     //aLink?.click(); // click on demo
@@ -158,7 +169,7 @@ function goTo(id) {
 
     // change to new id
     currentHash = '#' + id;
-    console.log("new currentHash =", currentHash);
+    //console.log("new currentHash =", currentHash);
 }
 
 function changeSelected(fromHash, toHash) {

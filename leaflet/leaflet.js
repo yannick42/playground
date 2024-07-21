@@ -6,7 +6,7 @@ import KDBush from 'https://cdn.jsdelivr.net/npm/kdbush/+esm';
 
 /*
 
-
+draw clusters above ?
 
 
 */
@@ -92,14 +92,29 @@ void main(void) {
 
 	// Make the pixel opaque only if inside the circle
     if (radiusSquared <= 1.0) {
-        if(vColor == 1.0) { // green
-    		gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-        } else if (vColor == 2.0) { // orange
-            gl_FragColor = vec4(1.0, 0.647, 0.0, 1.0);
-        } else if (vColor == 3.0) { // red
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        } else if (vColor == 4.0) { // grey
-            gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+
+        if (radiusSquared <= 0.4) {
+            if(vColor == 1.0) { // green
+                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+            } else if (vColor == 2.0) { // orange
+                gl_FragColor = vec4(1.0, 0.647, 0.0, 1.0);
+            } else if (vColor == 3.0) { // red
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            } else if (vColor == 4.0) { // grey
+                gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+            }
+        }
+        else // outline
+        {
+            if(vColor == 1.0) { // darkgreen
+                gl_FragColor = vec4(0.0, 0.392, 0.0, 1.0);
+            } else if (vColor == 2.0) { // darkorange
+                gl_FragColor = vec4(1.0, 0.55, 0.0, 1.0);
+            } else if (vColor == 3.0) { // darkred
+                gl_FragColor = vec4(0.545, 0.0, 0.0, 1.0);
+            } else if (vColor == 4.0) { // darkgrey
+                gl_FragColor = vec4(0.25, 0.25, 0.25, 1.0);
+            }
         }
     } else {
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
