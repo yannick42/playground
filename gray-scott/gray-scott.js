@@ -1,5 +1,5 @@
 
-const GRID_SIZE = 150,
+const GRID_SIZE = 200,
 	D_a = 1,
 	D_b = 0.5,
 	discrete_laplacian_2D = [
@@ -13,9 +13,9 @@ let ctx,
 	intervalId,
 	grid,
 	frame = 0,
-	feed = 0.028,
-	kill = 0.062,
-	DT = 0.25;
+	feed = 0.029,
+	kill = 0.057,
+	DT = 1.0;
 
 class Cell {
 	constructor(A, B) {

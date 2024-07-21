@@ -3,7 +3,11 @@
     "nb_pages": 481,
     "id": "AlgoForDecisionMaking",
     "front_cover": "https://m.media-amazon.com/images/I/61OL0H+gSNL._AC_UF100,100_QL80_.jpg",
-    "tags": [],
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
     "authors": "Mykel J. Kochenderfer, Tim A. Wheeler & Kyle H. Wray",
     "pdf_url": "https://algorithmsbook.com/files/dm.pdf",
     "main_url": "https://algorithmsbook.com/",
