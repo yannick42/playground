@@ -36,4 +36,14 @@ body {
 	color: blue;
 	font-style: italic;
 	font-size: smaller;
+	text-align: center;
+}
+
+.leaflet-div-icon {
+	border: 0 !important;
+	background-color: transparent !important;
+}
+
+#debug {
+	margin: 5px;
 }

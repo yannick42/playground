@@ -135,6 +135,11 @@ iframe {
     background-color: orange;
 }
 
+.tool {
+    color: black;
+    background-color: greenyellow;
+}
+
 /*
 .todo {
     color: white;

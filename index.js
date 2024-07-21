@@ -7,6 +7,7 @@ const searchInputEl = document.querySelector("#search");
 const toggleMenuEl = document.querySelector("#toggle-menu");
 const menu = document.querySelector("#menu");
 const menuEntriesEl = document.querySelector("#menu-entries");
+const headerEl = document.querySelector("#header");
 
 window.onload = function() {
     updateFilteredEntries(entries); // load initial list (everything !)
@@ -113,6 +114,7 @@ function closeMenu() {
     root.style.setProperty('--menu-width', '25px');
     searchInputEl.style.display = 'none';
     menuEntriesEl.style.display = 'none';
+    headerEl.style.display = 'none';
     isClosedMenu = true;
     toggleMenuEl.innerText = '⏻';
 }
@@ -123,6 +125,7 @@ function openMenu() {
     root.style.setProperty('--menu-width', ''); // revert to 20% (css)
     searchInputEl.style.display = 'inline-block';
     menuEntriesEl.style.display = 'flex';
+    headerEl.style.display = 'block';
     isClosedMenu = false;
     searchInputEl.focus(); // ready to search something !
     toggleMenuEl.innerText = '⏼';

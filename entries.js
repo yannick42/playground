@@ -56,10 +56,14 @@ export const entries = [{
     name: 'Book progression',
     desc: "tool to visualize progression on technical books",
     searchContext: 'tool,book,reading',
+    chips: [{
+        type: 'tool',
+        text: "TOOL"
+    }]
 },{
-    id: 'leaflet-playground',
-    href: './leaflet-playground/',
-    name: 'Leaflet Playground',
+    id: 'leaflet',
+    href: './leaflet/',
+    name: 'Leaflet',
     desc: "GLMarkers, ...",
     searchContext: 'map',
     chips: [{
