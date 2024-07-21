@@ -44,8 +44,9 @@ const X_MAX = 800,          // canvas sizes
       // HK = Hoshen-Kopelman algorithm (1976) to color contiguous areas ...
       HK_RELABEL = false,
       HK_GRID = false,
-      HK_GRID_SIZE = 16,
-      SHOW_CONTOUR_GRADIENT = false;
+      HK_GRID_SIZE = 16;
+    
+let SHOW_CONTOUR_GRADIENT = false;
 
 // NOT USED YET
 import tinycolor from "https://esm.sh/tinycolor2";
@@ -66,6 +67,8 @@ const availableColors = [
   'teal', 'lightsalmon',
 ];
 
+
+const showContourGradientEl = document.getElementById("show_contour_gradient");
 
 //
 // Helper functions
@@ -135,7 +138,7 @@ const findNearestBall = (x, y) => {
 let metaballs = []; // array of objects { name: , x: , y: , ... }
 let loop = 0; // Infinity/...
 // to save computations ... !!
-let cache = [];
+let cache = {};
 let my_balls;
 
 let segGrid = [];
@@ -148,14 +151,17 @@ let interval; // from setInterval (main loop)
 //
 console.log("cache size:", Math.round(Y_MAX / GRID_SIZE), "*", Math.round(canvas.width / GRID_SIZE), ":", Math.round(Y_MAX / GRID_SIZE) * Math.round(canvas.width / GRID_SIZE), "floats");
 
-function initCache() {
+function initCache(key) {
 	const _cacheValue = Array(Math.round(Y_MAX / GRID_SIZE)).fill(Infinity).map(x => Array(Math.round(canvas.width / GRID_SIZE)).fill(Infinity));
-	cache = _cacheValue;
+	cache[key.toString()] = _cacheValue;
 }
 
 let myReq;
 
 function main() {
+
+  showContourGradientEl.addEventListener('change', (e) => SHOW_CONTOUR_GRADIENT = e.target.checked);
+  showContourGradientEl.checked = SHOW_CONTOUR_GRADIENT;
   
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', () => {
@@ -195,24 +201,17 @@ function mainLoop() {
     ctx.fillStyle = BACKGROUND;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
-
-
-
-
-
-
-		const offsets = [0, 0.2, 0.33, 0.4, 0.6, 0.8, 1]
-		const colors = ["green", "lawngreen", "yellowgreen", "yellow", "orange", "orangered", "red"]
+		const offsets = [0, 0.2, 0.67, 3]
+		const colors = ["green", "lawngreen", "yellowgreen", "yellow"]
 		const lineWidths = [LINE_WIDTH, 4, 4, 3, 3, 2, 1]
 
-		const shown = SHOW_CONTOUR_GRADIENT ? [0, 3, 6] : [0];
+		const shown = SHOW_CONTOUR_GRADIENT ? [0, 1, 2, 3, 4, 5, 6] : [0] /* only 1 contour */;
 	
 		for(let line_idx = 0; line_idx < offsets.length; line_idx++) {
 
 			if(!shown.includes(line_idx)) continue;
 			
-	    initCache(); // reset evaluated (x, y) points to Infinity...
+	    initCache(0); // reset evaluated (x, y) points to Infinity...
 			
 			// line color
 	    if(UNIFORM_COLOR) {
@@ -222,21 +221,18 @@ function mainLoop() {
       // evaluated function(s) on a grid
       // first pass to determine ball positions
       const coloredGrid = evaluateOnGrid(offsets[line_idx]);
-      
+
 			// find contiguous zones
 	    // TODO: not necessary if UNIFORM_COLOR = true ?!
-      if (!UNIFORM_COLOR) {
-        console.log(coloredGrid);     
-        [segGrid, disjointSet] = Hoshen_Kopelman(coloredGrid, BG_COLOR, HK_RELABEL)
-      }
-
+      [segGrid, disjointSet] = Hoshen_Kopelman(coloredGrid, BG_COLOR, HK_RELABEL)
+      
 	    ctx.lineWidth = lineWidths[line_idx];
 	    ctx.lineCap = "round"; // round|square -> useful ??
 	
 			//
 	    // display all the balls' outline with the "marching squares" method
 			//
-	    marchingSquares(segGrid, coloredGrid);
+	    marchingSquares(segGrid, coloredGrid, true, offsets[line_idx]);
 		}
 	
 
@@ -345,21 +341,27 @@ document.getElementById('reload').addEventListener('click', function() {
 // evaluate the "scalar field"
 // - then the lines are where the threshold passes through 1
 //   (= isolines/isocontour, with constant "height")
-function evaluatedValueAt(metaballs, x, y) {
+function evaluatedValueAt(metaballs, x, y, offset=0) {
   const i = Math.round(y/GRID_SIZE);
   const j = Math.round(x/GRID_SIZE);
-  const cachedValue = cache[i] ? (cache[i][j] ?? Infinity) : Infinity;
+
+  if(! cache[offset.toString()]) {
+    initCache(offset.toString());
+  }
+
+  const cachedValue = cache[offset.toString()] && cache[i] ? (cache[offset][i][j] ?? Infinity) : Infinity;
   
   // -> time saved ?
   if(cachedValue !== Infinity) return cachedValue;
-  
+
   // **simply** sum every implicit functions ! (as in an electric field ?)
     // see : https://youtu.be/6oMZb3yP_H8?t=1288
     // = constructive interference ?
   let value = metaballs.reduce((accumulator, currentValue) => accumulator + currentValue.fn(x, y), 0 /* initial value */);
   
   // Save in cache
-  cache[i][j] = value;
+  cache[offset.toString()][i][j] = value;
+  
   return value;
 }
 
@@ -370,27 +372,27 @@ function evaluatedValueAt(metaballs, x, y) {
 // (x, y) is the upper-left point of the "square"
 // -> faster than "true" root-finding
 // 
-function lerpAt(x, y, side) {
+function lerpAt(x, y, side, nocache=false, offset=0) {
   let value_1, value_2;
   switch(side) {
     case "lower":
-      value_1 = evaluatedValueAt(metaballs, x,              y + GRID_SIZE);
-      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE,  y + GRID_SIZE);
+      value_1 = evaluatedValueAt(metaballs, x,              y + GRID_SIZE, offset) - offset;
+      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE,  y + GRID_SIZE, offset) - offset;
       // lerp
       return x + (1 - value_1) / (value_2 - value_1) * GRID_SIZE;
     case "upper":
-      value_1 = evaluatedValueAt(metaballs, x,              y);
-      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE,  y);
+      value_1 = evaluatedValueAt(metaballs, x,              y, offset) - offset;
+      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE,  y, offset) - offset;
       // lerp
       return x + (1 - value_1) / (value_2 - value_1) * GRID_SIZE;
     case "left":
-      value_1 = evaluatedValueAt(metaballs, x, y);
-      value_2 = evaluatedValueAt(metaballs, x, y + GRID_SIZE);
+      value_1 = evaluatedValueAt(metaballs, x, y, offset) - offset;
+      value_2 = evaluatedValueAt(metaballs, x, y + GRID_SIZE, offset) - offset;
       // lerp
       return y + (1 - value_1) / (value_2 - value_1) * GRID_SIZE;
     case "right":
-      value_1 = evaluatedValueAt(metaballs, x + GRID_SIZE, y);
-      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE, y + GRID_SIZE);
+      value_1 = evaluatedValueAt(metaballs, x + GRID_SIZE, y, offset) - offset;
+      value_2 = evaluatedValueAt(metaballs, x + GRID_SIZE, y + GRID_SIZE, offset) - offset;
       // lerp
       return y + (1 - value_1) / (value_2 - value_1) * GRID_SIZE;
   }
@@ -415,7 +417,7 @@ function evaluateOnGrid(offset=0) {
       
       // current evaluated point: to determine which object we're on (background / a ball)
       // -> it extract isocontour lines from the "implicit function" = C (here 1)
-      const color = evaluatedValueAt(metaballs, x, y) >= (1 + offset) ? BALL_COLOR : BG_COLOR;
+      const color = (evaluatedValueAt(metaballs, x, y, offset) - offset) >= 1 ? BALL_COLOR : BG_COLOR;
 // to store current "state" : background / ball
 			
       //
@@ -446,7 +448,7 @@ function evaluateOnGrid(offset=0) {
 function getBall(segmentedGrid, i, j, xOffset, yOffset) {
   let label = segmentedGrid[j+xOffset][i+yOffset];
   if(label && !my_balls[label]) {
-      my_balls[label] = findNearestBall((j+xOffset)*GRID_SIZE, (i+yOffset)*GRID_SIZE);
+    my_balls[label] = findNearestBall((j+xOffset)*GRID_SIZE, (i+yOffset)*GRID_SIZE);
     return my_balls[label];
   }
 }
@@ -466,12 +468,13 @@ function getBallColor(segmentedGrid, i, j, xOffset, yOffset) {
 }
 
 
-function marchingSquares(segmentedGrid, coloredGrid)
+function marchingSquares(segmentedGrid, coloredGrid, nocache=false, offset=0)
 {
-	// (x,y) points on a grid (separated by GRID_SIZE)
+	// (x,y) points on a grid (separated by GRID_SIZE steps)
   let x, y;
   
-  //console.log(segmentedGrid);
+  //console.log(segmentedGrid); // 100 x 242 -> 0/1 ?!
+  //console.log(coloredGrid); // 100 x 242 -> named colors
 	
   // reset
   my_balls = Array(Math.round(i)).fill(0);
@@ -489,7 +492,7 @@ function marchingSquares(segmentedGrid, coloredGrid)
           lower_right = coloredGrid[i+1][j+1];  //
       
       //
-      // SKIP uninteresting cases (when all 4 with same color)
+      // SKIP uninteresting cases (when all 4 with same color at each corner)
       //
       if((upper_left == BALL_COLOR && upper_right == BALL_COLOR && lower_left == BALL_COLOR && lower_right == BALL_COLOR)
          || (upper_left == BG_COLOR && upper_right == BG_COLOR && lower_left == BG_COLOR && lower_right == BG_COLOR)) {
@@ -516,6 +519,11 @@ function marchingSquares(segmentedGrid, coloredGrid)
       
       let xOffset, yOffset, ball;
       
+
+      if(!NO_OUTLINE) {
+        ctx.beginPath(); // make animation fast, here ...
+      }
+
       // at upper-left position
       if ((upper_left === BALL_COLOR && upper_right === BG_COLOR && lower_left === BG_COLOR && lower_right === BG_COLOR)
           || (upper_left === BG_COLOR && upper_right === BALL_COLOR && lower_left === BALL_COLOR && lower_right === BALL_COLOR)) {
@@ -530,12 +538,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
-          ctx.strokeStyle = color;
-        
-          ctx.moveTo(lerpAt(x, y, 'upper'),   y);
-          ctx.lineTo(x,                       lerpAt(x, y, 'left'));
+					ctx.strokeStyle = color;
+
+          ctx.moveTo(lerpAt(x, y, 'upper', nocache, offset),   y);
+          ctx.lineTo(x,                       lerpAt(x, y, 'left', nocache, offset));
       		ctx.stroke();
         }
         
@@ -556,12 +562,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
-          ctx.strokeStyle = color;
+					ctx.strokeStyle = color;
           
-          ctx.moveTo(lerpAt(x, y, 'upper'),   y);
-          ctx.lineTo(x + GRID_SIZE,           lerpAt(x, y, 'right'));
+          ctx.moveTo(lerpAt(x, y, 'upper', nocache, offset),   y);
+          ctx.lineTo(x + GRID_SIZE,           lerpAt(x, y, 'right', nocache, offset));
       		ctx.stroke();
         }
 
@@ -583,12 +587,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
-          ctx.strokeStyle = color;
+					ctx.strokeStyle = color;
           
-          ctx.moveTo(lerpAt(x, y, 'lower'),   y + GRID_SIZE);
-          ctx.lineTo(x + GRID_SIZE,           lerpAt(x, y, 'right'));
+          ctx.moveTo(lerpAt(x, y, 'lower', nocache, offset),   y + GRID_SIZE);
+          ctx.lineTo(x + GRID_SIZE,           lerpAt(x, y, 'right', nocache, offset));
       		ctx.stroke();
         }
         
@@ -609,12 +611,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
-          ctx.strokeStyle = color;
+					ctx.strokeStyle = color;
           
-          ctx.moveTo(lerpAt(x, y, 'lower'),   y + GRID_SIZE);
-          ctx.lineTo(x,                       lerpAt(x, y, 'left'));
+          ctx.moveTo(lerpAt(x, y, 'lower', nocache, offset),   y + GRID_SIZE);
+          ctx.lineTo(x,                       lerpAt(x, y, 'left', nocache, offset));
       		ctx.stroke();
         }
         
@@ -635,12 +635,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
           ctx.strokeStyle = color;
           
-          ctx.moveTo(x,               lerpAt(x, y, 'left'));
-          ctx.lineTo(x + GRID_SIZE,   lerpAt(x, y, 'right'));
+          ctx.moveTo(x,               lerpAt(x, y, 'left', nocache, offset));
+          ctx.lineTo(x + GRID_SIZE,   lerpAt(x, y, 'right', nocache, offset));
       		ctx.stroke();
         }
         
@@ -660,12 +658,10 @@ function marchingSquares(segmentedGrid, coloredGrid)
         
         let color = getBallColor(segmentedGrid, i, j, xOffset, yOffset);
         if(!NO_OUTLINE) {
-					ctx.beginPath(); // make animation fast, here ...
-		
           ctx.strokeStyle = color;
           
-          ctx.moveTo(lerpAt(x, y, 'upper'),   y);
-          ctx.lineTo(lerpAt(x, y, 'lower'),   y + GRID_SIZE);
+          ctx.moveTo(lerpAt(x, y, 'upper', nocache, offset),   y);
+          ctx.lineTo(lerpAt(x, y, 'lower', nocache, offset),   y + GRID_SIZE);
       		ctx.stroke();
         }
         
@@ -678,6 +674,9 @@ function marchingSquares(segmentedGrid, coloredGrid)
         // 
       }
       
+      if(!NO_OUTLINE) {
+        ctx.closePath();
+      }
 	    
     } // j
 		

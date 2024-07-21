@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./style.css"/>
+		<base target="_blank">
 
 		<!-- no cache ... -->
 		<meta http-Equiv="Cache-Control" Content="no-cache" />
@@ -10,27 +11,26 @@
 	<body>
 		
 		<div id="content">
-			<div id="title">Delaunay triangulation</div>
-			<div id="subtitle">Subdivide the point set into triangles whose circumcircles do not contain any of the points.</div>
+			<div id="title"><a href="https://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay triangulation</a></div>
+			<div id="subtitle">It subdivides a set of points into triangles whose circumcircles do not contain any of the points.</div>
 			<div id="desc">
 				<ul>
-					<li>studied by Boris Delaunay in <b>1934</b></li>
-					<li>
-						coded using "winged-edge" data structure to quickly find neighboring faces
-					</li>
+					<li>studied by <a href="https://en.wikipedia.org/wiki/Boris_Delaunay">Boris Delaunay</a> in <b>1934</b></li>
 				</ul>
 			</div>
 
-			<span class="info">The points can be moved.</span><br/>
+			Coded using "winged-edge" data structure to quickly find neighboring faces. Triangles are handled from left to right.
+			<br/>
+			<span class="info">The points can be moved around.</span><br/>
 			
 			<div id="canvas"></div>
 			
 			<div id="controls">
 				<div>
 					
-					<button id="backward" disabled>&lt;&lt;</button>
+					<button id="backward">&lt;&lt;</button>
 					<button id="start">▶</button>
-					<button id="forward">&gt;&gt;</button>
+					<button id="forward" disabled>&gt;&gt;</button>
 					<button id="save">Save points</button>
 					<button id="restore">Restore saved points</button>
 

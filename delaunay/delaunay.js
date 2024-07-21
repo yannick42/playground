@@ -641,11 +641,11 @@ function showStuff(ctx, orderedLetters) {
 		const triangle1 = values[0]?.name,
 					triangle2 = values[1]?.name;
 		if(triangle1 && triangles.includes(triangle1)) {
-			drawTriangleByName(ctx, triangle1, "#FF0000");
+			drawTriangleByName(ctx, triangle1, "#FF000050");
 			debug("<mark style='background-color: #FF000040;'>highlighting triangle " + triangle1 + "</mark>");
 		}
 		if(triangle2 && triangles.includes(triangle2)) {
-			drawTriangleByName(ctx, triangle2, "#FF0000");
+			drawTriangleByName(ctx, triangle2, "#FF000050");
 			debug("<mark style='background-color: #FF000040;'>highlighting triangle " + triangle2 + "</mark>");
 		}
 	}

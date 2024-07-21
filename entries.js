@@ -1,4 +1,16 @@
 export const entries = [{
+    id: 'graph-algorithms',
+    href: './graph-algorithms/',
+    name: 'Graph algorithms',
+    desc: "Hierholzer's algorithm, ...",
+    searchContext: '',
+    creationDate: '21/07/2024',
+    classes: ['disabled-entry'],
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'collisions',
     href: './collisions/',
     name: 'Collisions',

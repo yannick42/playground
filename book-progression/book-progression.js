@@ -96,7 +96,7 @@ function getBookList() {
 
 function createHtml(book) {
 
-    if(! getProgress(book.id)) { // init to hidden
+    if(! getProgress(book.id)) { // init to hidden if not present
         setVisibility(book.id, false);
     }
 

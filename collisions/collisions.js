@@ -18,6 +18,7 @@ function main() {
 }
 
 let balls = [];
+let reqId;
 
 function redraw() {
 
@@ -26,7 +27,7 @@ function redraw() {
     // balls creation
     for(let i = 0; i < NB_BALLS; i++) {
         //const radius = randInt(MIN_RADIUS, MAX_RADIUS);
-        let ball = new Ball();
+        const ball = new Ball();
         ball.mass = randInt(MIN_MASS, MAX_MASS);
         ball.radius = Math.sqrt(ball.mass) * 10;
         ball.id = balls.length + 1;
@@ -44,8 +45,10 @@ function redraw() {
     // draw them
     balls.forEach(ball => ball.draw(ctx));
 
-
-    window.requestAnimationFrame(loop)
+    if(reqId) {
+        window.cancelAnimationFrame(reqId)
+    }
+    reqId = window.requestAnimationFrame(loop)
 
 }
 
@@ -87,15 +90,13 @@ function loop() {
         }
     }
 
-
     // draw them
     balls.forEach(ball => ball.draw(ctx));
-
     // move
     balls.forEach(ball => ball.step(DT, canvas.width, canvas.height));
 
-
-    window.requestAnimationFrame(loop);
+    // loop
+    reqId = window.requestAnimationFrame(loop);
 }
 
 
