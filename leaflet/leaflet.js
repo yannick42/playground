@@ -24,8 +24,7 @@ const percInputEl = document.getElementById("perc_input");
 const percEl = document.getElementById("perc");
 const skipWaterEl = document.getElementById("skip_water");
 
-
-const NB_MARKERS = 35_000; // 500_000 -> 311 ms ?
+const NB_MARKERS = 15_000; // 500_000 -> 311 ms ?
 
 const MARKER_PER_GROUP = 10_000;
 
@@ -97,12 +96,10 @@ function getColorHueAt(lat, lng) {
         canvas = canvases[key];
     }
     
-    // Get the rgba color, using the inversion
+    // get the color
     var rgba = canvas.getContext('2d').getImageData(pointInTile.x, pointInTile.y, 1, 1).data;
 
     const HSL = RGBToHSL(rgba[0], rgba[1], rgba[2]);
-    //console.log("HSL:", HSL)
-
     return HSL;
 }
 
@@ -123,7 +120,9 @@ function createMarkerPositions() {
             [latitude, longitude, , ] = markerPositions[randInt(0, markerPositions.length - 1)];
         } else {
 
+            let i = 0;
             do {
+                
                 latitude = center[0] + randFloat(-8/100, 8/100); // bounding box
                 longitude = center[1] + randFloat(-7/100, 7/100); // 
 
@@ -133,11 +132,12 @@ function createMarkerPositions() {
                     [hue, saturation, lightness] = hsl;
                 }
 
+                i++
             } while(
                 (
                     Math.sqrt(Math.pow(latitude-center[0], 2) + Math.pow(longitude-center[1], 2)) > 0.052
                     ||
-                    (!SKIPWATER && (hue < 240 && hue > 150 /*water*/) || !hsl)
+                    (i < 10 && (SKIPWATER && (hue < 240 && hue > 150 /*water*/) || !hsl))
                 )
             );
 
@@ -281,11 +281,14 @@ function addEvents () {
 
 let loaded = false;
 
-function redraw() {
 
+
+
+
+function redraw() {
     loaded = false;
 
-    index = null; // important ?!
+    index = null; // important ?
     index = new KDBush(NB_MARKERS); // init kd-tree index
     console.log(index)
 
@@ -313,6 +316,7 @@ function redraw() {
     t.on('load', async function(e) {
 
         if(!loaded) {
+            console.warn("start!")
             await start();
             addEvents();
 
@@ -334,17 +338,16 @@ function redraw() {
 
 async function start() {
 
-    console.log("1");
-
+    console.time("createMarkerPositions")
     createMarkerPositions();
-
-    console.log("1");
+    console.timeEnd("createMarkerPositions")
 
     let t0 = window.performance.now();
     // perform the indexing
     index.finish();
-    document.getElementById('number_of_markers').innerHTML = "Kd-tree indexation in <b>" + round(window.performance.now() - t0, 1) + " ms.</b> (to speed up point search, when clicking a GlMarker to show a tooltip)";
-
+    document.getElementById('number_of_markers').innerHTML = `
+        <a href="https://en.wikipedia.org/wiki/K-d_tree">Kd-tree</a> indexation in <b> ${round(window.performance.now() - t0, 1)} ms.</b> (to speed up point search, when clicking a GlMarker to show a tooltip or on mouse over)
+    `;
     console.log("1");
 
     t0 = window.performance.now();
@@ -408,7 +411,7 @@ async function start() {
         removeOutsideVisibleBounds: true, // for performance
         spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 1 },
         iconCreateFunction: function(cluster) {
-            return L.divIcon({ html: '' });
+            return L.divIcon({ html: '' }); // important for speed !
             /*
             <div style="width: 10px; height: 16px; text-align: center; transform: translate(-2px, -2px); border-radius: 8px; padding: 0px 3px; background-color: lime; font-weight: bold; margin: 0;"> '
                 + cluster.getChildCount()
@@ -471,11 +474,7 @@ async function start() {
     let numberOfClusters = 0;
     let c = 0;
     map.eachLayer(layer => {
-        //console.log(layer.options)
-        if(layer.options.id === 'markerCluster') {
-            console.log(layer?.getLayers().length);
-            console.log(layer._childClusters?.length)        
-            console.log(layer._childCount);
+        if(layer instanceof L.MarkerCluster) {
             c += layer._childCount;
             numberOfClusters++;
         }
@@ -484,7 +483,7 @@ async function start() {
     console.assert(c === nbMarkersAtSamePosition, c, "and", nbMarkersAtSamePosition);
   
     debugEl.innerHTML += `<ul>
-        <li>Number of points in the same place : <b>${nbMarkersAtSamePosition}</b> (${round(nbMarkersAtSamePosition/NB_MARKERS*100, 0)}%)</li>
+        <li>Number of points at the same place : <b>${nbMarkersAtSamePosition}</b> (${round(nbMarkersAtSamePosition/NB_MARKERS*100, 0)}%)</li>
         <li>Number of glMarkerGroups : <b>${glMarkerGroups.length}</b></li>
         <li>Number of clusters : <b>${numberOfClusters}</b> (with mean nb of point = ${round(nbMarkersAtSamePosition/numberOfClusters, 2)})</li>
     </ul>`;

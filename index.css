@@ -10,7 +10,7 @@ body {
 
 #main {
     display: flex;
-    height: 96%; /* because of the header ? */
+    height: 100%; /* because of the header ? */
 }
 
 #menu {

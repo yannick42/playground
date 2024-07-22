@@ -1,7 +1,7 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
-import { computeBézierCurve } from '../common/math.helper.js';
+import { computeBézierCurve, distance } from '../common/math.helper.js';
 
 import { DCEL, Face } from '../common/dcel.js';
 
@@ -9,24 +9,49 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const debugEl = document.getElementById("debug");
 
+let dcel;
+
+let hoveredVertex;
+let selectedVertex;
+
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
 
-    redraw();
-}
+    canvas.addEventListener('mousemove', (e) => {
+        if(!selectedVertex) {
+            redraw();
+        }
+        dcel.vertices.forEach(vertex => {
+            if(!selectedVertex && isWithinRangeOf([vertex.value.x, vertex.value.y], e.offsetX, e.offsetY, 10)) {
+                drawPointAt(ctx, vertex.value.x, vertex.value.y, 10, "red");
+                hoveredVertex = vertex;
+                noHover = false;
+            }
+        });
+    });
 
-function printHE(he) {
-    console.log('-------------------')
-    console.log("NAME:", he.name, he)
-    console.log("twin half-edge = ", he.twin.name, he.twin)
-    console.log("PREV =", he.prev?.name, he.prev)
-    console.log("NEXT =", he.next?.name, he.next)
-    console.log('-------------------')
-}
+    canvas.addEventListener('click', (e) => {
+        if(hoveredVertex && isWithinRangeOf([hoveredVertex.value.x, hoveredVertex.value.y], e.offsetX, e.offsetY, 10)) {
+            redraw();
+            if(selectedVertex !== hoveredVertex) {
+                selectedVertex = hoveredVertex;
+                drawPointAt(ctx, selectedVertex.value.x, selectedVertex.value.y, 10, "green");
+            } else {
+                selectedVertex = null;
+            }
 
-function redraw() {
+            
+        } else { // click elsewhere -> stop ?
+            selectedVertex = null;
+            hoveredVertex = null;
+            redraw();
+        }
+    })
 
-    const dcel = new DCEL();
+
+
+
+    dcel = new DCEL();
 
     const dummyFace = dcel.addFace("dummy");
 
@@ -108,6 +133,26 @@ function redraw() {
 
 
 
+
+
+    redraw();
+}
+
+function printHE(he) {
+    console.log('-------------------')
+    console.log("NAME:", he.name, he)
+    console.log("twin half-edge = ", he.twin.name, he.twin)
+    console.log("PREV =", he.prev?.name, he.prev)
+    console.log("NEXT =", he.next?.name, he.next)
+    console.log('-------------------')
+}
+
+
+function isWithinRangeOf(point, x, y, byHowManyPixels) {
+    return distance(point[0], point[1], x, y) <= byHowManyPixels;
+}
+
+function redraw() {
     // show it on canvas
     console.groupCollapsed("drawing")
     drawDCEL(dcel);

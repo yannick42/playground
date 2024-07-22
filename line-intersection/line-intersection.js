@@ -16,7 +16,7 @@ const newSetEl = document.getElementById("new");
 const numberEl = document.getElementById("number");
 const showDebugEl = document.getElementById("show_debug");
 
-const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink'];
+const colors = ['red', 'orange', 'blue', 'green', 'purple', 'pink', 'darkorange', 'darkred', 'darkblue', 'gray'];
 let NB_SEGMENTS = 10;
 
 let segments = [],
@@ -70,6 +70,7 @@ function createRandomSegments(fixed=true)
         //segments = [[[8.9,1.1],[3,6.9],"red"],[[8.1,1.2],[5.9,2.5],"purple"],[[8.5,2.2],[4.5,4.8],"pink"]];
         //segments = [[[2.1,4.3],[3.5,9.9],"red"],[[1.3,5.5],[5.3,9.2],"green"],[[4.8,3.2],[0.2,7.6],"pink"]];
         segments = [[[0.3,6.4],[8.6,7.4],"red"],[[5.4,1.6],[1.9,3.6],"orange"],[[5.2,3],[5.8,7.6],"green"],[[2.2,2.1],[6,4.5],"purple"]];
+        //segments = [[[1.3,4],[4,8.4],"red"],[[7,7.2],[0.4,9],"orange"],[[9.9,2.1],[3.8,4.4],"blue"]];
     } else {
         for(let i = 0; i < NB_SEGMENTS; i++) {
             const pt1 = [
@@ -389,13 +390,13 @@ function handleEventPoint(p)
         }
     }
 
-    addDebug(['Finding nearest (rightess if any?) x-key in sweep line T', key ?? '-']);
+    addDebug(['Finding nearest (rightest if any?) x-key in sweep line T', key ?? '-']);
 
     let predPredKey, predKey, succKey;
 
     if(key) {
-        succKey = T.getSuccessorOf(key);
-        addDebug(['succKey (of '+key+')', succKey]);
+        succKey = T.getSuccessorOf(p[0]);
+        addDebug(['succKey (of '+p[0]+')', succKey]);
         const rightSegment = succKey ? T.get(succKey) : null;
         if(rightSegment) {
             segmentsThatMayContainsP.push(rightSegment?.value?.segments[0]);
@@ -403,8 +404,8 @@ function handleEventPoint(p)
     }
 
     if(key) {
-        predKey = T.getPredecessorOf(key);
-        addDebug(['predKey (of '+key+')', predKey]);
+        predKey = T.getPredecessorOf(p[0]);
+        addDebug(['predKey (of y='+p[0]+')', predKey]);
 
         const leftSegment = predKey ? T.get(predKey) : null;
         if(leftSegment) {
@@ -524,14 +525,15 @@ function handleEventPoint(p)
             const predKey = T.getPredecessorOf(key);
             const succKey = T.getSuccessorOf(key);
 
+            console.log("delete key", key)
             T.delete(key); // delete from the "status" T as it stops intersecting the sweep line
 
             // check for intersection (for its 2 neighbors)
 
             const s_l_list = T.get(predKey)?.value?.segments;
             const s_r_list = T.get(succKey)?.value?.segments;
-            s_l_list.forEach(s_l => {
-                s_r_list.forEach(s_r => {
+            s_l_list?.forEach(s_l => {
+                s_r_list?.forEach(s_r => {
                     findNewEvent(s_l, s_r, p); // even if multiple segments at pred or succ ... (?)
                 })
             })
@@ -541,7 +543,7 @@ function handleEventPoint(p)
 
     // TODO: order the segment as they intersect the sweep line (x-axis)
     //
-    // beware: handle the horizontal segments !
+    // beware: TODO: handle the horizontal segments !
     //
     const U_union_C = [...U_p, ...C_p];
     addDebug(['p is <b>Upper</b> ∪ <b>Center</b> ?', U_union_C]);
@@ -559,12 +561,22 @@ function handleEventPoint(p)
 
         const intersectA = has_intersection([a[0], a[1]], [[0, y], [10, y]]);
         const intersectB = has_intersection([b[0], b[1]], [[0, y], [10, y]]);
-        //console.log("intersectA", intersectA)
-        //console.log("intersectB", intersectB)
+        console.log("intersectA", intersectA)
+        console.log("intersectB", intersectB)
 
         return intersectB !== false ? intersectA[0] - intersectB[0] : -1;
+
     }).forEach((segment, i) => {
-        const previousKey = segment[0][0]; // Upper endpoint of this segment ? (or also a C_p ?)
+        
+        // find segments key ? by "color?!"
+
+        const out = [];
+        T.printInOrder(T.root, out);
+
+        console.log(out)
+        
+        const previousKey = out?.find(a => a[1].segments.map(s => s[2]).includes(segment[2])) ?? null;
+        //const previousKey = segment[0][0]; // Upper endpoint of this segment ? (or also a C_p ?)
         const key = p[0]; // at current point -> new position on the line (of this same)
         
         // TODO: if multiples ??!
@@ -580,26 +592,6 @@ function handleEventPoint(p)
         ]);
         // INFO: the "U_p" segment(s) are the new/arriving segments crossing the sweep line
     });
-
-
-
-    // reorder ?!?
-    if(T.counter) {
-        console.log("-----")
-        let element = T.min();
-        while(element?.key) {
-            console.log(element.key);
-            const el = T.get(T.getSuccessorOf(element.key));
-            if(el.key === element.key) {
-                break;
-            }
-            element = el;
-            console.log(element.key);
-        }
-
-        //console.error(has_intersection([[0, p[1], 10, p[1]]))
-    }
-
 
 
 
@@ -657,6 +649,87 @@ function handleEventPoint(p)
             })
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    // reorder ?!?
+    
+    if(T.counter) {
+        console.log("-----")
+        let prevElement;
+        let element;
+
+        element = T.min();
+
+        console.log(">>>", T.counter);
+
+        while(element?.key) {
+            console.log("(next) min:", element.key);
+            
+            const sweepLine = [[0, p[1]], [10, p[1]]]
+
+            for (let segment of element.value.segments) {
+                const segm = [segment[0], segment[1]];
+                const color = segment[2];
+                console.log("intersection of", color, "with sweepline at y=", p[1])
+                console.log(sweepLine);
+                console.log(segm)
+                const inter = has_intersection(sweepLine, segm); // eg. [4.525, 2.1]
+
+                if(element.key !== inter[0]) {
+                    console.log("move from key=", element.key, "to", round(inter[0], 2))
+                    T.delete(element.key); // delete from the "status" T as it stops intersecting the sweep line
+                    T.insert(round(inter[0], 2), { segments: [segment] }); // TODO: not only the first [0] ?!
+                } else {
+                    console.log("nothing to move")
+                }
+            }
+
+            element = T.get(T.getSuccessorOf(element.key));
+            if(prevElement?.key >= element.key) {
+                break; // END ??!
+            } else {
+                console.log("next of ", prevElement?.key, "is:", element.key)
+            }
+            prevElement = element;
+        }
+    }
+
+    const out = [];
+    T.printInOrder(T.root, out);
+    addDebug([
+        `(after reorder) <b><i>Sweep line</i></b> 'status' (ordered) at y=${p[1]}`,
+        `${JSON.stringify(out.map(e => {
+            //console.log(">", e)
+            return e[1].segments.map(seg => seg[2]).join(",") + ' (' + JSON.stringify(e[0]) + ')';
+        }))}`
+    ]);
+    
+
+
+/*
+    let element = T.min();
+    while(element?.key) {
+        
+
+        el = T.get(T.getSuccessorOf(element.key));
+        if(el.key <= element.key) {
+            break; // END ?
+        }
+    }
+*/
+
+
+
 }
 
 
@@ -675,9 +748,9 @@ function findNewEvent(s_l, s_r, p) {
 
             //console.warn(`NEW INTERSECTION POINT at x:${intersect[0]}, y:${intersect[1]}`)
 
-            Q.insert(intersect[1], { x: intersect[0], y: intersect[1], segments: [s_l, s_r] });
+            Q.insert(intersect[1], { x: round(intersect[0], 2), y: round(intersect[1], 2), segments: [s_l, s_r] });
 
-            debugHTML += `<tr><td><mark>New intersection</mark></td><td>${JSON.stringify(intersect)}</td></tr>`;
+            debugHTML += `<tr><td><mark>New intersection</mark></td><td>${round(intersect[0], 2)}, ${round(intersect[1], 2)}</td></tr>`;
 
             // save it...?
             intersections.push({
@@ -722,7 +795,7 @@ function isInsideSegment(pt, linePt1, linePt2) {
 }
 
 function L(segs, p) {
-    //console.log("L: segs=", segs, p)
+    console.log("L: segs=", segs, p)
     return segs?.filter(segment => p[0] === segment[1][0] && p[1] === segment[1][1])
 }
 // segments that contains p in their interior

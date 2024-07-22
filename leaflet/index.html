@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="index.css" />
+		<base target="_blank">
 
 		<!-- no cache ... -->
 		<meta http-Equiv="Cache-Control" Content="no-cache" />
@@ -34,7 +35,8 @@
 			<div id="subtitle"></div>
 
 			<div id="desc">
-                Using Leaflet.GLMarkers.js plug-in to handle lots of markers in the GPU (WebGL)
+                Using Leaflet.GLMarkers.js (& Marker.Cluster) plug-ins to handle multiple markers in the GPU (WebGL)<br/>
+				- hiding Marker.Cluster cluster icon (and using a bigger GlMarker point instead) improves performance
             </div>
 
 			<br/>
@@ -45,9 +47,9 @@
 			
 			<div id="map"></div>
 
-			<label><input type="checkbox" id="skip_water" /> skip water pixels</label>
+			<label><input type="checkbox" id="skip_water" /> skip water pixels when picking random points</label>
 
-			<input id="perc_input" type="range" min="0" max="1" step="0.01" value="0.2" /> <span id="perc"></span>
+			<label><input id="perc_input" type="range" min="0" max="1" step="0.01" value="0.2" /> <span id="perc"></span></label>
 
 			<div id="debug"></div>
 

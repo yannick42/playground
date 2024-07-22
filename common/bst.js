@@ -254,23 +254,21 @@ export class BST {
         if(node == null) return;
 
         // 1. node has a left righttree
-        if(node.right != null) {
+        if(node.right) {
             const n = this.get(this.minNode(node.right));
             //console.warn("n:", n)
             return n?.key;
         }
 
         // 2. go up the nearest ancestor with a left? subtree
-        let root = this.root;
-        let successor;
-        while(root) {
-            if(key < root.key) {
-                successor = root.key;
-                root = root.left
-            } else if (key > root.key) {
-                root = root.right;
+        let ancestor = this.root;
+        let successor = null;
+        while(ancestor) {
+            if(key < ancestor.key) {
+                successor = ancestor.key;
+                ancestor = ancestor.left
             } else {
-                break;
+                ancestor = ancestor.right;
             }
         }
         return successor; // = a key
