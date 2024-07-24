@@ -1,0 +1,64 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "3404.64"
+    },
+    "grouping_operation": {
+      "using_temporary_table": true,
+      "using_filesort": false,
+      "nested_loop": [
+        {
+          "table": {
+            "table_name": "s",
+            "access_type": "ALL",
+            "rows_examined_per_scan": 7463,
+            "rows_produced_per_join": 7463,
+            "filtered": "100.00",
+            "cost_info": {
+              "read_cost": "46.29",
+              "eval_cost": "746.30",
+              "prefix_cost": "792.59",
+              "data_read_per_join": "22M"
+            },
+            "used_columns": [
+              "id",
+              "contract_id"
+            ],
+            "attached_condition": "(`main`.`s`.`contract_id` is not null)"
+          }
+        },
+        {
+          "table": {
+            "table_name": "c",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY"
+            ],
+            "key": "PRIMARY",
+            "used_key_parts": [
+              "id"
+            ],
+            "key_length": "1022",
+            "ref": [
+              "main.s.contract_id"
+            ],
+            "rows_examined_per_scan": 1,
+            "rows_produced_per_join": 7463,
+            "filtered": "100.00",
+            "using_index": true,
+            "cost_info": {
+              "read_cost": "1865.75",
+              "eval_cost": "746.30",
+              "prefix_cost": "3404.64",
+              "data_read_per_join": "15M"
+            },
+            "used_columns": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
