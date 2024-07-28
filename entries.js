@@ -1,4 +1,15 @@
 export const entries = [{
+    id: 'tsp',
+    href: './tsp/',
+    name: 'Traveling Salesperson Problem',
+    desc: "approximation methods/heuristics: 2-opt, simulated annealing, ...",
+    searchContext: '',
+    creationDate: '28/07/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'mysql-plan',
     href: './mysql-plan/',
     name: 'MySQL Execution Plans',
