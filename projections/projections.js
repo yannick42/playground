@@ -1,7 +1,7 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine, drawLineThroughPoints } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
-import { matMul } from '../common/math.helper.js';
+import { matMul, degToRad } from '../common/math.helper.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -13,6 +13,7 @@ let cameraZPos = -115;
 let cameraOrientationTheta = 0; // roll ?
 let cameraOrientationPhi = 0; // pitch ?
 let cameraOrientationPsi = 0; // yaw ?
+let FOV = 105;
 
 function main() {
     document.querySelector("#camera_orientation_roll").addEventListener('change', (e) => {
@@ -41,6 +42,13 @@ function main() {
         cameraZPos = e.target.value;
         redraw();
     });
+
+    document.querySelector("#fov").addEventListener('change', (e) => {
+        FOV = e.target.value;
+        redraw();
+    });
+
+    document.querySelector("#fov").value = FOV;
 
     document.querySelector("#camera_x_pos").value = cameraXPos;
     document.querySelector("#camera_y_pos").value = cameraYPos;
@@ -323,7 +331,7 @@ function redraw() {
             const cameraPosition = [cameraXPos, cameraYPos, cameraZPos]; // C (= origin)
             const cameraOrientation = [cameraOrientationTheta, cameraOrientationPhi, cameraOrientationPsi]; // Tait-Bryan angles (Euler angles)
             
-            const displaySurfacePosition = [0, 0, 1]; // E = display surface relative to C
+            const displaySurfacePosition = [0, 0, 1 / Math.tan(degToRad(FOV/2))]; // E = display surface relative to C
             
             //const cameraFieldOfView = [1, 1, 1]; // ???
             

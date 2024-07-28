@@ -38,6 +38,7 @@ canvas {
 	font-size: smaller;
 }
 
+#fov,
 #camera_x_pos,
 #camera_y_pos,
 #camera_z_pos,
