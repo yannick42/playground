@@ -134,7 +134,7 @@ export const entries = [{
     id: 'convolution-filters',
     href: './convolution-filters/',
     name: 'Convolution filters',
-    desc: 'kernels: blur, sharpen, Sobel filter, ...',
+    desc: 'kernels: blur, sharpen, Sobel filter, LoG, ...',
     searchContext: 'matrix,dogs',
     chips: [{
         type: 'draft',
