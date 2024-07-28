@@ -8,12 +8,14 @@ const ctx = canvas.getContext("2d");
 const randomPointsEl = document.getElementById("random_points");
 const randomSolutionEl = document.getElementById("random_solution");
 const apply2OptEl = document.getElementById("apply_2-opt");
+const apply2OptSAEl = document.getElementById("apply_2-opt_SA");
 const totalDistEl = document.getElementById("total_dist");
 
 let points = [],
     path = [];
 
 function main() {
+
     randomPointsEl.addEventListener('click', (e) => {
         points = generateNPoints(500);
         setUpCanvas(ctx, canvas.width, canvas.height, 'white'); // clear
@@ -29,7 +31,32 @@ function main() {
         const dist = pathDistance(path, points);
         totalDistEl.innerHTML = round(dist, 1);
     });
-    apply2OptEl.addEventListener('click', (e) => redraw());
+
+    /**
+     * methods
+     */
+    apply2OptEl.addEventListener('click', (e) => {
+        path = twoOpt(path);
+
+        setUpCanvas(ctx, canvas.width, canvas.height, 'white'); // clear
+        drawPath(path, points);
+        points.forEach(pt => drawPointAt(ctx, pt.x, pt.y, 3, 'black'))
+
+        const dist = pathDistance(path, points);
+        totalDistEl.innerHTML = round(dist, 1);
+    });
+
+    apply2OptSAEl.addEventListener('click', (e) => {
+        console.log(pathDistance(path, points));
+        path = twoOpt(path, true);
+
+        setUpCanvas(ctx, canvas.width, canvas.height, 'white'); // clear
+        drawPath(path, points);
+        points.forEach(pt => drawPointAt(ctx, pt.x, pt.y, 3, 'black'))
+
+        const dist = pathDistance(path, points);
+        totalDistEl.innerHTML = round(dist, 1);
+    })
 
     points = generateNPoints(500);
 
@@ -79,13 +106,20 @@ function drawPath(path, points) {
     }
 }
 
-function twoOpt(solution) {
+function twoOpt(solution, useSA=false, TMax=100_000, coolingRate=0.99995) {
 
     let iter = 0,
-        MAX_ITER = 10,
+        MAX_ITER = 50,
         is_better = true;
 
-    while(is_better && iter < MAX_ITER) {
+    let global_best_dist,
+        global_best_solution;
+
+    let T = TMax,
+        p = 0,
+        r;
+
+    while((is_better || useSA) && iter < MAX_ITER) {
         is_better = false;
 
         iter += 1;
@@ -111,42 +145,65 @@ function twoOpt(solution) {
 
                 const E_diff = new_length - current_length
 
-                // if new tour is better
-                if(E_diff < 0) {
-                    // remplace edges (x_i, x_i+1) by (x_i, x_j)
+                let r;
+                if(useSA) {
+                    r = Math.random(); // flip a coin ?
+                    p = Math.exp(-E_diff / T);
+                }
+
+                // if new tour is better (or if we use SA : take some non-ameliorating steps, with less and less probability)
+                if(E_diff < 0 || (useSA && p > r)) {
+                    // 
+                    // do the swap of edges (x_i, x_i+1) by (x_i, x_j)
                     //                   and (x_j, x_j+1) by (x_i+1, x_j+1)
-                    
+                    //
                     let part1 = solution.slice(0, i + 1);
                     let part2 = solution.slice(i + 1, j + 1).reverse();
                     let part3 = solution.slice(j + 1);
                     solution = part1.concat(part2, part3); // rewrite over solution array ... ?
                     
-                    is_better = true
+                    if(E_diff < 0) {
+                        is_better = true // ... not if SA..
+                    } else {
+                        //console.count("worst step but SA ...") // ~90 000 ! with MAX_ITER = 50 and N=500
+                    }
+                }
+
+                // decrease temperature
+                if(useSA) {
+                    T = T * coolingRate;
                 }
             }
         }
 
+        const dist = pathDistance(solution, points);
         if(is_better) {
-            console.log("improvments!")
+            console.log(`improvments to ${dist} (${iter}/${MAX_ITER})`);
+
+            global_best_solution = solution
+            global_best_dist = dist
+        } else {
+            //console.log("no more improvement at iteration", iter); //, "still", dist)
         }
     }
 
-    if(iter < MAX_ITER) {
-
+    if(iter === MAX_ITER) {
+        console.log("Max reached !")
     }
 
-    return solution;
+    return global_best_solution ?? solution;
 }
 
 function redraw() {
 
     setUpCanvas(ctx, canvas.width, canvas.height, 'white')
 
+    // find an other random path to improve
+    path = findPath('random', points);
+
     let dist = pathDistance(path, points);
     console.log("before:", dist);
 
-    // find an other random path to improve ?
-    path = findPath('random', points);
 
     path = twoOpt(path);
 

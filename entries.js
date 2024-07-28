@@ -1,7 +1,7 @@
 export const entries = [{
     id: 'tsp',
     href: './tsp/',
-    name: 'Traveling Salesperson Problem',
+    name: 'Traveling Salesman Problem',
     desc: "approximation methods/heuristics: 2-opt, simulated annealing, ...",
     searchContext: '',
     creationDate: '28/07/2024',

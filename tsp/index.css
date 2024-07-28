@@ -34,3 +34,16 @@ canvas {
 #refresh {
 	margin: 5px;
 }
+
+#controls {
+	margin: 5px;
+}
+
+#controls > button {
+	margin: 2.5px;
+}
+
+#total_dist {
+	font-weight: bold;
+	font-style: italic;
+}
