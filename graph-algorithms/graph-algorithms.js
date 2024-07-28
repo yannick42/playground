@@ -147,17 +147,19 @@ function redraw() {
             //console.log("vertex:", vertex, forces[vertex].mul(c4))
             vertices[vertex] = vertices[vertex].add(forces[vertex].mul(c4));
 
-            if(vertices[vertex].x < 0) {
-                vertices[vertex].x = 0;
+            const MARGIN = 20;
+
+            if(vertices[vertex].x < MARGIN) {
+                vertices[vertex].x = MARGIN;
             }
-            if(vertices[vertex].y < 0) {
-                vertices[vertex].y = 0;
+            if(vertices[vertex].y < MARGIN) {
+                vertices[vertex].y = MARGIN;
             }
-            if(vertices[vertex].x > canvas.width) {
-                vertices[vertex].x = canvas.width;
+            if(vertices[vertex].x > canvas.width - MARGIN) {
+                vertices[vertex].x = canvas.width - MARGIN;
             }
-            if(vertices[vertex].y > canvas.height) {
-                vertices[vertex].y = canvas.height;
+            if(vertices[vertex].y > canvas.height - MARGIN) {
+                vertices[vertex].y = canvas.height - MARGIN;
             }
         });
     }
@@ -304,15 +306,18 @@ function redraw() {
     });
 
     // show list of ordered vertex producing the tour
-    document.getElementById("debug").innerHTML = "Tour : " + tour.map((vertex, i) => {
+    document.getElementById("debug").innerHTML = `<u>Tour</u> : ${tour.map((vertex, i) => {
         const color = `hsl(${Math.round(hsl[0]+(i*10) % 360)}deg, ${hsl[1]}%, 50%)`;
         return `<span style="color: ${color}">${vertex}</span>`
-    }).join('&rightarrow;');
+    }).join('&rightarrow;')}
+        <br/>
+        <i><u>Length</u> : ${tour.length - 1}</i> edges
+    `;
 
 
     
     Object.keys(vertices).forEach(name => {
-        drawPointAt(ctx, vertices[name].x, vertices[name].y, 6, "blue");
+        drawPointAt(ctx, vertices[name].x, vertices[name].y, 5, "blue");
     })
 
     Object.keys(vertices).forEach(name => {
