@@ -1,11 +1,22 @@
 export const entries = [{
+    id: 'mysql-plan',
+    href: './mysql-plan/',
+    name: 'MySQL Execution Plans',
+    desc: "Trying to make sense of its JSON export",
+    searchContext: '',
+    creationDate: '24/07/2024',
+    classes: ['disabled-entry'],
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'graph-algorithms',
     href: './graph-algorithms/',
     name: 'Graph algorithms',
-    desc: "Hierholzer's algorithm, ...",
+    desc: "Hierholzer's algorithm, force-directed layout, ...",
     searchContext: '',
     creationDate: '21/07/2024',
-    classes: ['disabled-entry'],
     chips: [{
         type: 'draft',
         text: "DRAFT"
@@ -65,7 +76,7 @@ export const entries = [{
     id: 'book-progression',
     href: './book-progression/',
     name: 'Book progression',
-    desc: "tool to visualize progression on technical books",
+    desc: "A tool to visualize progression in technical books",
     searchContext: 'tool,book,reading',
     chips: [{
         type: 'tool',

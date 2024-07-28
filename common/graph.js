@@ -31,6 +31,14 @@ export class Graph {
         return this.customData[link];
     }
 
+    countEdges() {
+        let count = 0;
+        Object.keys(this.adj).forEach(vertex => {
+            count += this.adj[vertex].length;
+        })
+        return count;
+    }
+
     // add vertices if necessary
     add(from, to) {
         //console.log("add:", from, to);
@@ -47,6 +55,11 @@ export class Graph {
                 this.adj[from] = [to];
             }
         }
+    }
+
+    hasEdge(v1, v2) {
+        //console.log(this.adj, v1, this.adj[v1], v2);
+        return this.adj[v1].includes(v2);
     }
 }
 

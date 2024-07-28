@@ -30,3 +30,7 @@ body {
 canvas {
 	border: 1px solid black;
 }
+
+#refresh {
+	margin: 5px;
+}
