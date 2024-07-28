@@ -331,7 +331,7 @@ function redraw() {
             const cameraPosition = [cameraXPos, cameraYPos, cameraZPos]; // C (= origin)
             const cameraOrientation = [cameraOrientationTheta, cameraOrientationPhi, cameraOrientationPsi]; // Tait-Bryan angles (Euler angles)
             
-            const displaySurfacePosition = [0, 0, 1 / Math.tan(degToRad(FOV/2))]; // E = display surface relative to C
+            const displaySurfacePosition = [0, 0, 1]; // E = display surface relative to C
             
             //const cameraFieldOfView = [1, 1, 1]; // ???
             
@@ -358,8 +358,8 @@ function redraw() {
 
             // TODO: use matrix form... (homogeneous coordinates = ?)
             const projectedPt = [
-                displaySurfacePosition[2] / D[2] * D[0] + displaySurfacePosition[0],
-                displaySurfacePosition[2] / D[2] * D[1] + displaySurfacePosition[1]
+                (displaySurfacePosition[2] / D[2] * D[0] + displaySurfacePosition[0]) / Math.tan(degToRad(FOV/2)),
+                (displaySurfacePosition[2] / D[2] * D[1] + displaySurfacePosition[1]) / Math.tan(degToRad(FOV/2))
             ];
 
             projectedSquare.push([projectedPt[0] * 500, projectedPt[1] * 500]);
