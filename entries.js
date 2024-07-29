@@ -54,7 +54,7 @@ export const entries = [{
     id: 'numerical-integration',
     href: './numerical-integration/',
     name: 'Numerical Integration',
-    desc: "Trapezoidal rule, Simpson's rules, ...",
+    desc: "Various methods: trapezoidal rule, Simpson's rules, ...",
     searchContext: '',
     creationDate: '09/07/2024',
     chips: [{
@@ -82,7 +82,10 @@ export const entries = [{
     desc: "solve simple satisfiability problems using strongly connected components",
     searchContext: 'SCC,Strongly Connected Components,topological sort',
     creationDate: '15/06/2024',
-    classes: ['disabled-entry'],
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
 },{
     id: 'book-progression',
     href: './book-progression/',
@@ -115,10 +118,9 @@ export const entries = [{
     name: 'Map projections',
     desc: 'Mercator, equirectangular projection, ...',
     searchContext: '3D,sphere,ellipsoid',
-    classes: ['disabled-entry'],
     chips: [{
-        type: 'early-draft',
-        text: "EARLY DRAFT"
+        type: 'draft',
+        text: "DRAFT"
     }]
 },{
     id: 'projections',

@@ -33,8 +33,8 @@ const methods = {
         color: 'DarkTurquoise',
     },
     'boole': {
-        name: "Boole's rule",
-        //color: '',
+        name: "Boole's rule (1860 ?)",
+        color: 'DeepSkyBlue',
     },
     'romberg': {
         name: "<a href='https://en.wikipedia.org/wiki/Romberg%27s_method'>Romberg's method</a> (1955)",
@@ -44,10 +44,11 @@ const methods = {
     'gaussian-quad': {
         name: '(n=2)-point Gaussian quadrature rule',
         color: 'red',
-        info: 'Gauss (1814). Jacobi (1826) using orthogonal polynomials. Points are no longer equally spaced, ...'
+        info: 'Gauss (1814). Reformulated by Jacobi (1826) using orthogonal polynomials. In this method, points are no longer equally spaced.'
     },
     'clenshaw': {
         name: 'Clenshaw-Curtis quadrature (1960)',
+        //color: 'orange',
         info: 'uses Chebyshev nodes/polynomial, DCT, cosine series, FFT'
     }
 };
@@ -111,6 +112,35 @@ function integrate(method, f, a, b, N=2) {
 
             break;
         
+        case "boole": // composite version : https://en.wikipedia.org/wiki/Boole%27s_rule
+
+            if(N % 4 !== 0) { // only i
+                sum = undefined;
+            } else {
+
+                sum = 0;
+                for(let k = 0; k <= N; k++) {
+                    const x_k = a + h*k;
+                    let term;
+
+                    if(k === 0 || k === N) {
+                        term = 7 * f(x_k)
+                    } else if(k % 2 === 1) { // k is odd: 1, ..., N-1
+                        term = 32 * f(x_k)
+                    } else if((k % 4 - 2) === 0) { // k=2, 6, 10, ..., N-2
+                        term = 12 * f(x_k)
+                    } else if (k % 4 === 0) { // k=4, 8, 12, ..., N-4
+                        term = 14 * f(x_k)
+                    } else {
+                        // impossible
+                    }
+
+                    sum += term
+                }
+                sum *= 2*h/45;
+            }
+            break;
+        
         case "gaussian-quad":
             //
             // see Section 4.6 of Numerical Recipes (2007)
@@ -160,8 +190,8 @@ function redraw() {
     const N_MAX = (nEl.value ?? 30) + 1;
 
     let fn,
-        a = fromEl.value,
-        b = toEl.value;
+        a = parseFloat(fromEl.value),
+        b = parseFloat(toEl.value);
 
     switch(fnEl.value) {
         case "sin":
@@ -195,6 +225,8 @@ function redraw() {
     //
     // Debugging info
     //
+
+    //  (at N=${N_MAX - 1}) ?
     let debugMessage = `<table>
         <thead> <td> Best methods </td> <td> value found </td> <td> error </td> </thead>
     `;
