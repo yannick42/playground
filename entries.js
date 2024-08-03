@@ -1,4 +1,15 @@
 export const entries = [{
+    id: 'ray-tracing',
+    href: './ray-tracing/',
+    name: '3D Ray Tracing',
+    desc: "A recursive path tracer",
+    searchContext: '',
+    creationDate: '02/08/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'tsp',
     href: './tsp/',
     name: 'Traveling Salesman Problem',
