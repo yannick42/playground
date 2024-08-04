@@ -29,11 +29,14 @@ console.log("look from:", lookFrom, "look at:", lookAt)
 const camera = new Camera({
     imageWidth,
     aspectRatio: 16 / 9,
-    vFOV: 25, // in degrees
+    vFOV: 20, // in degrees
     samplesPerPixel, // 500 = high-quality ?
     maxDepth, // default = 40
     lookFrom,
     lookAt,
+    // Large aperture ?
+    defocusAngle: 0.6,
+    focusDistance: 10,
 });
 
 const timings = [{

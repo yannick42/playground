@@ -3,8 +3,18 @@ import { Interval } from './interval.js';
 import { Ray } from './ray.js';
 import { Vec3 } from './vec3.js';
 import { degToRad, round } from '../common/math.helper.js';
+import { randFloat } from '../common/common.helper.js';
 
 const debugEl = document.getElementById("debug");
+
+function randomInUnitDisk() {
+    while (true) {
+        const p = new Vec3(randFloat(-1, 1), randFloat(-1, 1), 0);
+        if (p.lengthSquared() < 1) {
+            return p;
+        }
+    }
+}
 
 export class Camera {
 
@@ -57,7 +67,7 @@ export class Camera {
         const theta = degToRad(this.vFOV);
         const h = Math.tan(theta/2);
 
-        const viewportHeight = 2 * h * focusLength; // this.focusDistance;
+        const viewportHeight = 2 * h * this.focusDistance; // focusLength;
         const viewportWidth = viewportHeight * this.imageWidth / this.imageHeight;
 
         const w = this.lookFrom.sub(this.lookAt).unit();
@@ -71,11 +81,16 @@ export class Camera {
         this.pixelDeltaV = viewportV.mul(1 / this.imageHeight);
 
         const viewportUpperLeft = this.center
-            .sub(w.mul(focusLength))
+            .sub(w.mul(this.focusDistance)) // focusLength
             .sub(viewportU.mul(0.5))
             .sub(viewportV.mul(0.5));
         
         this.pixel00Loc = viewportUpperLeft.add(this.pixelDeltaU.add(this.pixelDeltaV).mul(0.5));
+
+        // calculate the camera defocus disk basis vectors.
+        const defocusRadius = this.focusDistance * Math.tan(degToRad(this.defocusAngle / 2));
+        this.defocusDiskU = u.mul(defocusRadius);
+        this.defocusDiskV = v.mul(defocusRadius);
     }
 
     /**
@@ -88,7 +103,13 @@ export class Camera {
             return new Vec3(Math.random() - 0.5, Math.random() - 0.5, 0);
         }
 
-        const rayOrigin = this.center; // TODO: defocus
+        const defocusDiskSample = () => {
+            // Returns a random point in the camera defocus disk.
+            const p = randomInUnitDisk();
+            return this.center.add(this.defocusDiskU.mul(p.x)).add(this.defocusDiskV.mul(p.y));
+        }
+    
+        const rayOrigin = this.defocusAngle <= 0 ? this.center : defocusDiskSample();
 
         const offset = sampleSquare(); // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
 
