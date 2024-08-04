@@ -75,11 +75,22 @@ function main() {
 
     timings.forEach((timing, i) => {
         document.getElementById(`timing_${i+1}`).addEventListener('click', (e) => {
-            console.log(">", timing);
             imageWidth = timing.width;
             samplesPerPixel = timing.samplesPerPixel;
             maxDepth = timing.maxDepth;
-            redraw(timing.width, timing.samplesPerPixel, timing.maxDepth);
+
+            // load pre-rendered images
+            if([200, 450, 500, 800].includes(imageWidth)) {
+                const image = new Image();
+                image.src = `./example_w${imageWidth}.png`;
+                image.onload = function() {
+                    canvas.width = imageWidth;
+                    canvas.height = Math.floor(imageWidth / camera.aspectRatio);
+                    ctx.drawImage(image, 0, 0);
+                };        
+            } else {
+                redraw(timing.width, timing.samplesPerPixel, timing.maxDepth);
+            }
         });
     })
 
