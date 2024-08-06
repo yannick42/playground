@@ -1,10 +1,22 @@
 export const entries = [{
+    id: 'quadtree',
+    href: './quadtree/',
+    name: 'Quadtree',
+    desc: "2d tree datastructure",
+    searchContext: '',
+    creationDate: '06/08/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'ray-tracing',
     href: './ray-tracing/',
     name: '3D Ray Tracing',
     desc: "A recursive path tracer",
     searchContext: '',
     creationDate: '02/08/2024',
+    updateDate: '04/08/2024',
     chips: [{
         type: 'draft',
         text: "DRAFT"
@@ -266,6 +278,9 @@ export const entries = [{
     chips: [{
         type: 'info',
         text: 'slow'
+    },{
+        type: 'buggy',
+        text: 'buggy'
     }]
 },{
     id: 'newton-fractals',
