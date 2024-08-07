@@ -61,7 +61,7 @@ const arrowsList = [
     ['AlgoForOptimization', 'AlgoForDecisionMaking', 'solid'],
 ];
 
-const bookIds = ['SICP', 'CG', 'VG', 'Cormen', 'AlgoForOptimization', 'NumericalRecipes', 'AlgoForDecisionMaking'];
+const bookIds = ['SICP', 'CG', 'VG', 'LinearAlgebraHefferon', 'Cormen', 'HoML3', 'AlgoForOptimization', 'NumericalRecipes', 'AlgoForDecisionMaking', 'KR'];
 
 /**
  * TODO: get it from localStorage too ! (or backend ?!)
@@ -145,7 +145,7 @@ function createLevel(book, content, level) {
                 </span>
                 ${el.tooltip ? '<span class="info" title="' + el.tooltip + '">🛈</span>' : ''}
             </span>
-            <span class="start_page">${el.start_page}</span>
+            <span class="start_page">${el.start_page ?? ''}</span>
 
             ${el.content ? createLevel(book, el.content, level + 1).join('') : ''}
         </div>

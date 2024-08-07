@@ -42,7 +42,7 @@ const methods = {
         info: 'applies Richardson extrapolation to accelerate?'
     },
     'gaussian-quad': {
-        name: '(n=2)-point Gaussian quadrature rule',
+        name: '(n=5)-point Gaussian quadrature rule',
         color: 'red',
         info: 'Gauss (1814). Reformulated by Jacobi (1826) using orthogonal polynomials. In this method, points are no longer equally spaced.'
     },
@@ -145,6 +145,8 @@ function integrate(method, f, a, b, N=2) {
             //
             // see Section 4.6 of Numerical Recipes (2007)
             //
+
+            // 5-point Gaussian quadrature
             const xs = [
                 0.1488743389816312,
                 0.4333953941292472,

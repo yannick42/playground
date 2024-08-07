@@ -1,0 +1,185 @@
+{
+    "title": "Linear Algebra, 4th ed. (2020)",
+    "nb_pages": 525,
+    "front_cover": "https://m.media-amazon.com/images/I/510we4Lg+hL._AC_UF200,200_QL80_.jpg",
+    "id": "LinearAlgebraHefferon",
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
+    "authors": "Jim Hefferon",
+    "pdf_url": "https://web.cortland.edu/jubrani/272book.pdf",
+    "content": [{
+        "title": "Chapter One - Linear Systems",
+        "content": [{
+            "title": "I - Solving Linear Systems",
+            "content": [{
+                "id": "1.I.1",
+                "title": "I.1 - Gauss's Method"
+            },{
+                "id": "1.I.2",
+                "title": "I.2 - Describing the Solution Set"
+            },{
+                "id": "1.I.3",
+                "title": "I.3 - General = Particular + Homogeneous"
+            }]
+        },{
+            "title": "II - Linear Geometry",
+            "content": [{
+                "id": "1.II.1",
+                "title": "II.1 - Vectors in Space*"
+            },{
+                "id": "1.II.2",
+                "title": "II.2 - Length and Angle Measures"
+            }]
+        },{
+            "title": "1.III - Reduced Echelon Form",
+            "content": [{
+                "id": "III.1",
+                "title": "III.1 - Gauss-Jordan Reduction"
+            },{
+                "id": "1.III.2",
+                "title": "III.2 - The Linear Combination Lemma"
+            }]
+        },{
+            "id": "1.1",
+            "title": "Topic: Computer Algebra Systems"
+        },{
+            "id": "1.2",
+            "title": "Topic: Input-Output Analysis"
+        },{
+            "id": "1.3",
+            "title": "Topic: Accuracy of Computations"
+        },{
+            "id": "1.4",
+            "title": "Topic: Analyzing Networks"
+        }]
+    },{
+        "title": "Chapter Two - Vector Spaces",
+        "content": [{
+            "title": "I - Definition of Vector Space",
+            "content": [{
+                "id": "2.I.1",
+                "title": "I.1 - Definition and Examples"
+            },{
+                "id": "2.I.2",
+                "title": "I.2 - Describing the Solution Set"
+            }]
+        },{
+            "title": "II - Linear Independance",
+            "content": [{
+                "id": "2.II.1",
+                "title": "II.1 - Definition and Examples"
+            }]
+        },{
+            "title": "III - Basis and Dimentions",
+            "content": [{
+                "id": "2.III.1",
+                "title": "III.1 - Basis"
+            },{
+                "id": "2.III.2",
+                "title": "III.2 - Dimension"
+            },{
+                "id": "2.III.3",
+                "title": "III.3 - Vector Spaces and Linear Systems"
+            },{
+                "id": "2.III.4",
+                "title": "III.4 - Combining Subspaces*"
+            }]
+        },{
+            "id": "2.1",
+            "title": "Topic: Fields"
+        },{
+            "id": "2.2",
+            "title": "Topic: Crystals"
+        },{
+            "id": "2.3",
+            "title": "Topic: Voting Paradoxes"
+        },{
+            "id": "2.4",
+            "title": "Topic: Dimensional Analysis"
+        }]
+    },{
+        "title": "Chapter Three - Maps Between Spaces",
+        "content": [{
+            "title": "I - Isomorphisms",
+            "content": [{
+                "id": "3.I.1",
+                "title": "I.1 - Definition and Examples"
+            },{
+                "id": "3.I.2",
+                "title": "I.2 - Dimension Characterizes Isomorphism"
+            }]
+        },{
+            "title": "II - Homomorphisms",
+            "content": [{
+                "id": "3.II.1",
+                "title": "II.1 - Definition"
+            },{
+                "id": "3.II.2",
+                "title": "II.2 - Range Space and Null Space"
+            }]
+        },{
+            "title": "III - Basis and Dimentions",
+            "content": [{
+                "id": "3.III.1",
+                "title": "III.1 - Representing Linear Maps with Matrices"
+            },{
+                "id": "3.III.2",
+                "title": "III.2 - Any Matrix Represents a Linear Map"
+            }]
+        },{
+            "title": "IV - Matrix Operations",
+            "content": [{
+                "id": "3.IV.1",
+                "title": "IV.1 - Sums and Scalar Products"
+            },{
+                "id": "3.IV.2",
+                "title": "IV.2 - Matrix Multiplication"
+            },{
+                "id": "3.IV.3",
+                "title": "IV.3 - Mechanics of Matrix Multiplication"
+            },{
+                "id": "3.IV.4",
+                "title": "IV.4 - Inverses"
+            }]
+        },{
+            "title": "V - Change of Basis",
+            "content": [{
+                "id": "3.V.1",
+                "title": "V.1 - Changing Representations of Vectors"
+            },{
+                "id": "3.V.2",
+                "title": "V.2 - Changing Map Representations"
+            }]
+        },{
+            "title": "VI - Projection",
+            "content": [{
+                "id": "3.VI.1",
+                "title": "VI.1 - Orthogonal Projection Into a Line*"
+            },{
+                "id": "3.VI.2",
+                "title": "VI.2 - Gram-Schmidt Orthogonalization*"
+            },{
+                "id": "3.VI.3",
+                "title": "VI.3 - Projection Into a Subspace*"
+            }]
+        },{
+            "id": "3.1",
+            "title": "Topic: Line of Best Fit"
+        },{
+            "id": "3.2",
+            "title": "Topic: Geometry of Linear Maps"
+        },{
+            "id": "3.3",
+            "title": "Topic: Magic Squares"
+        },{
+            "id": "3.4",
+            "title": "Topic: Markov Chains"
+        },{
+            "id": "3.5",
+            "title": "Topic: Orthonormal Matrices"
+        }]
+    }]
+}

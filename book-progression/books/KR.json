@@ -1,0 +1,57 @@
+{
+    "title": "The C Programming Language (1988)",
+    "nb_pages": 272,
+    "front_cover": "https://m.media-amazon.com/images/I/51EyaJeebHL._AC_UF200,200_QL80_.jpg",
+    "id": "KR",
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
+    "authors": "Brian W. Kernighan, Dennis M. Ritchie",
+    "content": [{
+        "title": "Chapter 1 - A Tutorial Introduction",
+        "start_page": 9,
+        "content": [{
+            "id": "1.1",
+            "title": "1.1 - Getting Started",
+            "start_page": 9
+        },{
+            "id": "1.2",
+            "title": "1.2 - Variables and Arithmetic Expressions",
+            "start_page": 11
+        },{
+            "id": "1.3",
+            "title": "1.3 - The for statement",
+            "start_page": 15
+        },{
+            "id": "1.4",
+            "title": "1.4 - Symbolic Constants",
+            "start_page": 17
+        },{
+            "id": "1.5",
+            "title": "1.5 - Character Input and Output",
+            "start_page": 17
+        },{
+            "id": "1.6",
+            "title": "1.6 - Arrays",
+            "start_page": 23
+        },{
+            "id": "1.7",
+            "title": "1.7 - Functions",
+            "start_page": 25
+        },{
+            "id": "1.8",
+            "title": "1.8 - Arguments - Call by Value",
+            "start_page": 28
+        },{
+            "id": "1.9",
+            "title": "1.9 - Character Arrays",
+            "start_page": 29
+        },{
+            "id": "1.10",
+            "title": "1.10 - External Variables and Scope",
+            "start_page": 31
+        }]
+    }]
+}       

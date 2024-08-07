@@ -1,0 +1,167 @@
+{
+    "title": "Hands-on Machine Learning - 3rd ed. (2023)",
+    "nb_pages": 0,
+    "front_cover": "https://m.media-amazon.com/images/I/81qHV3ACapL._AC_UF200,200_QL80_.jpg",
+    "id": "HoML3",
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
+    "authors": "Aurélien Géron",
+    "content": [{
+        "title": "Part I - The Fundamentals of Machine Learning",
+        "content": [{
+            "title": "Chapter 1 - The Machine Learning Landscape",
+            "content": [{
+                "id": "1.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 2 - End-to-End Machine Learning Project",
+            "content": [{
+                "id": "2.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 3 - Classification",
+            "content": [{
+                "id": "3.1",
+                "title": "MNIST"
+            },{
+                "id": "3.2",
+                "title": "Training a Binary Classifier"
+            },{
+                "id": "3.3",
+                "title": "Performance Measures",
+                "tooltip": "cross-validation, confusion matrices, precision & recall, precision/recall tradeoff, the ROC curve"
+            },{
+                "id": "3.4",
+                "title": "Multiclass Classification"
+            },{
+                "id": "3.5",
+                "title": "Error Analysis"
+            },{
+                "id": "3.6",
+                "title": "Multilabel Classification"
+            },{
+                "id": "3.7",
+                "title": "Multioutput Classification"
+            }]
+        },{
+            "title": "Chapter 4 - Training Models",
+            "content": [{
+                "id": "4.1",
+                "title": "Linear Regression",
+                "tooltip": "The Normal equation"
+            },{
+                "id": "4.2",
+                "title": "Gradient Descent",
+                "tooltip": "batch/stochastic/mini-batch gradient descent"
+            },{
+                "id": "4.3",
+                "title": "Polynomial Regression"
+            },{
+                "id": "4.4",
+                "title": "Learning Curves"
+            },{
+                "id": "4.5",
+                "title": "Regularized Linear Models",
+                "tooltip": "Ridge regression, Lasso regression, Elastic Net regression, early stopping"
+            },{
+                "id": "4.6",
+                "title": "Logistic Regression",
+                "tooltip": "softmax regression"
+            }]
+        },{
+            "title": "Chapter 5 - Support Vector Machines",
+            "content": [{
+                "id": "5.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 6 - ",
+            "content": [{
+                "id": "6.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 7 - Ensemble Learning and Random Forests",
+            "content": [{
+                "id": "6.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 8 - ",
+            "content": [{
+                "id": "6.1",
+                "title": ""
+            }]
+        },{
+            "title": "Chapter 9 - ",
+            "content": [{
+                "id": "6.1",
+                "title": ""
+            }]
+        }]
+    }, {
+        "title": "Part II - Neural Networks and Deep Learning",
+        "content": [{
+            "title": "Chapter 10 - Introduction to Artificial Neural Networks with Keras",
+            "content": [{
+                "id": "10.1",
+                "title": "From Biological to Artificial Neurons"
+            },{
+                "id": "10.2",
+                "title": "Implementing MLPs with Keras",
+                "tooltip": "Sequential API, load datasets, ..."
+            },{
+                "id": "10.3",
+                "title": "Fine-Tuning Neural Network Hyperparameters",
+                "tooltip": "Sequential API, load datasets, ..."
+            }]
+        }, {
+            "title": "Chapter 11 - Training Deep Neural Network",
+            "content": [{
+                "id": "11.1",
+                "title": "The Vanishing/Exploding Gradients Problems",
+                "tooltip": "Glorot and He initialization, Leaky ReLU, ELU, SELU, GELU, Swish, Mish, Batch normalization, Gradient clipping, "
+            },{
+                "id": "11.2",
+                "title": "Reusing Pretrained Layers",
+                "tooltip": "Transfert learning, unsupervised pretraining"
+            },{
+                "id": "11.3",
+                "title": "Faster Optimizers",
+                "tooltip": "Momentum, Nesterov accelerated gradient (NAG), AdaGrad, RMSProp, Adam, AdaMax, Nadam, AdamW"
+            },{
+                "id": "11.4",
+                "title": "Learning Rate Scheduling",
+                "tooltip": "power/exponential/piecewise constant/performance/Icycle scheduling"
+            },{
+                "id": "11.5",
+                "title": "Avoiding Overfitting Through Regularization",
+                "tooltip": "L1/L2 regularization, Dropout (2014), Monte Carlo (MC) dropout (2016), Max-Norm regularization"
+            },{
+                "id": "11.6",
+                "title": "Summary and Practical Guidelines",
+                "tooltip": ""
+            }]
+        }, {
+            "title": "Chapter 12 - Custom Models and Training with TensorFlow",
+            "content": [{
+                "id": "12.1",
+                "title": "A Quick Tour of TensorFlow"
+            },{
+                "id": "12.2",
+                "title": "Using TensorFlow like NumPy"
+            },{
+                "id": "12.3",
+                "title": "Customizing Models and Training Algorithms"
+            },{
+                "id": "12.4",
+                "title": "TensorFlow Functions and Graphs"
+            }]
+        }]
+    }]
+}       

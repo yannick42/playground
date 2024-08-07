@@ -51,6 +51,203 @@
                 "title": "Exercises",
                 "start_page": 38
             }]
+        },{
+            "id": "3",
+            "title": "Inference",
+            "start_page": 43,
+            "content": [{
+                "id": "3.1",
+                "title": "3.1 - Inference in Bayesian Networks",
+                "start_page": 43
+            },{
+                "id": "3.2",
+                "title": "3.2 - Inference in Naive Bayes Models",
+                "start_page": 48
+            },{
+                "id": "3.3",
+                "title": "3.3 - Sum-Product Variable Elimination",
+                "start_page": 49
+            },{
+                "id": "3.4",
+                "title": "3.4 - Belief Propagation",
+                "start_page": 53
+            },{
+                "id": "3.5",
+                "title": "3.5 - Computational Complexity",
+                "start_page": 53
+            },{
+                "id": "3.6",
+                "title": "3.6 - Direct Sampling",
+                "start_page": 54
+            },{
+                "id": "3.7",
+                "title": "3.7 - Likelihood Weighted Sampling",
+                "start_page": 57
+            },{
+                "id": "3.8",
+                "title": "3.8 - Gibbs sampling",
+                "start_page": 60
+            },{
+                "id": "3.9",
+                "title": "3.9 - Inference in Gaussian Models",
+                "start_page": 63
+            },{
+                "id": "3.10",
+                "title": "Summary",
+                "start_page": 65
+            },{
+                "id": "3.11",
+                "title": "Exercises",
+                "start_page": 66
+            }]
+        },{
+            "id": "4",
+            "title": "Parameter Learning",
+            "start_page": 71,
+            "content": [{
+                "id": "4.1",
+                "title": "4.1 - Maximum Likelihood Parameter Learning",
+                "start_page": 71
+            },{
+                "id": "4.2",
+                "title": "4.2 - Bayesian Parameter Learning",
+                "start_page": 75
+            },{
+                "id": "4.3",
+                "title": "4.3 - Nonparametric Learning",
+                "start_page": 82
+            },{
+                "id": "4.4",
+                "title": "4.4 - Learning with Missing Data",
+                "start_page": 82
+            },{
+                "id": "4.5",
+                "title": "Summary",
+                "start_page": 89
+            },{
+                "id": "4.6",
+                "title": "Exercises",
+                "start_page": 89
+            }]
+        },{
+            "id": "5",
+            "title": "Structure Learning",
+            "start_page": 97,
+            "content": [{
+                "id": "5.1",
+                "title": "5.1 - Bayesian Network Scoring",
+                "start_page": 97
+            },{
+                "id": "5.2",
+                "title": "5.2 - Direct Graph Search",
+                "start_page": 99
+            },{
+                "id": "5.3",
+                "title": "5.3 - Markov Equivalence Classes",
+                "start_page": 103
+            },{
+                "id": "5.4",
+                "title": "5.4 - Partially Directed Graph Search",
+                "start_page": 104
+            },{
+                "id": "5.5",
+                "title": "Summary",
+                "start_page": 106
+            },{
+                "id": "5.6",
+                "title": "Exercises",
+                "start_page": 107
+            }]
+        },{
+            "id": "6",
+            "title": "Simple Decisions",
+            "start_page": 111,
+            "content": [{
+                "id": "6.1",
+                "title": "6.1 - Constraints on Rational Preferences",
+                "start_page": 111
+            },{
+                "id": "6.2",
+                "title": "6.2 - Utility Functions",
+                "start_page": 112
+            },{
+                "id": "6.3",
+                "title": "6.3 - Utility Elicitation",
+                "start_page": 114
+            },{
+                "id": "6.4",
+                "title": "6.4 - Maximum Expected Utility Principle",
+                "start_page": 116
+            },{
+                "id": "6.5",
+                "title": "6.5 - Decision Networks",
+                "start_page": 116
+            },{
+                "id": "6.6",
+                "title": "6.6 - Value of Information",
+                "start_page": 119
+            },{
+                "id": "6.7",
+                "title": "6.7 - Irrationality",
+                "start_page": 122
+            },{
+                "id": "6.8",
+                "title": "Summary",
+                "start_page": 125
+            },{
+                "id": "6.9",
+                "title": "Exercises",
+                "start_page": 125
+            }]
+        }]
+    },{
+        "id": "part-2",
+        "title": "Part II - Sequential Problems",
+        "content": [{
+            "id": "7",
+            "title": "Exact Solution Methods",
+            "start_page": 133,
+            "content": [{
+                "id": "7.1",
+                "title": "7.1 - Markov Decision Processes",
+                "start_page": 133
+            },{
+                "id": "7.2",
+                "title": "7.2 - Policy Evaluation",
+                "start_page": 136
+            },{
+                "id": "7.3",
+                "title": "7.3 - Value Function Policies",
+                "start_page": 139
+            },{
+                "id": "7.4",
+                "title": "7.4 - Policy Iteration",
+                "start_page": 140
+            },{
+                "id": "7.5",
+                "title": "7.5 - Value Iteration",
+                "start_page": 141
+            },{
+                "id": "7.6",
+                "title": "7.6 - Asynchronous Value Iteration",
+                "start_page": 145
+            },{
+                "id": "7.7",
+                "title": "7.7 - Linear Program Formulation",
+                "start_page": 147
+            },{
+                "id": "7.8",
+                "title": "7.8 - Linear Systems with Quadratic Reward",
+                "start_page": 122
+            },{
+                "id": "7.9",
+                "title": "Summary",
+                "start_page": 125
+            },{
+                "id": "7.10",
+                "title": "Exercises",
+                "start_page": 125
+            }]
         }]
     }]
 }
