@@ -3,20 +3,34 @@ import { setUpCanvas, drawPointAt, drawLine, drawArrow } from '../common/canvas.
 import { randInt, choice } from '../common/common.helper.js';
 import { Graph } from '../common/graph.js';
 import { Vector2D } from '../common/vector2D.js';
-import { computeBézierCurve } from '../common/math.helper.js';
+import { computeBézierCurve, distance } from '../common/math.helper.js';
 import { convertToRGB, RGBToHSL } from '../common/color.js';
+import { UF } from '../common/union-find.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
+const algorithmEl = document.getElementById('algorithm');
+const newGraphBtn = document.getElementById('new_graph');
+const debugEl = document.getElementById("debug");
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 let g;
 let vertices = {};
+const edges = [];
 
 function main() {
-    document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    //document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    algorithmEl.addEventListener('change', (e) => {
+        redraw();
+    });
+    newGraphBtn.addEventListener('click', (e) => {
+        g = createGraph();
+        redraw();
+    });
+
+    g = createGraph();
 
     redraw();
 }
@@ -42,28 +56,24 @@ function isEulerian(graph) {
     return countOddVertices(graph) <= 2
 }
 
-function redraw() {
-    setUpCanvas(ctx, WIDTH, HEIGHT, 'white')
+function createGraph() {
 
-    
     const n = 7;
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
     const names = ALPHABET.substr(0, n).split('');
-
-    console.log(names)
+    //console.log(names); // ['A', 'B', ...]
 
     g = new Graph(names, {})
 
+    // initial random placement (centered)
     names.forEach(name => {
-        const x = randInt(WIDTH / 2 - 150, WIDTH / 2 + 150            );
+        const x = randInt(WIDTH / 2 - 150, WIDTH / 2 + 150);
         const y = randInt(HEIGHT / 2 - 150, HEIGHT / 2 + 150);
         vertices[name] = new Vector2D(x, y);
     })
 
-    // House
-    const edges = [
-        /*
+    /* // debug
+    const houseEdges = [
         ["A", "B"],
         ["A", "C"],
         ["B", "C"],
@@ -72,8 +82,8 @@ function redraw() {
         ["D", "E"],
         ["C", "D"],
         ["B", "E"],
-        */
     ];
+    */
 
     // create a complete graph K_n
     for(let i = 0; i < n; i++) {
@@ -82,7 +92,6 @@ function redraw() {
         }
     }
 
-
     // add it to the graph
     edges.forEach(edge => {
         // added in both directions (= undirected graph)
@@ -90,9 +99,9 @@ function redraw() {
         g.add(edge[1], edge[0]);
     });
 
-    console.log(edges)
+    //console.log(edges); // [['A', 'B'], [...], ...]
 
-
+    //
     // A force-directed graph drawing algorithm by Peter Eades (1984) using SPRINGs and Electrical Forces
     // https://cs.brown.edu/people/rtamassi/gdhandbook/chapters/force-directed.pdf
     // 
@@ -142,11 +151,13 @@ function redraw() {
             });
         }); // after this, all forces has been computed
 
-
         Object.keys(vertices).forEach(vertex => {
             //console.log("vertex:", vertex, forces[vertex].mul(c4))
             vertices[vertex] = vertices[vertex].add(forces[vertex].mul(c4));
 
+            //
+            // "wall" constraints
+            //
             const MARGIN = 20;
 
             if(vertices[vertex].x < MARGIN) {
@@ -164,28 +175,66 @@ function redraw() {
         });
     }
 
-    // Draw
-    edges.forEach(edge => {
-        console.log(edge[0], edge[1]);
-        drawLineBetween(edge[0], edge[1], 'blue', 1)
+    // compute and store edge weight (based on vertices distance)
+    Object.keys(g.adj).forEach(from => {
+        g.adj[from].forEach(to => {
+            const dist = distance(vertices[from].x, vertices[from].y, vertices[to].x, vertices[to].y);
+            g.weight(`${from}-${to}`, dist);
+        });
     });
+
+    return g;
+}
+
+
+function redraw() {
+    setUpCanvas(ctx, WIDTH, HEIGHT, 'white');
+    debugEl.innerHTML = '';
 
     console.log(g);
 
+    switch(algorithmEl.value) {
+        case "hierholzer":
+            hierholzer(g);
+            break;
+        case "kruskal":
+            kruskal(g);
+            break;
+    }
+
+
+
+    // vertex dot
+    Object.keys(vertices).forEach(name => {
+        drawPointAt(ctx, vertices[name].x, vertices[name].y, 5, "blue");
+    })
+
+    // vertex names
+    Object.keys(vertices).forEach(name => {
+        // Text
+        ctx.fillStyle = 'blue';
+        ctx.font = '15pt monospace';
+        ctx.fillText(name, vertices[name].x + 8, vertices[name].y - 8)
+    })
+
+    // Draw thin blue lines
+    edges.forEach(edge => {
+        console.log(edge[0], edge[1]);
+        drawLineBetween(edge[0], edge[1], 'blue', 0.5)
+    });
+
+}
 
 
 
 
 
+
+
+
+function hierholzer(g) {
 
     // TODO: check if Eulerian path is possible
-
-
-
-
-
-
-
 
     // get initial vertex (an odd degree vertex if any)
     let initialVertex;
@@ -306,7 +355,7 @@ function redraw() {
     });
 
     // show list of ordered vertex producing the tour
-    document.getElementById("debug").innerHTML = `<u>Tour</u> : ${tour.map((vertex, i) => {
+    debugEl.innerHTML = `<u>Tour</u> : ${tour.map((vertex, i) => {
         const color = `hsl(${Math.round(hsl[0]+(i*10) % 360)}deg, ${hsl[1]}%, 50%)`;
         return `<span style="color: ${color}">${vertex}</span>`
     }).join('&rightarrow;')}
@@ -314,19 +363,44 @@ function redraw() {
         <i><u>Length</u> : ${tour.length - 1}</i> edges
     `;
 
+}
 
-    
-    Object.keys(vertices).forEach(name => {
-        drawPointAt(ctx, vertices[name].x, vertices[name].y, 5, "blue");
+/**
+ * a greedy algorithm
+ */
+function kruskal(g) {
+
+    // create UNION-FIND data structure
+    const unionFind = new UF();
+    unionFind.makeSet(Object.keys(g.V));
+    //console.log(unionFind, unionFind.size()); // 7 disjoint elements
+
+    // /!\ both direction are present
+    const sortedEdges = Object.entries(g.customData).sort(([,a],[,b]) => a-b);
+    console.log(sortedEdges)
+
+    const edges = [];
+    while(sortedEdges.length && unionFind.size() > 1) {
+        const minEdge = sortedEdges.shift(); // get minimal element
+        sortedEdges.shift(); // also remove its opposite direction ...
+
+        const [from, to] = minEdge[0].split("-");
+        if(unionFind.find(from) !== unionFind.find(to)) {
+            unionFind.union(from, to);
+            console.log("add edge:", from, "-", to)
+            edges.push([from, to]);
+        } else {
+            // already in same tree -> try next
+        }
+    }
+    //unionFind.printSet();
+
+    edges.forEach(edge => {
+        const point = vertices[edge[0]];
+        const point2 = vertices[edge[1]];
+        drawLine(ctx, point.x, point.y, point2.x, point2.y, 5, 'black');
+
     })
-
-    Object.keys(vertices).forEach(name => {
-        // Text
-        ctx.fillStyle = 'blue';
-        ctx.font = '15pt monospace';
-        ctx.fillText(name, vertices[name].x + 8, vertices[name].y - 8)
-    })
-
 
 
 

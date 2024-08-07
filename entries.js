@@ -48,7 +48,7 @@ export const entries = [{
     id: 'graph-algorithms',
     href: './graph-algorithms/',
     name: 'Graph algorithms',
-    desc: "Hierholzer's algorithm, force-directed layout, ...",
+    desc: "Hierholzer, Kruskal, force-directed layout, ...",
     searchContext: '',
     creationDate: '21/07/2024',
     chips: [{

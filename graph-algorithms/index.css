@@ -31,6 +31,40 @@ canvas {
 	border: 1px solid black;
 }
 
+fieldset {
+	margin: 5px;
+	width: 75%;
+	background-color: darkseagreen;
+	border-radius: 5px;
+	font-weight: bold;
+    padding: 0px 9px;
+}
+
+fieldset > legend {
+	background-color: darkseagreen;
+	border-radius: 5px;
+	padding: 4px 6px;
+}
+
+option {
+	background-color: antiquewhite;
+}
+
+#controls {
+	margin: 5px;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+#new_graph {
+	align-self: flex-end;
+}
+
 #refresh {
+	margin: 5px;
+}
+
+#debug {
 	margin: 5px;
 }
