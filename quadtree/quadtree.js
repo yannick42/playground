@@ -35,15 +35,20 @@ function redraw() {
     let currentQuadrants = [qd.NW, qd.NE, qd.SW, qd.SE];
     while(currentQuadrants.length) {
         //console.log("quadrants:", currentQuadrants)
-        currentQuadrants.forEach(quadrant => {
+        currentQuadrants.forEach((quadrant, i) => {
+
+            if(!quadrant) return;
+
             const x = quadrant.boundary.center.x - quadrant.boundary.halfDimension;
             const y = quadrant.boundary.center.y - quadrant.boundary.halfDimension;
             const size = quadrant.boundary.halfDimension * 2;
             //console.log(x, y, size)
 
             ctx.strokeStyle = 'black';
-            ctx.lineWidth = 0.25;
-            ctx.setLineDash([2.5, 2.5]);
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([4, 2]);
+            
+            /*
             ctx.beginPath();
             ctx.rect(
                 x,
@@ -52,10 +57,41 @@ function redraw() {
                 size
             )
             ctx.stroke();
+            */
+
+            if(i % 4 === 3) { // SE -> left
+                ctx.beginPath();
+                //ctx.strokeStyle = 'red';
+                ctx.moveTo(x, y);
+                ctx.lineTo(x, y + size);
+                ctx.stroke();
+            } else if (i % 4 === 2) { // SW -> top
+                ctx.beginPath();
+                //ctx.strokeStyle = 'green';
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + size, y);
+                ctx.stroke();
+            } else if (i % 4 === 1) { // NE -> below
+                ctx.beginPath();
+                //ctx.strokeStyle = 'blue';
+                ctx.moveTo(x, y + size);
+                ctx.lineTo(x + size, y + size);
+                ctx.stroke();
+            } else if(i % 4 === 0) { // NW -> right
+                ctx.beginPath();
+                //ctx.strokeStyle = 'purple';
+                ctx.moveTo(x + size, y);
+                ctx.lineTo(x + size, y + size);
+                ctx.stroke();
+            }
         })
 
         // continue with next depth level if any
-        currentQuadrants = currentQuadrants.flatMap(quadrant => [quadrant.NW, quadrant.NE, quadrant.SW, quadrant.SE].filter(q => q));
+        currentQuadrants = currentQuadrants.flatMap(quadrant => [quadrant?.NW, quadrant?.NE, quadrant?.SW, quadrant?.SE]);
+
+        if(currentQuadrants.filter(o => o).length === 0) {
+            break;
+        }
     }
 
     document.getElementById('debug').innerHTML = 'max depth = ' + maxDepth;
