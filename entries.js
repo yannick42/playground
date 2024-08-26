@@ -63,6 +63,28 @@ export const entries = [{
         text: 'buggy'
     }]
 },{
+    id: 'neural-nets',
+    href: './neural-nets/',
+    name: 'Neural networks',
+    desc: "...",
+    searchContext: '',
+    creationDate: '22/08/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
+    id: 'char-rnn',
+    href: './char-rnn/',
+    name: 'Char RNN',
+    desc: "...",
+    searchContext: '',
+    creationDate: '16/08/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'quadtree',
     href: './quadtree/',
     name: 'Quadtree',

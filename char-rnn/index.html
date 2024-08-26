@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<base target="_blank">
+
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+		<!-- Load TensorFlow.js from a script tag -->
+		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@latest/dist/tf-converter.min.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">A character-level text generation</div>
+			<div id="subtitle"><u>Goal</u>: to test <a href="https://www.tensorflow.org/js?hl=en">tf.js library</a> to use Tensorflow models directly in the browser</div>
+
+			<div id="desc">
+                <ul>
+					<li>The neural network was trained using standard layers (Embedding, GRU & Dense layers) over 40 000 lines of Shakespeare, in a few minutes of training using Python & Keras. Its model and weight saved and reused here in the browser.</li>
+					<li></li>
+					<li>Type the beginning of a dialog, then let the model continue</li>
+				</ul>
+			</div>
+
+			Input: <input type="text" /> <br/>
+			<textarea id="response"></textarea>
+
+			<hr/>
+
+			Resources:
+			<ul>
+				<li><a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/">https://karpathy.github.io/2015/05/21/rnn-effectiveness/</a></li>
+			</ul>
+
+        </div>
+
+        <script type="module" src="./char-rnn.js"></script>
+    </body>
+</html>
