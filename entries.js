@@ -13,10 +13,7 @@ export const entries = [{
     desc: "2d tree datastructure",
     searchContext: '',
     creationDate: '06/08/2024',
-    chips: [{
-        type: 'draft',
-        text: "DRAFT"
-    }]
+    chips: []
 },{
     id: 'ray-tracing',
     href: './ray-tracing/',
@@ -25,10 +22,7 @@ export const entries = [{
     searchContext: '',
     creationDate: '02/08/2024',
     updateDate: '04/08/2024',
-    chips: [{
-        type: 'draft',
-        text: "DRAFT"
-    }]
+    chips: []
 },{
     id: 'tsp',
     href: './tsp/',
