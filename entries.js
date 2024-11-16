@@ -1,4 +1,12 @@
 export const entries = [{
+    id: 'verlet',
+    href: './verlet/',
+    name: 'Verlet integration',
+    desc: "Simulate physical system: collisions, rigid bodies, ...",
+    searchContext: '',
+    creationDate: '15/11/2024',
+    chips: []
+},{
     id: 'quadtree',
     href: './quadtree/',
     name: 'Quadtree',

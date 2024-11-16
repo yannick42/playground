@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Verlet integration</div>
+			<div id="subtitle"><u>Goal</u>: play with math & physics equations</div>
+
+			<div id="desc">
+				<br/>
+                <i>Using <b>Verlet integration</b> (1967), "from scratch", simple solver to compute particles' motion (under a downward gravity force), better stability than explicit Euler method (?), without velocities only particle positions (current & previous). Collision detection with walls and between points. Possibly pinned points (red), and stick length constraints to make rigid bodies. Relatively few lines of code !</i>
+				<br/>
+				<mark><b>TODO:</b> fix collision formula (elastic collision?), add mouse interactions, add air friction/wind/...</mark>
+				<br/>
+			</div>
+			<br/>
+
+			<canvas width=600 height=400></canvas>
+			<br/>
+			<button type="button" id="reset">Restart</button>
+			<br/>
+
+			<b><u>Resources</u></b>
+			<ul>
+				<li>Youtube: <a target="_blank" href="https://www.youtube.com/watch?v=-GWTDhOQU6M">Verlet Integration (by Pikuma)</a> - 1h20</li>
+				<ul>
+					<li>with an in-depth <a target="_blank" href="https://pikuma.com/blog/verlet-integration-2d-cloth-physics-simulation">tutorial for cloth simulation</a></li>
+				</ul>
+				<li>Youtube: <a target="_blank" href="https://www.youtube.com/watch?v=lS_qeBy3aQI">Writing a Physics Engine from scratch (by Pezzza's Work)</a> - 9 min</li>
+				<li><a target="_blank" href="https://en.wikipedia.org/wiki/Verlet_integration">Verlet integration (wikipedia)</a></li>
+			</ul>
+        </div>
+
+        <script type="module" src="./verlet.js"></script>
+    </body>
+</html>
