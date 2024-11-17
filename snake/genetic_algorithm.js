@@ -1,5 +1,5 @@
-import { randInt, randFloat } from '../_common/common.helper.js'
-import { createDAG, dfs } from '../_common/graph.js'
+import { randInt, randFloat } from '../common/common.helper.js'
+import { createDAG, dfs } from '../common/graph.js'
 
 export function mutate(g, perc=0.2, delta=0.1) {
     // mutate the weights by a small delta

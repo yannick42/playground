@@ -1,4 +1,4 @@
-import { dfs, dfs_visit, Graph, draw } from '../_common/graph.js';
+import { dfs, dfs_visit, Graph, draw } from '../common/graph.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

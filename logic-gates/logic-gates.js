@@ -1,7 +1,7 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
-import { randInt, choice } from '../_common/common.helper.js';
-import { getPathBoundingBox, getBoundingBox, getBBoxCenter } from '../_common/geometry.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
+import { randInt, choice } from '../common/common.helper.js';
+import { getPathBoundingBox, getBoundingBox, getBBoxCenter } from '../common/geometry.helper.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

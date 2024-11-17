@@ -1,11 +1,11 @@
 
-import { setUpCanvas, drawPointAt, drawLine, drawArrow } from '../_common/canvas.helper.js';
-import { randInt, choice } from '../_common/common.helper.js';
-import { Graph } from '../_common/graph.js';
-import { Vector2D } from '../_common/vector2D.js';
-import { computeBézierCurve, distance } from '../_common/math.helper.js';
-import { convertToRGB, RGBToHSL } from '../_common/color.js';
-import { UF } from '../_common/union-find.js';
+import { setUpCanvas, drawPointAt, drawLine, drawArrow } from '../common/canvas.helper.js';
+import { randInt, choice } from '../common/common.helper.js';
+import { Graph } from '../common/graph.js';
+import { Vector2D } from '../common/vector2D.js';
+import { computeBézierCurve, distance } from '../common/math.helper.js';
+import { convertToRGB, RGBToHSL } from '../common/color.js';
+import { UF } from '../common/union-find.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

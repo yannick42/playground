@@ -1,6 +1,6 @@
-import { fillShape } from '../_common/canvas.helper.js';
+import { fillShape } from '../common/canvas.helper.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
-import { convertToRGB, RGBToHSL } from '../_common/color.js';
+import { convertToRGB, RGBToHSL } from '../common/color.js';
 
 export class Snake {
     // head position

@@ -1,6 +1,6 @@
 // TODO: use common helper functions !!
-//import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
-//import { randInt } from '../_common/common.helper.js';
+//import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
+//import { randInt } from '../common/common.helper.js';
 
 /**
 TODO:
@@ -8,9 +8,9 @@ TODO:
 
 */
 
-import { round } from '../_common/math.helper.js';
-import { Vec2, Quadtree } from '../_common/quadtree.js';
-import { AABB } from '../_common/aabb.js';
+import { round } from '../common/math.helper.js';
+import { Vec2, Quadtree } from '../common/quadtree.js';
+import { AABB } from '../common/aabb.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');

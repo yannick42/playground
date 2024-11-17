@@ -1,6 +1,6 @@
-import { randFloat, randInt, choice } from '../_common/common.helper.js';
-import { round } from '../_common/math.helper.js';
-import { RGBToHSL } from '../_common/color.js';
+import { randFloat, randInt, choice } from '../common/common.helper.js';
+import { round } from '../common/math.helper.js';
+import { RGBToHSL } from '../common/color.js';
 import KDBush from 'https://cdn.jsdelivr.net/npm/kdbush/+esm';
 
 /*

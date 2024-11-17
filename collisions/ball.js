@@ -1,6 +1,6 @@
-import { drawPointAt } from '../_common/canvas.helper.js';
-import { randFloat} from '../_common/common.helper.js';
-import { Vector2D } from '../_common/vector2D.js';
+import { drawPointAt } from '../common/canvas.helper.js';
+import { randFloat} from '../common/common.helper.js';
+import { Vector2D } from '../common/vector2D.js';
 
 export class Ball {
     x;

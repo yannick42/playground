@@ -1,8 +1,8 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../_common/canvas.helper.js';
-import { randInt } from '../_common/common.helper.js';
-import { round } from '../_common/math.helper.js';
-import { gaussian } from '../_common/stats.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../common/canvas.helper.js';
+import { randInt } from '../common/common.helper.js';
+import { round } from '../common/math.helper.js';
+import { gaussian } from '../common/stats.helper.js';
 
 const canvas = document.getElementById("error");
 const ctx = canvas.getContext("2d");

@@ -1,9 +1,9 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
-import { randInt } from '../_common/common.helper.js';
-import { normalize, distance } from '../_common/math.helper.js';
-import { Vec2, Quadtree } from '../_common/quadtree.js';
-import { AABB } from '../_common/aabb.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
+import { randInt } from '../common/common.helper.js';
+import { normalize, distance } from '../common/math.helper.js';
+import { Vec2, Quadtree } from '../common/quadtree.js';
+import { AABB } from '../common/aabb.js';
 
 class Object {
     constructor(position) {
