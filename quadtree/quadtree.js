@@ -31,15 +31,25 @@ function main() {
     redraw();
 }
 
-
+// initial settings (modified by mouse interactions)
+let rangeHalfSize = 50;
 let mouseX = 100, mouseY = 100;
-// on mouse move over the canvas
+
 canvas.addEventListener('mousemove', function(e) {
     [mouseX, mouseY] = [e.offsetX, e.offsetY];
 });
-canvas.addEventListener('mouseout', function(e) {
-    [mouseX, mouseY] = [100, 100];
+canvas.addEventListener("wheel", event => {
+    const minSize = 5;
+    rangeHalfSize += -event.deltaY * 0.5 /*slowdown*/;
+    if(rangeHalfSize < minSize) {
+        rangeHalfSize = minSize;
+    }
+    if(rangeHalfSize > 1.5 * halfDimension) {
+        rangeHalfSize = 1.5 * halfDimension;
+    }
+    event.preventDefault(); // prevents scrolling the page
 });
+
 
 
 /**
@@ -107,6 +117,7 @@ function redraw() {
             point.position.x += point.velocity.x;
             point.position.y += point.velocity.y;
 
+            // TODO: we slowly lose points from the viewport ?!
             if(point.position.x > canvas.width) {
                 point.velocity.x *= -1;
             }
@@ -205,12 +216,12 @@ function redraw() {
 
         document.getElementById('debug').innerHTML = 'Current quadtree depth = ' + currentMaxDepth;
 
-        const range = new AABB(new Vec2(mouseX, mouseY), 50 /*halfDim*/);
+        const range = new AABB(new Vec2(mouseX, mouseY), rangeHalfSize /*halfDim*/);
         //drawPointAt(ctx, mouseX, mouseY, 5, 'red');
         ctx.beginPath();
         ctx.setLineDash([]);
         ctx.strokeStyle = 'red'
-        ctx.rect(mouseX - 50, mouseY - 50, 100, 100);
+        ctx.rect(mouseX - rangeHalfSize, mouseY - rangeHalfSize, rangeHalfSize*2, rangeHalfSize*2);
         ctx.stroke();
         const pts = qd.queryRange(range);
         pts.forEach(pt => drawPointAt(ctx, pt.x, pt.y, RADIUS * 1.5, 'red'));
