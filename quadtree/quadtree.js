@@ -3,20 +3,48 @@ import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.
 import { randInt } from '../common/common.helper.js';
 import { normalize, distance } from '../common/math.helper.js';
 
+/**
+INFO: it was slow when points were allowed to colide (-> overlap), why ??
+*/
+
+/**
+ * TODO:
+ *  - show counts (number of points) at level each level -> add opacity "red-ish" color
+ *  
+ * BARNES-HUT
+ *  - ?
+ */
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-const halfDimension = canvas.width / 2;
+
 let currentMaxDepth = 0,
     reqFrameId;
-const QD_NODE_CAPACITY = 1,
-    NB_POINTS = 200,
-    RADIUS = 2;
+
+    const halfDimension = canvas.width / 2,
+    QD_NODE_CAPACITY = 1,
+    NB_POINTS = 500,
+    RADIUS = 1.5;
 
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
     redraw();
 }
 
+
+let mouseX = 100, mouseY = 100;
+// on mouse move over the canvas
+canvas.addEventListener('mousemove', function(e) {
+    [mouseX, mouseY] = [e.offsetX, e.offsetY];
+});
+canvas.addEventListener('mouseout', function(e) {
+    [mouseX, mouseY] = [100, 100];
+});
+
+
+/**
+ * ~ same methods as in Verlet int. page /!\
+ */
 function collide(pt1, pt2) {
     return distance(pt1.position.x, pt1.position.y, pt2.position.x, pt2.position.y) < 2 * RADIUS;
 }
@@ -30,16 +58,15 @@ function solveCollision(pt1, pt2) {
   
     const overlap = 0.5 * (2 * RADIUS - distance);
   
-    // Normalized collision vector
+    // normalized collision vector
     const nx = dx / distance;
     const ny = dy / distance;
   
-    // Push points apart to resolve overlap
+    // Simply push points apart to resolve overlap... (but not realistic)
     pt1.position.x -= nx * overlap;
     pt1.position.y -= ny * overlap;
     pt2.position.x += nx * overlap;
     pt2.position.y += ny * overlap;
-    
 }
 
 function findCollisions() {
@@ -52,6 +79,13 @@ function findCollisions() {
         })
     })
 }
+
+
+
+
+
+
+
 
 let points = [];
 
@@ -169,7 +203,18 @@ function redraw() {
             }
         }
 
-        document.getElementById('debug').innerHTML = 'max depth = ' + currentMaxDepth;
+        document.getElementById('debug').innerHTML = 'Current quadtree depth = ' + currentMaxDepth;
+
+        const range = new AABB(new Vec2(mouseX, mouseY), 50 /*halfDim*/);
+        //drawPointAt(ctx, mouseX, mouseY, 5, 'red');
+        ctx.beginPath();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = 'red'
+        ctx.rect(mouseX - 50, mouseY - 50, 100, 100);
+        ctx.stroke();
+        const pts = qd.queryRange(range);
+        pts.forEach(pt => drawPointAt(ctx, pt.x, pt.y, RADIUS * 1.5, 'red'));
+        document.getElementById('debug').innerHTML += '<br/> number of points in range = ' + pts.length;
 
         reqFrameId = window.requestAnimationFrame(step);
     }
@@ -214,6 +259,15 @@ class AABB {
             return true;
         }
         return false;
+    }
+
+    intersect(range) {
+        return !(
+            this.center.x + this.halfDimension < range.center.x - range.halfDimension || // this AABB is to the left of "range"
+            range.center.x + range.halfDimension < this.center.x - this.halfDimension || // "range" is to the left of this AABB
+            this.center.y + this.halfDimension < range.center.y - range.halfDimension || // this AABB is above "range"
+            range.center.y + range.halfDimension < this.center.y - this.halfDimension
+        );
     }
 }
 
@@ -292,7 +346,28 @@ class Quadtree {
         return false; // should never happen
     }
 
-    // TODO : query a point ...
+    queryRange(range) {
+        let pts = [];
+
+        if(!this.boundary.intersect(range)) {
+            return pts; // empty array
+        }
+
+        // at this level
+        this.points.forEach(pt => {
+            if(range.contains(pt)) {
+                pts.push(pt);
+            }
+        });
+
+        if(!this.NW) return pts; // no child
+
+        pts = pts.concat(this.NW.queryRange(range));
+        pts = pts.concat(this.NE.queryRange(range));
+        pts = pts.concat(this.SW.queryRange(range));
+        pts = pts.concat(this.SE.queryRange(range));
+        return pts;
+    }
 }
 
 
