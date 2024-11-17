@@ -1,0 +1,17 @@
+{
+    "title": "Fluent Python, 2nd ed. (2022)",
+    "nb_pages": 961,
+    "id": "FluentPython",
+    "front_cover": "https://m.media-amazon.com/images/I/81OvszBEdhL._AC_UF200,200_QL80_.jpg",
+    "tags": [],
+    "authors": "Luciano Ramalho",
+    "content": [{
+        "title": "Part I - Data Structures",
+        "start_page": 1,
+        "content": [{
+            "id": "1",
+            "title": "The Python Data Model",
+            "start_page": 2
+        }]
+    }]
+}

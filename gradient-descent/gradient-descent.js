@@ -1,8 +1,8 @@
 
-import { setUpCanvas, drawPointAt, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
-import { matMul, transpose, showShape, round } from '../common/math.helper.js';
-import { rejectionSampling, gaussian } from '../common/stats.helper.js';
+import { setUpCanvas, drawPointAt, drawLine, drawAxis, convertToGraphCoords, convertToCanvasCoords } from '../_common/canvas.helper.js';
+import { randInt } from '../_common/common.helper.js';
+import { matMul, transpose, showShape, round } from '../_common/math.helper.js';
+import { rejectionSampling, gaussian } from '../_common/stats.helper.js';
 
 const SQUARE_SIZE = 25,
     dataPoints = [];

@@ -28,7 +28,7 @@ TODO:
 
  */
 
-import { addCanvas, drawPointAt, drawArrow, drawArrow2, drawRectangle } from '../common/canvas.helper.js';
+import { addCanvas, drawPointAt, drawArrow, drawArrow2, drawRectangle } from '../_common/canvas.helper.js';
 import { Particle } from './particle.js';
 import { colorGradient } from './color.js';
 

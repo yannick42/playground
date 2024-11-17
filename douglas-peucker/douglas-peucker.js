@@ -1,6 +1,6 @@
 
-import { setUpCanvas, drawPointAt, drawLine, drawLineThroughPoints } from '../common/canvas.helper.js';
-import { choice, printVar } from '../common/common.helper.js';
+import { setUpCanvas, drawPointAt, drawLine, drawLineThroughPoints } from '../_common/canvas.helper.js';
+import { choice, printVar } from '../_common/common.helper.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

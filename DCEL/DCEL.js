@@ -1,9 +1,9 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
-import { computeBézierCurve, distance } from '../common/math.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
+import { randInt } from '../_common/common.helper.js';
+import { computeBézierCurve, distance } from '../_common/math.helper.js';
 
-import { DCEL, Face } from '../common/dcel.js';
+import { DCEL, Face } from '../_common/dcel.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

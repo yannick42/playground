@@ -1,6 +1,6 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt, randFloat } from '../common/common.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
+import { randInt, randFloat } from '../_common/common.helper.js';
 
 import { Camera } from './camera.js';
 import { HittableList } from './hittable-list.js'; // World scene

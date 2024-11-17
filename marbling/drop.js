@@ -1,5 +1,5 @@
 
-import { Vector2D } from '../common/vector2D.js';
+import { Vector2D } from '../_common/vector2D.js';
 
 export const NB_VERTICES = 50;
 

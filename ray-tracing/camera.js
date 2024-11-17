@@ -2,8 +2,8 @@ import { HitRecord } from './hit-record.js';
 import { Interval } from './interval.js';
 import { Ray } from './ray.js';
 import { Vec3 } from './vec3.js';
-import { degToRad, round } from '../common/math.helper.js';
-import { randFloat } from '../common/common.helper.js';
+import { degToRad, round } from '../_common/math.helper.js';
+import { randFloat } from '../_common/common.helper.js';
 
 const debugEl = document.getElementById("debug");
 

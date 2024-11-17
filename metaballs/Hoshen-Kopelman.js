@@ -1,6 +1,6 @@
 
 
-import { UF } from '../common/union-find.js';
+import { UF } from '../_common/union-find.js';
 
 
 //

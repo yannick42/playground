@@ -1,6 +1,6 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
+import { randInt } from '../_common/common.helper.js';
 import { Ball } from './ball.js';
 
 const canvas = document.querySelector("canvas");

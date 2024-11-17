@@ -1,7 +1,7 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
-import { computeBézierCurve } from '../common/math.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
+import { randInt } from '../_common/common.helper.js';
+import { computeBézierCurve } from '../_common/math.helper.js';
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"

@@ -1,9 +1,9 @@
 import { Snake } from './snake.js';
 import { Board, LEFT, UP, RIGHT, DOWN } from './board.js';
 import { computeOutput, argmax } from './neural_net.js';
-import { setUpCanvas, drawGrid, fillShape } from '../common/canvas.helper.js';
-import { randInt, choice } from '../common/common.helper.js'
-import { Graph, dfs, createDAG, nb_params } from '../common/graph.js';
+import { setUpCanvas, drawGrid, fillShape } from '../_common/canvas.helper.js';
+import { randInt, choice } from '../_common/common.helper.js'
+import { Graph, dfs, createDAG, nb_params } from '../_common/graph.js';
 import { crossover, mutate } from './genetic_algorithm.js';
 
 const canvas = document.querySelector("canvas");

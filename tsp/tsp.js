@@ -1,7 +1,7 @@
 
-import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt, shuffle } from '../common/common.helper.js';
-import { distance, round } from '../common/math.helper.js';
+import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../_common/canvas.helper.js';
+import { randInt, shuffle } from '../_common/common.helper.js';
+import { distance, round } from '../_common/math.helper.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");

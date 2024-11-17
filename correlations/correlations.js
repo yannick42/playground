@@ -8,7 +8,7 @@ TODO:
 */
 
 import { drawPointAt } from './helper.js';
-import { drawAxis, convertToCanvasCoords, convertToGraphCoords } from '../common/canvas.helper.js';
+import { drawAxis, convertToCanvasCoords, convertToGraphCoords } from '../_common/canvas.helper.js';
 
 
 const CANVAS_WIDTH = 600,

@@ -1,6 +1,6 @@
 
 import { drawPointAt, convertToGraphCoords, convertToCanvasCoords, drawAxis } from './helper.js';
-import { drawLine } from '../common/canvas.helper.js'
+import { drawLine } from '../_common/canvas.helper.js'
 
 const canvas = document.querySelector("#graph");
 const context = canvas.getContext('2d');

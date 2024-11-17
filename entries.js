@@ -5,7 +5,13 @@ export const entries = [{
     desc: "Simulate physical system: collisions, rigid bodies, ...",
     searchContext: '',
     creationDate: '15/11/2024',
-    chips: []
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    },{
+        type: 'buggy',
+        text: 'buggy'
+    }]
 },{
     id: 'quadtree',
     href: './quadtree/',
