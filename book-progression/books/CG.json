@@ -5,6 +5,7 @@
     "front_cover": "https://m.media-amazon.com/images/I/614hApBTToL._AC_UF100,100_QL80_.jpg",
     "tags": [],
     "authors": "Mark de Berg, Marc van Kreveld, Mark Overmars & Otfried Schwarzkopf",
+    "pdf_url": "https://www.cs.cmu.edu/afs/cs/academic/class/15456-s13/Handouts/BKOS.pdf",
     "content": [{
         "title": "1 - Computational Geometry",
         "desc": "Introduction",
@@ -346,23 +347,23 @@
         "start_page": 259,
         "content": [{
             "id": "12.1",
-            "title": "12.1 - ",
+            "title": "12.1 - The Definition of BSP Trees",
             "start_page": 261
         },{
             "id": "12.2",
-            "title": "12.2 - ",
+            "title": "12.2 - BSP Trees and the Painter's Algorithm",
             "start_page": 263
         },{
             "id": "12.3",
-            "title": "12.3 - ",
+            "title": "12.3 - Constructing a BSP Tree",
             "start_page": 264
         },{
             "id": "12.4",
-            "title": "12.4* - ",
+            "title": "12.4* - The Size of BSP Trees in 3-Space",
             "start_page": 268
         },{
             "id": "12.5",
-            "title": "12.5 - ",
+            "title": "12.5 - BSP Trees for Low-Density Scenes",
             "start_page": 271
         },{
             "id": "12.6",

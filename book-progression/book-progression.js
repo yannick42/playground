@@ -684,7 +684,7 @@ function redraw(books) {
 }
 
 function updateOverallProgress() {
-    document.getElementById('score').innerHTML = `<u>Current progression : <b><i>${round(overallAverage(false), 2)}%</i></b></u>`;
+    document.getElementById('score').innerHTML = `<u>Current progression : <b><i>${round(overallAverage(), 2)}%</i></b></u>`;
 }
 
 const bookList = await getBookListFromFirebase();
