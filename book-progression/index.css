@@ -41,7 +41,23 @@ canvas {
 }
 
 
+#connect, #disconnect, #sync {
+	display: none;
+	cursor: pointer;
+}
 
+#sync {
+	color: orange;
+}
+
+#disconnect {
+	float: right;
+	color: red;
+}
+
+#connect {
+	color: blue;
+}
 
 
 
@@ -51,6 +67,10 @@ canvas {
 #book_list {
 	width: 575px;
 	font-size: smaller;
+}
+
+.gcs {
+	background-color: navajowhite !important;
 }
 
 .book {
@@ -124,6 +144,13 @@ canvas {
 .start_page {
 	right: 0;
 	position: relative;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#score {
+    text-align: center;
+    display: block;
 }
 
 .leaf {
@@ -135,7 +162,7 @@ canvas {
 }
 
 .leaf > .start_page {
-	font-weight: bold;
+	font-weight: normal;
 }
 
 .front-cover {

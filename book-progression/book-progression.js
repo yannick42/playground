@@ -1,10 +1,12 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
 import { randInt } from '../common/common.helper.js';
-import { computeBézierCurve } from '../common/math.helper.js';
+import { computeBézierCurve, round } from '../common/math.helper.js';
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"
+import { getAuth, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyAvPeqHFoSYuETGai2VoAtDmbP8a_F3QR0", // no risk : https://firebase.google.com/docs/projects/api-keys
@@ -18,8 +20,127 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+let userData;
 //const analytics = getAnalytics(app);
 const storage = getStorage(app);
+const firestore = getFirestore(app);
+
+let payload;
+
+document.getElementById('sync').addEventListener('click', async (event) => {
+    console.log("syncing...", userData);
+
+    const userDoc = doc(firestore, "users", userData.uid);
+
+    // state to store remotely in user's data
+    payload = _getLocalStorageObj('book_progress');
+
+    setDoc(userDoc, {
+        username: userData.displayName,
+        email: userData.email,
+        payload
+    })
+      .then(() => {
+        // Data saved successfully to Firestore!
+      })
+      .catch((error) => {
+        console.error("Error saving data to Firestore:", error);
+      });
+})
+
+
+document.getElementById('connect').addEventListener('click', async (event) => {
+    const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
+    userData = userCred.user;
+    console.log("connected: user =", userData);
+
+    event.target.style.display = 'none';
+    document.getElementById('sync').style.display = 'block';
+    document.getElementById('disconnect').style.display = 'block';
+})
+
+document.getElementById('disconnect').addEventListener('click', async (event) => {
+    try {
+        await signOut(auth);
+        console.log("User signed out");
+
+        // Clear user info on the webpage
+        document.getElementById("user-info").innerHTML = "You are logged out.";
+        document.getElementById('disconnect').style.display = 'none';
+        document.getElementById('sync').style.display = 'none';
+        document.getElementById('connect').style.display = 'block';
+    } catch (error) {
+        console.error("Error signing out:", error);
+    }
+})
+
+// Check if a user is already signed in
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User is signed in
+      console.warn("User is signed in", user);
+      payload = _getLocalStorageObj('book_progress'); // from local storage first ?!
+  
+      userData = user;
+  
+      // Get user details
+      const displayName = user.displayName;
+      //const email = user.email;
+      //const photoURL = user.photoURL;
+      const uid = user.uid; // User's unique ID
+  
+      // Example: Show user's details on the webpage
+      document.getElementById("user-info").innerHTML = `<p>Welcome, <b>${displayName}</b>!</p>`;
+
+      document.getElementById('disconnect').style.display = 'block';
+      document.getElementById('sync').style.display = 'block';
+      document.getElementById('connect').style.display = 'none';
+    } else {
+      // No user is signed in
+      document.getElementById('disconnect').style.display = 'none';
+      document.getElementById('sync').style.display = 'none';
+      document.getElementById('connect').style.display = 'block';
+    }
+  });
+
+
+// check regularly if sync. is needed !
+setInterval(() => {
+
+    const last = payload; // null at the beginning
+    const current = _getLocalStorageObj('book_progress');
+
+    if(JSON.stringify(last?.sort((a, b) => a.id > b.id ? 1 : -1)) != JSON.stringify(current.sort((a, b) => a.id > b.id ? 1 : -1))) {
+        document.getElementById("user-info").style.backgroundColor = 'lightgrey';
+    } else {
+        document.getElementById("user-info").style.backgroundColor = 'transparent';
+    }
+
+    console.warn(last, current);
+
+}, 5000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const bookListEl = document.getElementById("book_list");
 const searchEl = document.querySelector("input[type='search']");
@@ -61,7 +182,14 @@ const arrowsList = [
     ['AlgoForOptimization', 'AlgoForDecisionMaking', 'solid'],
 ];
 
-const bookIds = ['SICP', 'CG', 'VG', 'LinearAlgebraHefferon', 'Cormen', 'HoML3', 'AlgoForOptimization', 'NumericalRecipes', 'AlgoForDecisionMaking', 'KR'];
+const bookIds = [
+    'SICP', 'CG', 'VG', 'LinearAlgebraHefferon',
+    'Cormen', 'HoML3', 'AlgoForOptimization',
+    'NumericalRecipes', 'AlgoForDecisionMaking', 'KR',
+    'FluentPython'
+];
+
+const booksIds_from_GCS = [];
 
 /**
  * TODO: get it from localStorage too ! (or backend ?!)
@@ -70,22 +198,20 @@ async function getBookListFromFirebase() {
 
     const books = [];
 
-    if(false) {
-        for (const bookId of bookIds) {
-            // hard-coded books stored in Firebase Storage (GCS)
+    for (const bookId of bookIds) {
+        let fetched;
+        // hard-coded books stored in Firebase Storage (GCS)
+        try {
             let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/' + bookId + '.json'));
-            let fetched = await fetch(url);
-            books.push(await fetched.json());
-        };
-    }
-    else
-    {
-        for (const bookId of bookIds) {
-            let fetched = await fetch('./books/'+bookId+'.json');
-            books.push(await fetched.json());
+            fetched = await fetch(url);
+            booksIds_from_GCS.push(bookId);
+        } catch(e) {
+            console.error(`loading ${bookId} from local`);
+            fetched = await fetch('./books/'+bookId+'.json');
         }
-    }
-
+        books.push(await fetched.json());
+    };
+    
     console.warn(books);
     return books;
 }
@@ -101,7 +227,7 @@ function createHtml(book) {
     }
 
     const html = `
-        <div id="${book.id}" class="book">
+        <div id="${book.id}" class="book${booksIds_from_GCS.includes(book.id) ? ' gcs' : ''}">
             <div>
 
                 ${book.front_cover ? `<div class="front-cover"><img src="${book.front_cover}" width=35 height=55 /></div>` : ''}
@@ -141,7 +267,7 @@ function createLevel(book, content, level) {
 
             <span${el.id ? ' id="'+el.id+'"' : ''} class="content_title_${level}">
                 <span ${isChecked ? 'class="checked"' : ''}>
-                    ${el.content ? '' : `<input type="checkbox" ${isChecked ? ' checked' : ''}/>`} ${el.title.replace(new RegExp(searchEl.value, 'ig'), (m) => '<mark>' + m + '</mark>')}
+                    ${el.content ? '' : `<input type="checkbox" ${isChecked ? ' checked' : ''}/>`} ${searchEl.value ? el.title.replace(new RegExp(searchEl.value, 'ig'), (m) => '<mark>' + m + '</mark>') : el.title}
                 </span>
                 ${el.tooltip ? '<span class="info" title="' + el.tooltip + '">🛈</span>' : ''}
             </span>
@@ -161,6 +287,9 @@ function findNextEntry(book, id) {
     });
     return nextEntry;
 }
+
+
+
 
 
 /**
@@ -216,6 +345,8 @@ function setBookVisibility(bookId, visible) {
     //console.log("el:", el)
     el.style.display = visible ? 'block' : 'none';
 }
+// local storage
+
 
 
 function removeEvents() {
@@ -227,29 +358,36 @@ function removeEvents() {
     titleEls.forEach(el => el.id && el.removeEventListener('click', clickCheckboxEvent));
 }
 
+
+
 function clickCheckboxEvent (e) {
 
     const bookId = e.target.offsetParent.id; // use nearest positionned parent ? (because of position: relative ?)
     
     const checkbox = e.target.querySelector("input[type='checkbox']");
-    checkbox.checked = !checkbox.checked; // toggle
+    checkbox.checked = !checkbox.checked; // toggle checkbox
 
     const book = getProgress(bookId);
     if(checkbox.checked) {
         e.target.classList.add('checked');
 
-        if(! book.progress.includes(e.target.parentNode.id)) book.progress.push(e.target.parentNode.id) // add to completed ids (eg. 1.1.1, ...)
+        // add selected section into progress list (at the end)
+        if(e.target.parentNode.id && ! book.progress.includes(e.target.parentNode.id)) book.progress.push(e.target.parentNode.id) // add to completed ids (eg. 1.1.1, ...)
 
     } else {
         e.target.classList.remove('checked');
 
+        // remove unselected section from progress list
         if(book.progress.includes(e.target.parentNode.id)) book.progress = book.progress.filter(id => id !== e.target.parentNode.id); // remove
     }
+
     // save new progress to localStorage
     setProgress(bookId, book);
 
-    updateProgressBar(book)
+    updateProgressBar(book);
+    updateOverallProgress();
 }
+
 
 /**
  * on +/- click
@@ -467,28 +605,26 @@ function updateArrows()
 }
 
 
+function countIds(content) {
+    // current level ids
+    let count = content.map(c => c.id ? 1 : 0).reduce((acc, value) => acc += value, 0);
+    // + recursive call on children
+    return count + content.map(c => c.content?.length ? countIds(c.content) : 0).reduce((acc, value) => acc += value, 0);
+}
+
 // TODO
 // compute "true" progression using pages
 //      by getting the "next" element (even if it is an other chapter !) then (next_start_page - start_page)
 // sum everything and divide by the total pages of the book (easy)
 function updateProgressBar(book) {
 
-    function countIds(content) {
-        // add current level ids
-        count += content.map(c => c.id ? 1 : 0).reduce((acc, value) => acc += value, 0);
-        // recursive call on children
-        content.forEach(c => c.content?.length && countIds(c.content));
-    }
-    
-    let count = 0;
-
-    console.log(">", book.id, getBookList().map(o => o.id));
+    //console.log(">", book.id, getBookList().map(o => o.id));
     const bookItem = getBookList().find(b => b.id == book.id);
-    console.log(bookItem)
+    //console.log(bookItem)
     if(bookItem) {
-        countIds(bookItem.content);
-
-        const value = Math.round(count ? (book.progress?.length ?? 0) / count * 100 : 0);
+        let count = countIds(bookItem.content);
+        let perc = (count ? (book.progress?.length ?? 0) / count : 0) * 100;
+        const value = Math.round(perc);
 
         document.querySelector("#"+bookItem.id+" .progress").style.width = value + '%';
         document.querySelector("#"+bookItem.id+" .progress-value").innerText = `${value} %`;
@@ -498,7 +634,28 @@ function updateProgressBar(book) {
 }
 
 
+function overallAverage(onlyIfStarted=true) {
+    let sum = 0,
+        cnt = 0;
 
+    getBookList().forEach(bookItem => {
+        const book = getProgress(bookItem.id);
+        if (book.progress?.length || !onlyIfStarted) {
+            let count = countIds(bookItem.content);
+            let perc = (count ? (book.progress?.length ?? 0) / count : 0) * 100;
+
+            cnt++;
+            sum += perc;
+        }
+    });
+
+    return cnt ? sum / cnt : 0;
+}
+
+
+/**
+ * called: in main & when searching for text
+ */
 function redraw(books) {
 
     // get html structure
@@ -522,9 +679,13 @@ function redraw(books) {
     updateArrows(); // to keep them at their position
 
     searchEl.focus();
+
+    updateOverallProgress();
 }
 
-
+function updateOverallProgress() {
+    document.getElementById('score').innerHTML = `<u>Current progression : <b><i>${round(overallAverage(false), 2)}%</i></b></u>`;
+}
 
 const bookList = await getBookListFromFirebase();
 main();

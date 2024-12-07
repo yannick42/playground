@@ -3,7 +3,11 @@
     "nb_pages": 961,
     "id": "FluentPython",
     "front_cover": "https://m.media-amazon.com/images/I/81OvszBEdhL._AC_UF200,200_QL80_.jpg",
-    "tags": [],
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
     "authors": "Luciano Ramalho",
     "content": [{
         "title": "Part I - Data Structures",
