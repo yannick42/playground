@@ -393,25 +393,27 @@ function clickCheckboxEvent (e) {
  * on +/- click
  */
 const toggleEventFn = function(e) {
-    const bookId = e.target.offsetParent.id; // parent having a position (absolution or relative ?)
-    const parentEl = e.target.parentNode.parentNode.parentNode.parentNode; // to reach the DOM element with the book id ...
+    const bookId = e.target.offsetParent.parentNode.parentNode.parentNode.id;
+    const parentEl = e.target.offsetParent.parentNode.parentNode.parentNode; // to reach the DOM element with the book id ...
 
     const currentVisibility = getVisibility(bookId);
     const newVisibility = setVisibility(bookId, !currentVisibility);
 
-    //console.log("parentEl:", parentEl)
+    //console.log("clicked on", bookId, "currently:", currentVisibility, "->", newVisibility);
 
     if(newVisibility) {
         parentEl.querySelector('.level').classList.remove('toggled'); // opened
         parentEl.querySelector(".toggle").innerText = '➖';
+        //
         // toggle/close all the others if open !
+        //
         const test = visibleBooks
             .filter(book => book.id !== bookId && getVisibility(book.id)) // only on the others if open
             .forEach(book => {
                 setVisibility(book.id, false);
                 const el = document.querySelector("#" + book.id + " > .level");
                 el.classList.add('toggled'); // close them
-                parentEl.querySelector(".toggle").innerText = '➕';
+                el.parentNode.querySelector(".toggle").innerText = '➕';
             });
     } else {
         parentEl.querySelector('.level').classList.add('toggled'); // closed

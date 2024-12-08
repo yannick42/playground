@@ -135,10 +135,16 @@ canvas {
 
 .content_title_0 {
 	font-weight: bold;
+	padding-left: 5px;
 }
 
 .content_title_1 {
 	font-style: italic;
+	padding-left: 10px;
+}
+
+.content_title_2 {
+	padding-left: 10px;
 }
 
 .start_page {
