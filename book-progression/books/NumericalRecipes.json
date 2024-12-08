@@ -19,23 +19,23 @@
         },{
             "id": "1.1",
             "title": "1.1 - Error, Accuracy, and Stability",
-            "start_page": 1
+            "start_page": 8
         },{
             "id": "1.2",
             "title": "1.2 - C Family Syntax",
-            "start_page": 1
+            "start_page": 12
         },{
             "id": "1.3",
             "title": "1.3 - Objects, Classes, and Inheritance",
-            "start_page": 1
+            "start_page": 17
         },{
             "id": "1.4",
             "title": "1.4 - Vector and Matrix Objects",
-            "start_page": 1
+            "start_page": 24
         },{
             "id": "1.5",
             "title": "1.5 - Some Further Conventions and Capabilities",
-            "start_page": 1
+            "start_page": 30
         }]
     },{
         "title": "2 - Solution of Linear Algebraic Equations",
@@ -47,47 +47,47 @@
         },{
             "id": "2.1",
             "title": "2.1 - Gauss-Jordan Elimination",
-            "start_page": 37
+            "start_page": 41
         },{
             "id": "2.2",
             "title": "2.2 - Gaussian Elimination with Backsubstitution",
-            "start_page": 37
+            "start_page": 46
         },{
             "id": "2.3",
             "title": "2.3 - LU Decomposition and Its Applications",
-            "start_page": 37
+            "start_page": 48
         },{
             "id": "2.4",
             "title": "2.4 - Tridiagonal and Band-Diagonal Systems of Equations",
-            "start_page": 37
+            "start_page": 56
         },{
             "id": "2.5",
             "title": "2.5 - Iterative Improvement of a Solution to Linear Equations",
-            "start_page": 37
+            "start_page": 61
         },{
             "id": "2.6",
             "title": "2.6 - Singular Value Decomposition",
-            "start_page": 37
+            "start_page": 65
         },{
             "id": "2.7",
             "title": "2.7 - Sparse Linear Systems",
-            "start_page": 37
+            "start_page": 75
         },{
             "id": "2.8",
             "title": "2.8 - Vandermonde Matrices and Toeplitz Matrices",
-            "start_page": 37
+            "start_page": 93
         },{
             "id": "2.9",
             "title": "2.9 - Cholesky Decomposition",
-            "start_page": 37
+            "start_page": 100
         },{
             "id": "2.10",
             "title": "2.10 - QR Decomposition",
-            "start_page": 37
+            "start_page": 102
         },{
             "id": "2.11",
             "title": "2.11 - Is Matrix Inversion an $N^3$ Process ?",
-            "start_page": 37
+            "start_page": 106
         }]
     },{
         "title": "3 - Interpolation and Extrapolation",
@@ -99,207 +99,207 @@
         },{
             "id": "3.1",
             "title": "3.1 - Preliminaries: Searching an Ordered Table",
-            "start_page": 110
+            "start_page": 114
         },{
             "id": "3.2",
             "title": "3.2 - Polynomial Interpolation and Extrapolation",
-            "start_page": 110
+            "start_page": 118
         },{
             "id": "3.3",
             "title": "3.3 - Cubic Spline Interpolation",
-            "start_page": 110
+            "start_page": 120
         },{
             "id": "3.4",
             "title": "3.4 - Rational Function Interpolation and Extrapolation",
-            "start_page": 110
+            "start_page": 124
         },{
             "id": "3.5",
             "title": "3.5 - Coefficient of the Interpolating Polynomial",
-            "start_page": 110
+            "start_page": 129
         },{
             "id": "3.6",
             "title": "3.6 - Interpolation on a Grid in Multidimensions",
-            "start_page": 110
+            "start_page": 132
         },{
             "id": "3.7",
             "title": "3.7 - Interpolation on Scattered Data in Multidimensions",
-            "start_page": 110
+            "start_page": 139
         },{
             "id": "3.8",
             "title": "3.8 - Laplace Interpolation",
-            "start_page": 110
+            "start_page": 150
         }]
     },{
         "title": "4 - Integration of Functions",
-        "start_page": 110,
+        "start_page": 155,
         "content": [{
             "id": "4.0",
             "title": "4.0 - Introduction",
-            "start_page": 110
+            "start_page": 155
         },{
             "id": "4.1",
             "title": "4.1 - Classical Formulas for Equally Spaced Abscissas",
-            "start_page": 110
+            "start_page": 156
         },{
             "id": "4.2",
             "title": "4.2 - Elementary Algorithms",
-            "start_page": 110
+            "start_page": 162
         },{
             "id": "4.3",
             "title": "4.3 - Romberg Integration",
-            "start_page": 110
+            "start_page": 166
         },{
             "id": "4.4",
             "title": "4.4 - Improper Integrals",
-            "start_page": 110
+            "start_page": 167
         },{
             "id": "4.5",
             "title": "4.5 - Quadrature by Variable Transformation",
-            "start_page": 110
+            "start_page": 172
         },{
             "id": "4.6",
             "title": "4.6 - Gaussian Quadratures and Orthogonal Polynomials",
-            "start_page": 110
+            "start_page": 179
         },{
             "id": "4.7",
             "title": "4.7 - Adaptative Quadrature",
-            "start_page": 110
+            "start_page": 194
         },{
             "id": "4.8",
             "title": "4.8 - Multidimensional Integrals",
-            "start_page": 110
+            "start_page": 196
         }]
     },{
         "title": "5 - Evaluation of Functions",
-        "start_page": 110,
+        "start_page": 201,
         "content": [{
             "id": "5.0",
             "title": "5.0 - Introduction",
-            "start_page": 110
+            "start_page": 201
         },{
             "id": "5.1",
             "title": "5.1 - Polynomials and Rational Functions",
-            "start_page": 110
+            "start_page": 201
         },{
             "id": "5.2",
             "title": "5.2 - Evaluation of Continued Fractions",
-            "start_page": 110
+            "start_page": 206
         },{
             "id": "5.3",
             "title": "5.3 - Series and Their Convergence",
-            "start_page": 110
+            "start_page": 209
         },{
             "id": "5.4",
             "title": "5.4 - Recurrence Relations and Clenshaw's Recurrence Formula",
-            "start_page": 110
+            "start_page": 219
         },{
             "id": "5.5",
             "title": "5.5 - Complex Arithmetic",
-            "start_page": 110
+            "start_page": 225
         },{
             "id": "5.6",
             "title": "5.6 - Quadratic and Cubic Equations",
-            "start_page": 110
+            "start_page": 227
         },{
             "id": "5.7",
             "title": "5.7 - Numerical Derivatives",
-            "start_page": 110
+            "start_page": 229
         },{
             "id": "5.8",
             "title": "5.8 - Chebyshev Approximation",
-            "start_page": 110
+            "start_page": 233
         },{
             "id": "5.9",
             "title": "5.9 - Derivatives or Integrals of a Chebyshev-Approximated Function",
-            "start_page": 110
+            "start_page": 240
         },{
             "id": "5.10",
             "title": "5.10 - Polynomial Approximation from Chebyshev Coefficients",
-            "start_page": 110
+            "start_page": 241
         },{
             "id": "5.11",
             "title": "5.11 - Economization of Power Series",
-            "start_page": 110
+            "start_page": 243
         },{
             "id": "5.12",
             "title": "5.12 - Padé Approximants",
-            "start_page": 110
+            "start_page": 245
         },{
             "id": "5.13",
             "title": "5.13 - Rational Chebyshev Approximation",
-            "start_page": 110
+            "start_page": 247
         },{
             "id": "5.14",
             "title": "5.14 - Evaluation of Functions by Path Integration",
-            "start_page": 110
+            "start_page": 251
         }]
     },{
         "title": "6 - Special Functions",
-        "start_page": 110,
+        "start_page": 255,
         "content": [{
             "id": "6.0",
             "title": "6.0 - Introduction",
-            "start_page": 110
+            "start_page": 255
         },{
             "id": "6.1",
             "title": "6.1 - Gamma Function, Beta Function, Factorials, Binomial Coefficients",
-            "start_page": 110
+            "start_page": 256
         },{
             "id": "6.2",
             "title": "6.2 - Incomplete Gamma Function and Error Function",
-            "start_page": 110
+            "start_page": 259
         },{
             "id": "6.3",
             "title": "6.3 - Exponential Integrals",
-            "start_page": 110
+            "start_page": 266
         },{
             "id": "6.4",
             "title": "6.4 - Incomplete Beta Functions",
-            "start_page": 110
+            "start_page": 270
         },{
             "id": "6.5",
             "title": "6.5 - Bessel Functions of Integer Order",
-            "start_page": 110
+            "start_page": 274
         },{
             "id": "6.6",
             "title": "6.6 - Bessel Functions of Fractional Order, Airy Functions, Spherical Bessel Functions",
-            "start_page": 110
+            "start_page": 283
         },{
             "id": "6.7",
             "title": "6.7 - Spherical Harmonics",
-            "start_page": 110
+            "start_page": 292
         },{
             "id": "6.8",
             "title": "6.8 - Fresnel Integrals, Cosine and Sine Integrals",
-            "start_page": 110
+            "start_page": 297
         },{
             "id": "6.9",
             "title": "6.9 - Dawson's Integral",
-            "start_page": 110
+            "start_page": 302
         },{
             "id": "6.10",
             "title": "6.10 - Generalized Fermi-Dirac Integrals",
-            "start_page": 110
+            "start_page": 304
         },{
             "id": "6.11",
             "title": "6.11 - Inverse of the Function $x\\log(x)$",
-            "start_page": 110
+            "start_page": 307
         },{
             "id": "6.12",
             "title": "6.12 - Elliptic Integrals and Jacobian Elliptic Functions",
-            "start_page": 110
+            "start_page": 309
         },{
             "id": "6.13",
             "title": "6.13 - Hypergeometric Functions",
-            "start_page": 110
+            "start_page": 318
         },{
             "id": "6.14",
             "title": "6.14 - Statistical Functions",
-            "start_page": 110
+            "start_page": 320
         }]
     },{
         "title": "7 - Random Numbers",
-        "start_page": 110,
+        "start_page": 340,
         "content": [{
             "id": "7.0",
             "title": "7.0 - Introduction",
