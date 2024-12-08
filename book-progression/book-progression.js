@@ -368,6 +368,7 @@ function clickCheckboxEvent (e) {
     checkbox.checked = !checkbox.checked; // toggle checkbox
 
     const book = getProgress(bookId);
+
     if(checkbox.checked) {
         e.target.classList.add('checked');
 
@@ -382,19 +383,24 @@ function clickCheckboxEvent (e) {
     }
 
     // save new progress to localStorage
+    book.last_updated_at = Date.now();
+    console.log(book.id, ", progress changed !");
     setProgress(bookId, book);
 
+    //
+    // update UI
+    //
     updateProgressBar(book);
     updateOverallProgress();
 }
 
 
 /**
- * on +/- click
+ * on +/- click to expand/shrink books
  */
 const toggleEventFn = function(e) {
-    const bookId = e.target.offsetParent.parentNode.parentNode.parentNode.id;
-    const parentEl = e.target.offsetParent.parentNode.parentNode.parentNode; // to reach the DOM element with the book id ...
+    const parentEl = e.target.offsetParent.parentNode.parentNode.parentNode;
+    const bookId = parentEl.id;
 
     const currentVisibility = getVisibility(bookId);
     const newVisibility = setVisibility(bookId, !currentVisibility);
@@ -659,17 +665,25 @@ function overallAverage(onlyIfStarted=true) {
  * called: in main & when searching for text
  */
 function redraw(books) {
-
+    // update initial progress (if present in localStorage ?!)
+    const bookProgress = JSON.parse(localStorage.getItem('book_progress') ?? '[]');
+        
     // get html structure
-    const booksHtml = books.map(book => createHtml(book))
+    const orderedBooks = books
+        .sort((a, b) => {
+            const bookA = getProgress(a.id);
+            const bookB = getProgress(b.id);
+            //console.log(bookA.id, bookB.id, bookA.last_updated_at, bookB.last_updated_at)
+            return (bookA.last_updated_at??0) < (bookB.last_updated_at??0) ? 1 : -1
+        });
+    //console.error(orderedBooks)
+    const booksHtml = orderedBooks.map(book => createHtml(book))
     // add it to the DOM
     booksHtml.forEach(html => bookListEl.innerHTML += html);
 
     // UI: on clicks, ...
     addEvents();
-
-    // update initial progress (if present in localStorage ?!)
-    const bookProgress = JSON.parse(localStorage.getItem('book_progress') ?? '[]');
+    
     bookProgress.forEach(b => {
         console.log("b:", b)
         if(b) {
