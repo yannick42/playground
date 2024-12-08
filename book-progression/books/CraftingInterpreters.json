@@ -1,0 +1,115 @@
+{
+    "title": "Crafting Interpreters (2021)",
+    "nb_pages": 0,
+    "id": "CraftingInterpreters",
+    "front_cover": "https://m.media-amazon.com/images/I/61cDxGe2YUL._AC_UF1000,1000_QL80_.jpg",
+    "tags": [{
+        "text": "incomplete",
+        "bgColor": "yellow",
+        "textColor": "red"
+    }],
+    "authors": "Robert Nystrom",
+    "content": [{
+        "id": "part-1",
+        "title": "I. Welcome",
+        "content": [{
+            "id": "1",
+            "title": "Introduction"
+        },{
+            "id": "2",
+            "title": "A Map of the Territory"
+        },{
+            "id": "3",
+            "title": "The Lox Language"
+        }]
+    },{
+        "id": "part-2",
+        "title": "II. A Tree-Walk Interpreter",
+        "content": [{
+            "id": "4",
+            "title": "Scanning"
+        },{
+            "id": "5",
+            "title": "Representing Code"
+        },{
+            "id": "6",
+            "title": "Parsing Expressions"
+        },{
+            "id": "7",
+            "title": "Evaluating Expressions"
+        },{
+            "id": "8",
+            "title": "Statements and State"
+        },{
+            "id": "9",
+            "title": "Control Flow"
+        },{
+            "id": "10",
+            "title": "Functions"
+        },{
+            "id": "11",
+            "title": "Resolving and Binding"
+        },{
+            "id": "12",
+            "title": "Classes"
+        },{
+            "id": "13",
+            "title": "Inheritance"
+        }]
+    },{
+        "id": "part-3",
+        "title": "III. A Bytecode Virtual Machine",
+        "content": [{
+            "id": "14",
+            "title": "Chunks of Bytecode"
+        },{
+            "id": "15",
+            "title": "A Virtual Machine"
+        },{
+            "id": "16",
+            "title": "Scanning on Demand"
+        },{
+            "id": "17",
+            "title": "Compiling Expressions"
+        },{
+            "id": "18",
+            "title": "Types of Values"
+        },{
+            "id": "19",
+            "title": "Strings"
+        },{
+            "id": "20",
+            "title": "Hash Tables"
+        },{
+            "id": "21",
+            "title": "Global Variables"
+        },{
+            "id": "22",
+            "title": "Local Variables"
+        },{
+            "id": "23",
+            "title": "Jumping Back and Forth"
+        },{
+            "id": "24",
+            "title": "Calls and Functions"
+        },{
+            "id": "25",
+            "title": "Closures"
+        },{
+            "id": "26",
+            "title": "Garbage Collection"
+        },{
+            "id": "27",
+            "title": "Classes and Instances"
+        },{
+            "id": "28",
+            "title": "Methods and Initializers"
+        },{
+            "id": "29",
+            "title": "Superclasses"
+        },{
+            "id": "30",
+            "title": "Optimization"
+        }]
+    }]
+}

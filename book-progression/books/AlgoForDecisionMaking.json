@@ -238,15 +238,426 @@
             },{
                 "id": "7.8",
                 "title": "7.8 - Linear Systems with Quadratic Reward",
-                "start_page": 122
+                "start_page": 147
             },{
                 "id": "7.9",
                 "title": "Summary",
-                "start_page": 125
+                "start_page": 150
             },{
                 "id": "7.10",
                 "title": "Exercises",
-                "start_page": 125
+                "start_page": 151
+            }]
+        },{
+            "id": "8",
+            "title": "Approximate Value Functions",
+            "start_page": 161,
+            "content": [{
+                "id": "8.1",
+                "title": "8.1 - Parametric Representations",
+                "start_page": 161
+            },{
+                "id": "8.2",
+                "title": "8.2 - Nearest Neighbor",
+                "start_page": 163
+            },{
+                "id": "8.3",
+                "title": "8.3 - Kernel Smoothing",
+                "start_page": 164
+            },{
+                "id": "8.4",
+                "title": "8.4 - Linear Interpolation",
+                "start_page": 167
+            },{
+                "id": "8.5",
+                "title": "8.5 - Simplex Interpolation",
+                "start_page": 168
+            },{
+                "id": "8.6",
+                "title": "8.6 - Linear Regression",
+                "start_page": 172
+            },{
+                "id": "8.7",
+                "title": "8.7 - Neural Network Regression",
+                "start_page": 174
+            },{
+                "id": "8.8",
+                "title": "Summary",
+                "start_page": 175
+            },{
+                "id": "8.9",
+                "title": "Exercises",
+                "start_page": 177
+            }]
+        },{
+            "id": "9",
+            "title": "Online Planning",
+            "start_page": 181,
+            "content": [{
+                "id": "9.1",
+                "title": "9.1 - Receding Horizon Planning",
+                "start_page": 181
+            },{
+                "id": "9.2",
+                "title": "9.2 - Lookahead with Rollouts",
+                "start_page": 183
+            },{
+                "id": "9.3",
+                "title": "9.3 - Forward Search",
+                "start_page": 183
+            },{
+                "id": "9.4",
+                "title": "9.4 - Branch and Bound",
+                "start_page": 185
+            },{
+                "id": "9.5",
+                "title": "9.5 - Sparse sampling",
+                "start_page": 187
+            },{
+                "id": "9.6",
+                "title": "9.6 - Monte Carlo Tree Search",
+                "start_page": 187
+            },{
+                "id": "9.7",
+                "title": "9.7 - Heuristic Search",
+                "start_page": 197
+            },{
+                "id": "9.8",
+                "title": "9.8 - Labeled Heuristic Search",
+                "start_page": 197
+            },{
+                "id": "9.9",
+                "title": "9.9 - Open-Loop Planning",
+                "start_page": 200
+            },{
+                "id": "9.10",
+                "title": "Summary",
+                "start_page": 208
+            },{
+                "id": "9.11",
+                "title": "Exercises",
+                "start_page": 209
+            }]
+        },{
+            "id": "10",
+            "title": "Policy Search",
+            "start_page": 213,
+            "content": [{
+                "id": "10.1",
+                "title": "10.1 - Approximate Policy Evaluation",
+                "start_page": 213
+            },{
+                "id": "10.2",
+                "title": "10.2 - Local Search",
+                "start_page": 215
+            },{
+                "id": "10.3",
+                "title": "10.3 - Genetic Algorithms",
+                "start_page": 215
+            },{
+                "id": "10.4",
+                "title": "10.4 - Cross Entropy Method",
+                "start_page": 218
+            },{
+                "id": "10.5",
+                "title": "10.5 - Evolution Strategies",
+                "start_page": 219
+            },{
+                "id": "10.6",
+                "title": "10.6 - Isotropic Evolutionary Strategies",
+                "start_page": 224
+            },{
+                "id": "10.7",
+                "title": "Summary",
+                "start_page": 226
+            },{
+                "id": "10.8",
+                "title": "Exercises",
+                "start_page": 226
+            }]
+        },{
+            "id": "11",
+            "title": "Policy Gradient Estimation",
+            "start_page": 231,
+            "content": [{
+                "id": "11.1",
+                "title": "11.1 - Finite Difference",
+                "start_page": 231
+            },{
+                "id": "11.2",
+                "title": "11.2 - Regression Gradient",
+                "start_page": 234
+            },{
+                "id": "11.3",
+                "title": "11.3 - Likelihood Ratio",
+                "start_page": 234
+            },{
+                "id": "11.4",
+                "title": "11.4 - Reward-to-Go",
+                "start_page": 237
+            },{
+                "id": "11.5",
+                "title": "11.5 - Baseline Substraction",
+                "start_page": 241
+            },{
+                "id": "11.6",
+                "title": "Summary",
+                "start_page": 245
+            },{
+                "id": "11.7",
+                "title": "Exercises",
+                "start_page": 246
+            }]
+        },{
+            "id": "12",
+            "title": "Policy Gradient Optimization",
+            "start_page": 249,
+            "content": [{
+                "id": "12.1",
+                "title": "12.1 - Gradient Ascent Update",
+                "start_page": 249
+            },{
+                "id": "12.2",
+                "title": "12.2 - Restricted Gradient Update",
+                "start_page": 251
+            },{
+                "id": "12.3",
+                "title": "12.3 - Natural Gradient Update",
+                "start_page": 253
+            },{
+                "id": "12.4",
+                "title": "12.4 - Trust Region Update",
+                "start_page": 254
+            },{
+                "id": "12.5",
+                "title": "12.5 - Clamped Surrogate Objective",
+                "start_page": 257
+            },{
+                "id": "12.6",
+                "title": "Summary",
+                "start_page": 263
+            },{
+                "id": "12.7",
+                "title": "Exercises",
+                "start_page": 264
+            }]
+        },{
+            "id": "13",
+            "title": "Actor-Critic Methods",
+            "start_page": 267,
+            "content": [{
+                "id": "13.1",
+                "title": "13.1 - Actor-Critic",
+                "start_page": 267
+            },{
+                "id": "13.2",
+                "title": "13.2 - Generalized Advantage Estimation",
+                "start_page": 269
+            },{
+                "id": "13.3",
+                "title": "13.3 - Deterministic Policy Gradient",
+                "start_page": 272
+            },{
+                "id": "13.4",
+                "title": "13.4 - Actor-Critic with Monte Carlo Tree Search",
+                "start_page": 274
+            },{
+                "id": "13.5",
+                "title": "Summary",
+                "start_page": 277
+            },{
+                "id": "13.5",
+                "title": "Exercises",
+                "start_page": 277
+            }]
+        },{
+            "id": "14",
+            "title": "Policy Validation",
+            "start_page": 281,
+            "content": [{
+                "id": "14.1",
+                "title": "14.1 - Performance Metric Evaluation",
+                "start_page": 281
+            },{
+                "id": "14.2",
+                "title": "14.2 - Rare Event Simulation",
+                "start_page": 285
+            },{
+                "id": "14.3",
+                "title": "14.3 - Robustness Analysis",
+                "start_page": 288
+            },{
+                "id": "14.4",
+                "title": "14.4 - Trade Analysis",
+                "start_page": 289
+            },{
+                "id": "14.5",
+                "title": "14.5 - Adversarial Analysis",
+                "start_page": 291
+            },{
+                "id": "14.6",
+                "title": "Summary",
+                "start_page": 295
+            },{
+                "id": "14.7",
+                "title": "Exercises",
+                "start_page": 295
+            }]
+        }]
+    },{
+        "id": "part-3",
+        "title": "Part III - Model Uncertainty",
+        "content": [{
+            "id": "15",
+            "title": "Exploration and Exploitation",
+            "start_page": 299,
+            "content": [{
+                "id": "15.1",
+                "title": "15.1 - Bandit Problems",
+                "start_page": 299
+            },{
+                "id": "15.2",
+                "title": "15.2 - Bayesian Model Estimation",
+                "start_page": 301
+            },{
+                "id": "15.3",
+                "title": "15.3 - Undirected Exploration Strategies",
+                "start_page": 301
+            },{
+                "id": "15.4",
+                "title": "15.4 - Directed Exploration Strategies",
+                "start_page": 303
+            },{
+                "id": "15.5",
+                "title": "15.5 - Optimal Exploration Strategies",
+                "start_page": 306
+            },{
+                "id": "15.6",
+                "title": "15.6 - Exploration with Multiple States",
+                "start_page": 309
+            },{
+                "id": "15.7",
+                "title": "Summary",
+                "start_page": 309
+            },{
+                "id": "15.8",
+                "title": "Exercises",
+                "start_page": 311
+            }]
+        },{
+            "id": "16",
+            "title": "Model-Based Methods",
+            "start_page": 317,
+            "content": [{
+                "id": "16.1",
+                "title": "16.1 - Maximum Likelihood Models",
+                "start_page": 317
+            },{
+                "id": "16.2",
+                "title": "16.2 - Update Schemes",
+                "start_page": 318
+            },{
+                "id": "16.3",
+                "title": "16.3 - Exploration",
+                "start_page": 321
+            },{
+                "id": "16.4",
+                "title": "16.4 - Bayesian Methods",
+                "start_page": 326
+            },{
+                "id": "16.5",
+                "title": "16.5 - Bayes-Adaptive Markov Decision Processes",
+                "start_page": 329
+            },{
+                "id": "16.6",
+                "title": "16.6 - Posterior Sampling",
+                "start_page": 330
+            },{
+                "id": "16.7",
+                "title": "Summary",
+                "start_page": 332
+            },{
+                "id": "16.8",
+                "title": "Exercises",
+                "start_page": 332
+            }]
+        },{
+            "id": "17",
+            "title": "Model-Free Methods",
+            "start_page": 335,
+            "content": [{
+                "id": "17.1",
+                "title": "17.1 - Incremental Estimation of the Mean",
+                "start_page": 335
+            },{
+                "id": "17.2",
+                "title": "17.2 - Q-Learning",
+                "start_page": 336
+            },{
+                "id": "17.3",
+                "title": "17.3 - Sarsa",
+                "start_page": 338
+            },{
+                "id": "17.4",
+                "title": "17.4 - Eligibility Traces",
+                "start_page": 341
+            },{
+                "id": "17.5",
+                "title": "17.5 - Reward Shaping",
+                "start_page": 343
+            },{
+                "id": "17.6",
+                "title": "17.6 - Action Value Function Approximation",
+                "start_page": 343
+            },{
+                "id": "17.7",
+                "title": "17.7 - Experience Replay",
+                "start_page": 345
+            },{
+                "id": "17.8",
+                "title": "Summary",
+                "start_page": 348
+            },{
+                "id": "17.9",
+                "title": "Exercises",
+                "start_page": 351
+            }]
+        },{
+            "id": "18",
+            "title": "Imitation Learning",
+            "start_page": 355,
+            "content": [{
+                "id": "18.1",
+                "title": "18.1 - Behavioral Cloning",
+                "start_page": 355
+            },{
+                "id": "18.2",
+                "title": "18.2 - Data Set Aggregation",
+                "start_page": 358
+            },{
+                "id": "18.3",
+                "title": "18.3 - Stochastic Mixing Iterative Learning",
+                "start_page": 358
+            },{
+                "id": "18.4",
+                "title": "18.4 - Maximum Margin Inverse Reinforcement Learning",
+                "start_page": 361
+            },{
+                "id": "18.5",
+                "title": "18.5 - Maximum Entropy Inverse Reinforcement Learning",
+                "start_page": 365
+            },{
+                "id": "18.6",
+                "title": "18.6 - Generative Adversarial Imitation Learning",
+                "start_page": 369
+            },{
+                "id": "18.7",
+                "title": "Summary",
+                "start_page": 371
+            },{
+                "id": "18.8",
+                "title": "Exercises",
+                "start_page": 372
             }]
         }]
     }]

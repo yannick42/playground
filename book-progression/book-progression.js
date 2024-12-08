@@ -186,7 +186,7 @@ const bookIds = [
     'SICP', 'CG', 'VG', 'LinearAlgebraHefferon',
     'Cormen', 'HoML3', 'AlgoForOptimization',
     'NumericalRecipes', 'AlgoForDecisionMaking', 'KR',
-    'FluentPython'
+    'FluentPython', 'CraftingInterpreters'
 ];
 
 const booksIds_from_GCS = [];
@@ -674,7 +674,7 @@ function redraw(books) {
             const bookA = getProgress(a.id);
             const bookB = getProgress(b.id);
             //console.log(bookA.id, bookB.id, bookA.last_updated_at, bookB.last_updated_at)
-            return (bookA.last_updated_at??0) < (bookB.last_updated_at??0) ? 1 : -1
+            return (bookA?.last_updated_at??0) < (bookB?.last_updated_at??0) ? 1 : -1
         });
     //console.error(orderedBooks)
     const booksHtml = orderedBooks.map(book => createHtml(book))

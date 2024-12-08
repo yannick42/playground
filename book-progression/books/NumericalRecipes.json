@@ -3,11 +3,7 @@
     "nb_pages": 1194,
     "front_cover": "https://m.media-amazon.com/images/I/41rHdNt5hlL._SL100_.jpg",
     "id": "NumericalRecipes",
-    "tags": [{
-        "text": "incomplete",
-        "bgColor": "yellow",
-        "textColor": "red"
-    }],
+    "tags": [],
     "authors": "William H. Press, Saul A. Teukolsky, William T. Vetterling & Brian P. Flannery",
     "content": [{
         "title": "1 - Preliminaries",
@@ -303,75 +299,75 @@
         "content": [{
             "id": "7.0",
             "title": "7.0 - Introduction",
-            "start_page": 110
+            "start_page": 340
         },{
             "id": "7.1",
             "title": "7.1 - Uniform Deviates",
-            "start_page": 110
+            "start_page": 341
         },{
             "id": "7.2",
             "title": "7.2 - Completely Hashing a Large Array",
-            "start_page": 110
+            "start_page": 358
         },{
             "id": "7.3",
             "title": "7.3 - Deviates from Other Distributions",
-            "start_page": 110
+            "start_page": 361
         },{
             "id": "7.4",
             "title": "7.4 - Multivariate Normal Deviates",
-            "start_page": 110
+            "start_page": 378
         },{
             "id": "7.5",
             "title": "7.5 - Linear Feedbac Shift Registers",
-            "start_page": 110
+            "start_page": 380
         },{
             "id": "7.6",
             "title": "7.6 - Hash Tables and Hash Memories",
-            "start_page": 110
+            "start_page": 386
         },{
             "id": "7.7",
             "title": "7.7 - Simple Monte Carlo Integration",
-            "start_page": 110
+            "start_page": 397
         },{
             "id": "7.8",
             "title": "7.8 - Quasi- (that is, Sub-) Random Sequences",
-            "start_page": 110
+            "start_page": 403
         },{
             "id": "7.9",
             "title": "7.9 - Adaptative and Recursive Monte Carlo Methods",
-            "start_page": 110
+            "start_page": 410
         }]
     },{
         "title": "8 - Sorting and Selection",
-        "start_page": 110,
+        "start_page": 419,
         "content": [{
             "id": "8.0",
             "title": "8.0 - Introduction",
-            "start_page": 110
+            "start_page": 419
         },{
             "id": "8.1",
             "title": "8.1 - Straight Insertion and Shell's Method",
-            "start_page": 110
+            "start_page": 420
         },{
-            "id": "9.2",
+            "id": "8.2",
             "title": "8.2 - Quicksort",
-            "start_page": 110
+            "start_page": 423
         },{
-            "id": "9.3",
+            "id": "8.3",
             "title": "8.3 - Heapsort",
-            "start_page": 110
+            "start_page": 426
         },{
             "id": "9.4",
             "title": "8.4 - Indexing and Ranking",
-            "start_page": 110
+            "start_page": 428
         },{
             "id": "8.5",
             "title": "8.5 - Selecting the $M$th largest",
-            "start_page": 110
+            "start_page": 431
         },{
             "id": "8.6",
             "title": "8.6 - Determination of Equivalence Classes",
-            "start_page": 110
+            "start_page": 439
         }]
     },{
         "title": "9 - Root Finding and Nonlinear Sets of Equations",
@@ -428,524 +424,524 @@
         }]
     },{
         "title": "10 - Minimization or Maximization of Functions",
-        "start_page": 110,
+        "start_page": 487,
         "content": [{
             "id": "10.0",
             "title": "10.0 - Introduction",
-            "start_page": 110
+            "start_page": 487
         },{
             "id": "10.1",
             "title": "10.1 - Initially Bracketing a Minimum",
-            "start_page": 110
+            "start_page": 490
         },{
             "id": "10.2",
             "title": "10.2 - Golden Section Search in One Dimension",
-            "start_page": 110
+            "start_page": 492
         },{
             "id": "10.3",
             "title": "10.3 - Parabolic Interpolation and Brent's Method in One Dimension",
-            "start_page": 110
+            "start_page": 496
         },{
             "id": "10.4",
             "title": "10.4 - One-Dimensional Search with First Derivatives",
-            "start_page": 110
+            "start_page": 499
         },{
             "id": "10.5",
             "title": "10.5 - Downhill Simplex Method in Multidimensions",
-            "start_page": 110
+            "start_page": 502
         },{
             "id": "10.6",
             "title": "10.6 - Line Methods in Multidimensions",
-            "start_page": 110
+            "start_page": 507
         },{
             "id": "10.7",
             "title": "10.7 - Direction Set (Powell's) Methods in Multidimensions",
-            "start_page": 110
+            "start_page": 509
         },{
             "id": "10.8",
             "title": "10.8 - Conjugate Gradient Methods in Multidimensions",
-            "start_page": 110
+            "start_page": 515
         },{
             "id": "10.9",
             "title": "10.9 - Quasi-Newton or Variable Metric Methods in Multidimensions",
-            "start_page": 110
+            "start_page": 521
         },{
             "id": "10.10",
             "title": "10.10 - Linear Programming: The Simplex Method",
-            "start_page": 110
+            "start_page": 526
         },{
             "id": "10.11",
             "title": "10.11 - Linear Programming: Interior-Point Methods",
-            "start_page": 110
+            "start_page": 537
         },{
             "id": "10.12",
             "title": "10.12 - Simulated Annealing Methods",
-            "start_page": 110
+            "start_page": 549
         },{
             "id": "10.13",
             "title": "10.13 - Dynamic Programming",
-            "start_page": 110
+            "start_page": 555
         }]
     },{
         "title": "11 - Eigensystems",
-        "start_page": 110,
+        "start_page": 563,
         "content": [{
             "id": "11.0",
             "title": "11.0 - Introduction",
-            "start_page": 110
+            "start_page": 563
         },{
             "id": "11.1",
             "title": "11.1 - Jacobi Transformations of a Symmetric Matrix",
-            "start_page": 110
+            "start_page": 570
         },{
             "id": "11.2",
             "title": "11.2 - Real Symmetric Matrices",
-            "start_page": 110
+            "start_page": 576
         },{
             "id": "11.3",
             "title": "11.3 - Reduction of a Symmetric Matrix to Tridiagonal Form: Givens and Householder Reductions",
-            "start_page": 110
+            "start_page": 578
         },{
             "id": "11.4",
             "title": "11.4 - Eigenvalues and Eigenvectors of a Tridiagonal Matrix",
-            "start_page": 110
+            "start_page": 583
         },{
             "id": "11.5",
             "title": "11.5 - Hermitian Matrices",
-            "start_page": 110
+            "start_page": 590
         },{
             "id": "11.6",
             "title": "11.6 - Real Nonsymmetric Matrices",
-            "start_page": 110
+            "start_page": 590
         },{
             "id": "11.7",
             "title": "11.7 - The QR Algorithm for Real Hessenberg Matrices",
-            "start_page": 110
+            "start_page": 596
         },{
             "id": "11.8",
             "title": "11.8 - Improving Eigenvalues and/or Finding Eigenvectors by Inverse Iteration",
-            "start_page": 110
+            "start_page": 597
         }]
     },{
         "title": "12 - Fast Fourier Transform",
-        "start_page": 110,
+        "start_page": 600,
         "content": [{
             "id": "12.0",
             "title": "12.0 - Introduction",
-            "start_page": 110
+            "start_page": 600
         },{
             "id": "12.1",
             "title": "12.1 - Fourier Transform of Discretely Sampled Data",
-            "start_page": 110
+            "start_page": 605
         },{
             "id": "12.2",
             "title": "12.2 - Fast Fourier Transform (FFT)",
-            "start_page": 110
+            "start_page": 608
         },{
             "id": "12.3",
             "title": "12.3 - FFT of Real Functions",
-            "start_page": 110
+            "start_page": 617
         },{
             "id": "12.4",
             "title": "12.4 - Fast Sine and Cosine Transform",
-            "start_page": 110
+            "start_page": 620
         },{
             "id": "12.5",
             "title": "12.5 - FFT in Two or More Dimensions",
-            "start_page": 110
+            "start_page": 627
         },{
             "id": "12.6",
             "title": "12.6 - Fourier Transform of Real Data in Two or Three Dimensions",
-            "start_page": 110
+            "start_page": 631
         },{
             "id": "12.7",
             "title": "12.7 - External Storage or Memory-Local FFTs",
-            "start_page": 110
+            "start_page": 637
         }]
     },{
         "title": "13 - Fourier and Spectral Applications",
-        "start_page": 110,
+        "start_page": 640,
         "content": [{
             "id": "13.0",
             "title": "13.0 - Introduction",
-            "start_page": 110
+            "start_page": 640
         },{
             "id": "13.1",
             "title": "13.1 - Convolution and Deconvolution Using the FFT",
-            "start_page": 110
+            "start_page": 641
         },{
             "id": "13.2",
             "title": "13.2 - Correlation and Autocorrelation Using the FFT",
-            "start_page": 110
+            "start_page": 648
         },{
             "id": "13.3",
             "title": "13.3 - Optimal (Wiener) Filtering with FFT",
-            "start_page": 110
+            "start_page": 649
         },{
             "id": "13.4",
             "title": "13.4 - Power Spectrum Estimation Using the FFT",
-            "start_page": 110
+            "start_page": 652
         },{
             "id": "13.5",
             "title": "13.5 - Digital Filtering in the Time Domain",
-            "start_page": 110
+            "start_page": 667
         },{
             "id": "13.6",
             "title": "13.6 - Linear Prediction and Linear Predictive Coding",
-            "start_page": 110
+            "start_page": 673
         },{
             "id": "13.7",
             "title": "13.7 - Power Spectrum Estimation by the Maximum Entropy (All-Poles) Method",
-            "start_page": 110
+            "start_page": 681
         },{
             "id": "13.8",
             "title": "13.8 - Spectral Analysis of Unevenly Sampled Data",
-            "start_page": 110
+            "start_page": 685
         },{
             "id": "13.9",
             "title": "13.9 - Computing Fourier Integrals Using the FFT",
-            "start_page": 110
+            "start_page": 692
         },{
             "id": "13.10",
             "title": "13.10 - Wavelet Transforms",
-            "start_page": 110
+            "start_page": 699
         },{
             "id": "13.11",
             "title": "13.11 - Numerical Use of the Sampling Theorem",
-            "start_page": 110
+            "start_page": 717
         }]
     },{
         "title": "14 - Statistical Description of Data",
-        "start_page": 110,
+        "start_page": 720,
         "content": [{
             "id": "14.0",
             "title": "14.0 - Introduction",
-            "start_page": 110
+            "start_page": 720
         },{
             "id": "14.1",
             "title": "14.1 - Moments of a Distribution: Mean, Variance, Skewness, and So Forth",
-            "start_page": 110
+            "start_page": 721
         },{
             "id": "14.2",
             "title": "14.2 - Do Two Distributions Have the Same Means or Variances?",
-            "start_page": 110
+            "start_page": 726
         },{
             "id": "14.3",
             "title": "14.3 - Are Two Distributions Different?",
-            "start_page": 110
+            "start_page": 730
         },{
             "id": "14.4",
             "title": "14.4 - Contingency Table Analysis of Two Distributions",
-            "start_page": 110
+            "start_page": 741
         },{
             "id": "14.5",
             "title": "14.5 - Linear Correlation",
-            "start_page": 110
+            "start_page": 745
         },{
             "id": "14.6",
             "title": "14.6 - Nonparametric or Rank Correlation",
-            "start_page": 110
+            "start_page": 748
         },{
             "id": "14.7",
             "title": "14.7 - Information-Theoretic Properties of Distributions",
-            "start_page": 110
+            "start_page": 754
         },{
             "id": "14.8",
             "title": "14.8 - Do Two-Dimensional Distributions Differ?",
-            "start_page": 110
+            "start_page": 762
         },{
             "id": "14.9",
             "title": "14.9 - Savitzky-Golay Smoothing Filters",
-            "start_page": 110
+            "start_page": 766
         }]
     },{
         "title": "15 - Modeling of Data",
-        "start_page": 110,
+        "start_page": 773,
         "content": [{
             "id": "15.0",
             "title": "15.0 - Introduction",
-            "start_page": 110
+            "start_page": 773
         },{
             "id": "15.1",
             "title": "15.1 - Least Squares as a Maximum Likelihood Estimator",
-            "start_page": 110
+            "start_page": 776
         },{
             "id": "15.2",
             "title": "15.2 - Fitting Data to a Straight Line",
-            "start_page": 110
+            "start_page": 780
         },{
             "id": "15.3",
             "title": "1(.3 - Straight-Line Data with Errors in Both Coordinates",
-            "start_page": 110
+            "start_page": 785
         },{
             "id": "15.4",
             "title": "15.4 - General Linear Least Squares",
-            "start_page": 110
+            "start_page": 788
         },{
             "id": "15.5",
             "title": "15.5 - Nonlinear Models",
-            "start_page": 110
+            "start_page": 799
         },{
             "id": "15.6",
             "title": "15.6 - Confidence Limits on Estimated Model Parameters",
-            "start_page": 110
+            "start_page": 807
         },{
             "id": "15.7",
             "title": "15.7 - Robust Estimation",
-            "start_page": 110
+            "start_page": 818
         },{
             "id": "15.8",
             "title": "15.8 - Markov Chain Monte Carlo",
-            "start_page": 110
+            "start_page": 824
         },{
             "id": "15.9",
             "title": "15.9 - Gaussian Process Regression",
-            "start_page": 110
+            "start_page": 836
         }]
     },{
         "title": "16 - Classification and Inference",
-        "start_page": 110,
+        "start_page": 840,
         "content": [{
             "id": "16.0",
             "title": "16.0 - Introduction",
-            "start_page": 110
+            "start_page": 840
         },{
             "id": "16.1",
             "title": "16.1 - Gaussian Mixture Models and k-Means Clustering",
-            "start_page": 110
+            "start_page": 842
         },{
             "id": "16.2",
             "title": "16.2 - Viterbi Decoding",
-            "start_page": 110
+            "start_page": 850
         },{
             "id": "16.3",
             "title": "16.3 - Markov Models and Hidden Markov Modeling",
-            "start_page": 110
+            "start_page": 856
         },{
             "id": "16.4",
             "title": "16.4 - Hierarchical Clustering by Phylogenetic Trees",
-            "start_page": 110
+            "start_page": 868
         },{
             "id": "16.5",
             "title": "16.5 - Support Vector Machines",
             "search_context": "SVM",
-            "start_page": 110
+            "start_page": 883
         }]
     },{
         "title": "17 - Integration of Ordinary Differential Equations",
-        "start_page": 110,
+        "start_page": 899,
         "content": [{
             "id": "17.0",
             "title": "17.0 - Introduction",
-            "start_page": 110
+            "start_page": 899
         },{
             "id": "17.1",
             "title": "17.1 - Runge-Kutta Method",
-            "start_page": 110
+            "start_page": 907
         },{
             "id": "17.2",
             "title": "17.2 - Adaptative Stepsize Control for Runge-Kutta",
-            "start_page": 110
+            "start_page": 910
         },{
             "id": "17.3",
             "title": "17.3 - Richardson Extrapolation and the Bulirsch-Stoer Method",
-            "start_page": 110
+            "start_page": 921
         },{
             "id": "17.4",
             "title": "17.4 - Second-Order Conservative Equations",
-            "start_page": 110
+            "start_page": 928
         },{
             "id": "17.5",
             "title": "17.5 - Stiff Sets of Equations",
-            "start_page": 110
+            "start_page": 931
         },{
             "id": "17.6",
             "title": "17.6 - Multistep, Multivalue, and Predictor-Corrector Methods",
-            "start_page": 110
+            "start_page": 942
         },{
             "id": "17.7",
             "title": "17.7 - Stochastic Simulation of Chemical Reaction Networks",
-            "start_page": 110
+            "start_page": 946
         }]
     },{
         "title": "18 - Two-Point Boundary Value Problems",
-        "start_page": 110,
+        "start_page": 955,
         "content": [{
             "id": "18.0",
             "title": "18.0 - Introduction",
-            "start_page": 110
+            "start_page": 955
         },{
             "id": "18.1",
             "title": "18.1 - The Shooting Method",
-            "start_page": 110
+            "start_page": 959
         },{
             "id": "18.2",
             "title": "18.2 - Shooting to a Fitting Point",
-            "start_page": 110
+            "start_page": 962
         },{
             "id": "18.3",
             "title": "18.3 - Relaxation Methods",
-            "start_page": 110
+            "start_page": 964
         },{
             "id": "18.4",
             "title": "18.4 - A Worked Example: Spheroidal Harmonics",
-            "start_page": 110
+            "start_page": 971
         },{
             "id": "18.5",
             "title": "18.5 - Automated Allocation of Mesh Points",
-            "start_page": 110
+            "start_page": 981
         },{
             "id": "18.6",
             "title": "18.6 - Handling Internal Boundary Conditions or Singular Points",
-            "start_page": 110
+            "start_page": 983
         }]
     },{
         "title": "19 - Integral Equations and Inverse Theory",
-        "start_page": 110,
+        "start_page": 986,
         "content": [{
             "id": "19.0",
             "title": "19.0 - Introduction",
-            "start_page": 110
+            "start_page": 986
         },{
             "id": "19.1",
             "title": "19.1 - Fredholm Equations of the Second Kind",
-            "start_page": 110
+            "start_page": 989
         },{
             "id": "19.2",
             "title": "19.2 - Volterra Equations",
-            "start_page": 110
+            "start_page": 992
         },{
             "id": "19.3",
             "title": "19.3 - Integral Equations with Singular Kernels",
-            "start_page": 110
+            "start_page": 995
         },{
             "id": "19.4",
             "title": "19.4 - Inverse Problems and the Use of A Priori Information",
-            "start_page": 110
+            "start_page": 1001
         },{
             "id": "19.5",
             "title": "19.5 - Linear Regularization Methods",
-            "start_page": 110
+            "start_page": 1006
         },{
             "id": "19.6",
             "title": "19.6 - Backus-Gilbert Method",
-            "start_page": 110
+            "start_page": 1014
         },{
             "id": "19.7",
             "title": "19.7 - Maximum Entropy Image Restoration",
-            "start_page": 110
+            "start_page": 1016
         }]
     },{
         "title": "20 - Partial Differential Equations",
-        "start_page": 110,
+        "start_page": 1024,
         "content": [{
             "id": "20.0",
             "title": "20.0 - Introduction",
-            "start_page": 110
+            "start_page": 1024
         },{
             "id": "20.1",
             "title": "20.1 - Flux-Conservative Initial Value Problems",
-            "start_page": 110
+            "start_page": 1031
         },{
             "id": "20.2",
             "title": "20.2 - Diffusive Initial Value Problems",
-            "start_page": 110
+            "start_page": 1043
         },{
             "id": "20.3",
             "title": "20.3 - Initial Value Problems in Multidimensions",
-            "start_page": 110
+            "start_page": 1049
         },{
             "id": "20.4",
             "title": "20.4 - Fourier and Cyclic Reduction Methods for Boundary Value Problems",
-            "start_page": 110
+            "start_page": 1053
         },{
             "id": "20.5",
             "title": "20.5 - Relaxation Methods for Boundary Value Problems",
-            "start_page": 110
+            "start_page": 1059
         },{
             "id": "20.6",
             "title": "20.6 - Multigrid Methods for Boundary Value Problems",
-            "start_page": 110
+            "start_page": 1066
         },{
             "id": "20.7",
             "title": "20.7 - Spectral Methods",
-            "start_page": 110
+            "start_page": 1083
         }]
     },{
         "title": "21 - Computational Geometry",
-        "start_page": 110,
+        "start_page": 1097,
         "content": [{
             "id": "21.0",
             "title": "21.0 - Introduction",
-            "start_page": 110
+            "start_page": 1097
         },{
             "id": "21.1",
             "title": "21.1 - Points and Boxes",
-            "start_page": 110
+            "start_page": 1099
         },{
             "id": "21.2",
             "title": "21.2 - KD Trees and Nearest-Neighbor Finding",
-            "start_page": 110
+            "start_page": 1101
         },{
             "id": "21.3",
             "title": "21.3 - Triangles in Two and Three Dimensions",
-            "start_page": 110
+            "start_page": 1111
         },{
             "id": "21.4",
             "title": "21.4 - Lines, Line Segments, and Polygons",
-            "start_page": 110
+            "start_page": 1117
         },{
             "id": "21.5",
             "title": "21.5 - Spheres and Rotations",
-            "start_page": 110
+            "start_page": 1128
         },{
             "id": "21.6",
             "title": "21.6 - Triangulation and Delaunay Triangulation",
-            "start_page": 110
+            "start_page": 1131
         },{
             "id": "21.7",
             "title": "21.7 - Applications of Delaunay Triangulation",
-            "start_page": 110
+            "start_page": 1141
         },{
             "id": "21.8",
             "title": "21.8 - Quadtrees and Octrees: Storing Geometrical Objects",
-            "start_page": 110
+            "start_page": 1149
         }]
     },{
         "title": "22 - Less-Numerical Algorithms",
-        "start_page": 110,
+        "start_page": 1160,
         "content": [{
             "id": "22.0",
             "title": "22.0 - Introduction",
-            "start_page": 110
+            "start_page": 1160
         },{
             "id": "22.1",
             "title": "22.1 - Plotting Simple Graphs",
-            "start_page": 110
+            "start_page": 1160
         },{
             "id": "22.2",
             "title": "22.2 - Diagnosing Machine Parameters",
-            "start_page": 110
+            "start_page": 1163
         },{
             "id": "22.3",
             "title": "22.3 - Gray Codes",
-            "start_page": 110
+            "start_page": 1166
         },{
             "id": "22.4",
             "title": "22.4 - Cyclic Redundancy and Other Checksums",
-            "start_page": 110
+            "start_page": 1168
         },{
             "id": "22.5",
             "title": "22.5 - Huffman Coding and Compression of Data",
-            "start_page": 110
+            "start_page": 1175
         },{
             "id": "22.6",
             "title": "22.6 - Arithmetic Coding",
-            "start_page": 110
+            "start_page": 1181
         },{
             "id": "22.7",
             "title": "22.7 - Arithmetic at Arbitrary Precision",
-            "start_page": 110
+            "start_page": 1185
         }]
     }]
 }
