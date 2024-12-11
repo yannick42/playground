@@ -1,0 +1,742 @@
+{
+    "title": "Fundamentals of Computer Graphics, 4th ed. (2015)",
+    "nb_pages": 699,
+    "id": "FundamentalsOfCG",
+    "front_cover": "https://m.media-amazon.com/images/I/51aWjDt-yeL._AC_UF1000,1000_QL80_.jpg",
+    "tags": [],
+    "authors": "Steve Marschner & Peter Shirley",
+    "content": [{
+        "title": "1. Introduction",
+        "start_page": 1,
+        "content": [{
+            "id": "1.1",
+            "title": "1.1 - Graphics Area",
+            "start_page": 2
+        },{
+            "id": "1.2",
+            "title": "1.2 - Major Applications",
+            "start_page": 3
+        },{
+            "id": "1.3",
+            "title": "1.3 - Graphics APIs",
+            "start_page": 4
+        },{
+            "id": "1.4",
+            "title": "1.4 - Graphics Pipeline",
+            "start_page": 4
+        },{
+            "id": "1.5",
+            "title": "1.5 - Numerical Issues",
+            "start_page": 5
+        },{
+            "id": "1.6",
+            "title": "1.6 - Efficiency",
+            "start_page": 7
+        },{
+            "id": "1.7",
+            "title": "1.7 - Designing and Coding Graphics Programs",
+            "start_page": 8
+        }]
+    },{
+        "title": "2. Miscellaneous Math",
+        "start_page": 13,
+        "content": [{
+            "id": "2.1",
+            "title": "2.1 - Sets and Mappings",
+            "start_page": 13
+        },{
+            "id": "2.2",
+            "title": "2.2 - Solving Quadratic Equations",
+            "start_page": 17
+        },{
+            "id": "2.3",
+            "title": "2.3 - Trigonometry",
+            "start_page": 18
+        },{
+            "id": "2.4",
+            "title": "2.4 - Vectors",
+            "start_page": 21
+        },{
+            "id": "2.5",
+            "title": "2.5 - Curves and Surfaces",
+            "start_page": 30
+        },{
+            "id": "2.6",
+            "title": "2.6 - Linear Interpolation",
+            "start_page": 44
+        },{
+            "id": "2.7",
+            "title": "2.7 - Triangles",
+            "start_page": 44
+        }]
+    },{
+        "title": "3. Raster Images",
+        "start_page": 53,
+        "content": [{
+            "id": "3.1",
+            "title": "3.1 - Raster Devices",
+            "start_page": 54
+        },{
+            "id": "3.2",
+            "title": "3.2 - Images, Pixels, and Geometry",
+            "start_page": 59
+        },{
+            "id": "3.3",
+            "title": "3.3 - RGB Color",
+            "start_page": 64
+        },{
+            "id": "3.4",
+            "title": "3.4 - Alpha Compositing",
+            "start_page": 65
+        }]
+    },{
+        "title": "4. Ray Tracing",
+        "start_page": 69,
+        "content": [{
+            "id": "4.1",
+            "title": "4.1 - The Basic Ray-Tracing Algorithm",
+            "start_page": 70
+        },{
+            "id": "4.2",
+            "title": "4.2 - Perspective",
+            "start_page": 71
+        },{
+            "id": "4.3",
+            "title": "4.3 - Computing Viewing Rays",
+            "start_page": 73
+        },{
+            "id": "4.4",
+            "title": "4.4 - Ray-Object Intersection",
+            "start_page": 76
+        },{
+            "id": "4.5",
+            "title": "4.5 - Shading",
+            "start_page": 81
+        },{
+            "id": "4.6",
+            "title": "4.6 - A Ray-Tracing Program",
+            "start_page": 84
+        },{
+            "id": "4.7",
+            "title": "4.7 - Shadows",
+            "start_page": 86
+        },{
+            "id": "4.8",
+            "title": "4.8 - Ideal Specular Reflection",
+            "start_page": 87
+        },{
+            "id": "4.9",
+            "title": "4.9 - Historical Notes",
+            "start_page": 87
+        }]
+    },{
+        "title": "5. Linear Algebra",
+        "start_page": 89,
+        "content": [{
+            "id": "5.1",
+            "title": "5.1 - Determinants",
+            "start_page": 89
+        },{
+            "id": "5.2",
+            "title": "5.2 - Matrices",
+            "start_page": 91
+        },{
+            "id": "5.3",
+            "title": "5.3 - Computing with Matrices and Determinants",
+            "start_page": 96
+        },{
+            "id": "5.4",
+            "title": "5.4 - Eigenvalues and Matrix Diagonalization",
+            "start_page": 101
+        }]
+    },{
+        "title": "6. Transformation Matrices",
+        "start_page": 109,
+        "content": [{
+            "id": "6.1",
+            "title": "6.1 - 2D Linear Transformations",
+            "start_page": 109
+        },{
+            "id": "6.2",
+            "title": "6.2 - 3D Linear Transformations",
+            "start_page": 91
+        },{
+            "id": "6.3",
+            "title": "6.3 - Translation and Affine Transformations",
+            "start_page": 128
+        },{
+            "id": "6.4",
+            "title": "6.4 - Inverses of Transformation Matrices",
+            "start_page": 132
+        },{
+            "id": "6.5",
+            "title": "6.5 - Coordinate Transformations",
+            "start_page": 133
+        }]
+    },{
+        "title": "7. Viewing",
+        "start_page": 139,
+        "content": [{
+            "id": "7.1",
+            "title": "7.1 - Viewing Transformations",
+            "start_page": 140
+        },{
+            "id": "7.2",
+            "title": "7.2 - Projective Transformations",
+            "start_page": 146
+        },{
+            "id": "7.3",
+            "title": "7.3 - Perspective Projection",
+            "start_page": 149
+        },{
+            "id": "7.4",
+            "title": "7.4 - Some Properties of the Perspective Transform",
+            "start_page": 153
+        },{
+            "id": "7.5",
+            "title": "7.5 - Field-of-View",
+            "start_page": 154
+        }]
+    },{
+        "title": "8. The Graphics Pipeline",
+        "start_page": 159,
+        "content": [{
+            "id": "8.1",
+            "title": "8.1 - Rasterization",
+            "start_page": 160
+        },{
+            "id": "8.2",
+            "title": "8.2 - Operations Before and After Rasterization",
+            "start_page": 171
+        },{
+            "id": "8.3",
+            "title": "8.3 - Simple Antialiasing",
+            "start_page": 177
+        },{
+            "id": "8.4",
+            "title": "8.4 - Culling Primitives for Efficiency",
+            "start_page": 179
+        }]
+    },{
+        "title": "9. Signal Processing",
+        "start_page": 183,
+        "content": [{
+            "id": "9.1",
+            "title": "9.1 - Digital Audio: Sampling in 1D",
+            "start_page": 184
+        },{
+            "id": "9.2",
+            "title": "9.2 - Convolution",
+            "start_page": 187
+        },{
+            "id": "9.3",
+            "title": "9.3 - Convolution Filters",
+            "start_page": 201
+        },{
+            "id": "9.4",
+            "title": "9.4 - Signal Processing for Images",
+            "start_page": 208
+        },{
+            "id": "9.5",
+            "title": "9.5 - Sampling Theory",
+            "start_page": 217
+        }]
+    },{
+        "title": "10. Surface Shading",
+        "start_page": 233,
+        "content": [{
+            "id": "10.1",
+            "title": "10.1 - Diffuse Shading",
+            "start_page": 233
+        },{
+            "id": "10.2",
+            "title": "10.2 - Phong Shading",
+            "start_page": 236
+        },{
+            "id": "10.3",
+            "title": "10.3 - Artistic Shading",
+            "start_page": 239
+        }]
+    },{
+        "title": "11. Texture Mapping",
+        "start_page": 243,
+        "content": [{
+            "id": "11.1",
+            "title": "11.1 - Looking Up Texture Values",
+            "start_page": 244
+        },{
+            "id": "11.2",
+            "title": "11.2 - Texture Coordinate Functions",
+            "start_page": 246
+        },{
+            "id": "11.3",
+            "title": "11.3 - Antialiasing Texture Lookups",
+            "start_page": 260
+        },{
+            "id": "11.4",
+            "title": "11.4 - Applications of Texture Mapping",
+            "start_page": 267
+        },{
+            "id": "11.5",
+            "title": "11.5 - Procedural 3D Textures",
+            "start_page": 273
+        }]
+    },{
+        "title": "12. Data Structures for Graphics",
+        "start_page": 281,
+        "content": [{
+            "id": "12.1",
+            "title": "12.1 - Triangle Meshes",
+            "start_page": 282
+        },{
+            "id": "12.2",
+            "title": "12.2 - Scene Graphs",
+            "start_page": 295
+        },{
+            "id": "12.3",
+            "title": "12.3 - Spatial Data Strucutures",
+            "start_page": 297
+        },{
+            "id": "12.4",
+            "title": "12.4 - BSP Tree for Visibility",
+            "start_page": 309
+        },{
+            "id": "12.5",
+            "title": "12.5 - Tiling Multidimensional Arrays",
+            "start_page": 317
+        }]
+    },{
+        "title": "13. More Ray Tracing",
+        "start_page": 323,
+        "content": [{
+            "id": "13.1",
+            "title": "13.1 - Transparency and Refraction",
+            "start_page": 324
+        },{
+            "id": "13.2",
+            "title": "13.2 - Instancing",
+            "start_page": 327
+        },{
+            "id": "13.3",
+            "title": "13.3 - Constructive Solid Geometry",
+            "start_page": 328
+        },{
+            "id": "13.4",
+            "title": "13.4 - Distribution Ray Tracing",
+            "start_page": 329
+        }]
+    },{
+        "title": "14. Sampling",
+        "start_page": 337,
+        "content": [{
+            "id": "14.1",
+            "title": "14.1 - Integration",
+            "start_page": 337
+        },{
+            "id": "14.2",
+            "title": "14.2 - Continuous Probability",
+            "start_page": 342
+        },{
+            "id": "14.3",
+            "title": "14.3 - Monte Carlo Integration",
+            "start_page": 346
+        },{
+            "id": "14.4",
+            "title": "14.4 - Choosing Random Points",
+            "start_page": 349
+        }]
+    },{
+        "title": "15. Curves",
+        "start_page": 359,
+        "content": [{
+            "id": "15.1",
+            "title": "15.1 - Curves",
+            "start_page": 359
+        },{
+            "id": "15.2",
+            "title": "15.2 - Curve Properties",
+            "start_page": 365
+        },{
+            "id": "15.3",
+            "title": "15.3 - Polynomial Pieces",
+            "start_page": 368
+        },{
+            "id": "15.4",
+            "title": "15.4 - Putting Pieces Together",
+            "start_page": 375
+        },{
+            "id": "15.5",
+            "title": "15.5 - Cubics",
+            "start_page": 378
+        },{
+            "id": "15.6",
+            "title": "15.6 - Approximating Curves",
+            "start_page": 385
+        },{
+            "id": "15.7",
+            "title": "15.7 - Summary",
+            "start_page": 402
+        }]
+    },{
+        "title": "16. Computer Animation",
+        "start_page": 405,
+        "content": [{
+            "id": "16.1",
+            "title": "16.1 - Principles of Animation",
+            "start_page": 406
+        },{
+            "id": "16.2",
+            "title": "16.2 - Keyframing",
+            "start_page": 410
+        },{
+            "id": "16.3",
+            "title": "16.3 - Deformations",
+            "start_page": 418
+        },{
+            "id": "16.4",
+            "title": "16.4 - Character Animation",
+            "start_page": 419
+        },{
+            "id": "16.5",
+            "title": "16.5 - Physics-Based Animation",
+            "start_page": 426
+        },{
+            "id": "16.6",
+            "title": "16.6 - Procedural Techniques",
+            "start_page": 428
+        },{
+            "id": "16.7",
+            "title": "16.7 - Groups of Objects",
+            "start_page": 431
+        }]
+    },{
+        "title": "17. Using Graphics Hardware",
+        "start_page": 437,
+        "content": [{
+            "id": "17.1",
+            "title": "17.1 - Hardward Overview",
+            "start_page": 437
+        },{
+            "id": "17.2",
+            "title": "17.2 - What Is Graphics Hardware",
+            "start_page": 437
+        },{
+            "id": "17.3",
+            "title": "17.3 - Heterogeneous Multiprocessing",
+            "start_page": 439
+        },{
+            "id": "17.4",
+            "title": "17.4 - Graphics Hardware Programming: Buffers, State, and Shaders",
+            "start_page": 441
+        },{
+            "id": "17.5",
+            "title": "17.5 - State Machine",
+            "start_page": 443
+        },{
+            "id": "17.6",
+            "title": "17.6 - Basic OpenGL Application Layout",
+            "start_page": 444
+        },{
+            "id": "17.7",
+            "title": "17.7 - Geometry",
+            "start_page": 445
+        },{
+            "id": "17.8",
+            "title": "17.8 - A First Look at Shaders",
+            "start_page": 447
+        },{
+            "id": "17.9",
+            "title": "17.9 - Vertex Buffer Objects",
+            "start_page": 450
+        },{
+            "id": "17.10",
+            "title": "17.10 - Vertex Array Objects",
+            "start_page": 452
+        },{
+            "id": "17.11",
+            "title": "17.11 - Transformation Matrices",
+            "start_page": 455
+        },{
+            "id": "17.12",
+            "title": "17.12 - Shading with Per-Vertex Attributes",
+            "start_page": 457
+        },{
+            "id": "17.13",
+            "title": "17.13 - Shading in the Fragment Processor",
+            "start_page": 461
+        },{
+            "id": "17.14",
+            "title": "17.14 - Meshes and Instancing",
+            "start_page": 467
+        },{
+            "id": "17.15",
+            "title": "17.15 - Texture Objects",
+            "start_page": 469
+        },{
+            "id": "17.16",
+            "title": "17.16 - Object-Oriented Design for Graphics Hardware Programming",
+            "start_page": 475
+        },{
+            "id": "17.17",
+            "title": "17.17 - Continued Learning",
+            "start_page": 476
+        }]
+    },{
+        "title": "18. Light",
+        "start_page": 479,
+        "content": [{
+            "id": "18.1",
+            "title": "18.1 - Radiometry",
+            "start_page": 479
+        },{
+            "id": "18.2",
+            "title": "18.2 - Transport Equation",
+            "start_page": 488
+        },{
+            "id": "18.3",
+            "title": "18.3 - Photometry",
+            "start_page": 489
+        }]
+    },{
+        "title": "19. Color",
+        "start_page": 493,
+        "content": [{
+            "id": "19.1",
+            "title": "19.1 - Colorimetry",
+            "start_page": 495
+        },{
+            "id": "19.2",
+            "title": "19.2 - Color Spaces",
+            "start_page": 504
+        },{
+            "id": "19.3",
+            "title": "19.3 - Chromatic Adaptation",
+            "start_page": 510
+        },{
+            "id": "19.4",
+            "title": "19.4 - Color Appearance",
+            "start_page": 514
+        }]
+    },{
+        "title": "20. Visual Perception",
+        "start_page": 515,
+        "content": [{
+            "id": "20.1",
+            "title": "20.1 - Vision Science",
+            "start_page": 516
+        },{
+            "id": "20.2",
+            "title": "20.2 - Visual Sensitivity",
+            "start_page": 517
+        },{
+            "id": "20.3",
+            "title": "20.3 - Spatial Vision",
+            "start_page": 534
+        },{
+            "id": "20.4",
+            "title": "20.4 - Objects, Locations, and Events",
+            "start_page": 547
+        },{
+            "id": "20.5",
+            "title": "20.5 - Picture Perception",
+            "start_page": 556
+        }]
+    },{
+        "title": "21. Tone Reproduction",
+        "start_page": 559,
+        "content": [{
+            "id": "21.1",
+            "title": "21.1 - Classification",
+            "start_page": 562
+        },{
+            "id": "21.2",
+            "title": "21.2 - Dynamic Range",
+            "start_page": 563
+        },{
+            "id": "21.3",
+            "title": "21.3 - Color",
+            "start_page": 565
+        },{
+            "id": "21.4",
+            "title": "21.4 - Image Formation",
+            "start_page": 567
+        },{
+            "id": "21.5",
+            "title": "21.5 - Frequency-Based Operators",
+            "start_page": 567
+        },{
+            "id": "21.6",
+            "title": "21.6 - Gradient-Domain Operators",
+            "start_page": 569
+        },{
+            "id": "21.7",
+            "title": "21.7 - Spatial Operators",
+            "start_page": 570
+        },{
+            "id": "21.8",
+            "title": "21.8 - Division",
+            "start_page": 572
+        },{
+            "id": "21.9",
+            "title": "21.9 - Sigmoids",
+            "start_page": 573
+        },{
+            "id": "21.10",
+            "title": "21.10 - Other Approaches",
+            "start_page": 578
+        },{
+            "id": "21.11",
+            "title": "21.11 - Night Tonemapping",
+            "start_page": 581
+        },{
+            "id": "21.12",
+            "title": "21.12 - Discussion",
+            "start_page": 582
+        }]
+    },{
+        "title": "22. Implicit Modeling",
+        "start_page": 585,
+        "content": [{
+            "id": "22.1",
+            "title": "22.1 - Implicit Functions, Skeletal Primitives, and Summation Blending",
+            "start_page": 586
+        },{
+            "id": "22.2",
+            "title": "22.2 - Rendering",
+            "start_page": 594
+        },{
+            "id": "22.3",
+            "title": "22.3 - Space Partitioning",
+            "start_page": 595
+        },{
+            "id": "22.4",
+            "title": "22.4 - More on Blending",
+            "start_page": 601
+        },{
+            "id": "22.5",
+            "title": "22.5 - Constructive Solid Geometry",
+            "start_page": 602
+        },{
+            "id": "22.6",
+            "title": "22.6 - Warping",
+            "start_page": 604
+        },{
+            "id": "22.7",
+            "title": "22.7 - Precise Contact Modeling",
+            "start_page": 606
+        },{
+            "id": "22.8",
+            "title": "22.8 - The BlobTree",
+            "start_page": 608
+        },{
+            "id": "22.9",
+            "title": "22.9 - Interactive Implicit Modeling Systems",
+            "start_page": 610
+        }]
+    },{
+        "title": "23. Global Illumination",
+        "start_page": 613,
+        "content": [{
+            "id": "23.1",
+            "title": "23.1 - Particle Tracing for Lambertian Scenes",
+            "start_page": 614
+        },{
+            "id": "23.2",
+            "title": "23.2 - Path Tracing",
+            "start_page": 617
+        },{
+            "id": "23.3",
+            "title": "23.3 - Accurate Direct Lighting",
+            "start_page": 619
+        }]
+    },{
+        "title": "24. Reflection Models",
+        "start_page": 627,
+        "content": [{
+            "id": "24.1",
+            "title": "24.1 - Real-World Materials",
+            "start_page": 627
+        },{
+            "id": "24.2",
+            "title": "24.2 - Implementing Reflection Models",
+            "start_page": 629
+        },{
+            "id": "24.3",
+            "title": "24.3 - Specular Reflection Models",
+            "start_page": 631
+        },{
+            "id": "24.4",
+            "title": "24.4 - Smooth-Layered Model",
+            "start_page": 632
+        },{
+            "id": "24.5",
+            "title": "24.5 - Rough-Layered Model",
+            "start_page": 635
+        }]
+    },{
+        "title": "25. Computer Graphics in Games",
+        "start_page": 643,
+        "content": [{
+            "id": "25.1",
+            "title": "25.1 - Platforms",
+            "start_page": 643
+        },{
+            "id": "25.2",
+            "title": "25.2 - Limited Resources",
+            "start_page": 646
+        },{
+            "id": "25.3",
+            "title": "25.3 - Optimization Techniques",
+            "start_page": 649
+        },{
+            "id": "25.4",
+            "title": "25.4 - Game Types",
+            "start_page": 650
+        },{
+            "id": "25.5",
+            "title": "25.5 - The Game Production Process",
+            "start_page": 653
+        }]
+    },{
+        "title": "26. Visualization",
+        "start_page": 665,
+        "content": [{
+            "id": "26.1",
+            "title": "26.1 - Background",
+            "start_page": 667
+        },{
+            "id": "26.2",
+            "title": "26.2 - Data Types",
+            "start_page": 668
+        },{
+            "id": "26.3",
+            "title": "26.3 - Human-Centered Design Process",
+            "start_page": 670
+        },{
+            "id": "26.4",
+            "title": "26.4 - Visual Encoding Principles",
+            "start_page": 672
+        },{
+            "id": "26.5",
+            "title": "26.5 - Interaction Principles",
+            "start_page": 680
+        },{
+            "id": "26.6",
+            "title": "26.6 - Composite and Adjacent Views",
+            "start_page": 681
+        },{
+            "id": "26.7",
+            "title": "26.7 - Data Reduction",
+            "start_page": 688
+        },{
+            "id": "26.8",
+            "title": "26.8 - Examples",
+            "start_page": 692
+        }]
+    },{
+        "id": "ref",
+        "title": "References",
+        "content": [],
+        "start_page": 701
+    }]
+}

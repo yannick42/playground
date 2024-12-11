@@ -1,0 +1,724 @@
+{
+    "title": "Reinforcement Learning (2018)",
+    "nb_pages": 478,
+    "id": "Sutton",
+    "front_cover": "https://m.media-amazon.com/images/I/71nk3rOK3jL._AC_UF1000,1000_QL80_.jpg",
+    "tags": [],
+    "authors": "Andrew Barto & Richard Sutton",
+    "content": [{
+        "id": "part-1",
+        "title": "I. Tabular Solution Methods",
+        "content": [{
+            "id": "2",
+            "title": "Multi-armed Bandits",
+            "content": [{
+                "id": "2.1",
+                "title": "A k-armed Bandits Problem",
+                "start_page": 25
+            },{
+                "id": "2.2",
+                "title": "Action-value Methods",
+                "start_page": 27
+            },{
+                "id": "2.3",
+                "title": "The 10-armed Testbed",
+                "start_page": 28
+            },{
+                "id": "2.4",
+                "title": "Incremental Implementation",
+                "start_page": 30
+            },{
+                "id": "2.5",
+                "title": "Tracking a Nonstationary Problem",
+                "start_page": 32
+            },{
+                "id": "2.6",
+                "title": "Optimistic Initial Values",
+                "start_page": 34
+            },{
+                "id": "2.7",
+                "title": "Upper-Confidence-Bound Action Selection",
+                "start_page": 35
+            },{
+                "id": "2.8",
+                "title": "Gradient Bandit Algorithms",
+                "start_page": 37
+            },{
+                "id": "2.9",
+                "title": "Associative Search (Contextual Bandits)",
+                "start_page": 41
+            },{
+                "id": "2.10",
+                "title": "Summary",
+                "start_page": 42
+            }]
+        },{
+            "id": "3",
+            "title": "Finite Markov Decision Processes",
+            "content": [{
+                "id": "3.1",
+                "title": "The Agent-Environment Interface",
+                "start_page": 47
+            },{
+                "id": "3.2",
+                "title": "Goals and Rewards",
+                "start_page": 53
+            },{
+                "id": "3.3",
+                "title": "Returns and Episodes",
+                "start_page": 54
+            },{
+                "id": "3.4",
+                "title": "Unified Notation for Episodic and Continuing Tasks",
+                "start_page": 57
+            },{
+                "id": "3.5",
+                "title": "Policies and Value Functions",
+                "start_page": 58
+            },{
+                "id": "3.6",
+                "title": "Optimal Policies and Optimal Value Functions",
+                "start_page": 62
+            },{
+                "id": "3.7",
+                "title": "Optimality and Approximation",
+                "start_page": 67
+            },{
+                "id": "3.8",
+                "title": "Summary",
+                "start_page": 68
+            }]
+        },{
+            "id": "4",
+            "title": "Dynamic Programming",
+            "content": [{
+                "id": "4.1",
+                "title": "Policy Evaluation (Prediction)",
+                "start_page": 74
+            },{
+                "id": "4.2",
+                "title": "Policy Improvement",
+                "start_page": 76
+            },{
+                "id": "4.3",
+                "title": "Policy Iteration",
+                "start_page": 80
+            },{
+                "id": "4.4",
+                "title": "Value Iteration",
+                "start_page": 82
+            },{
+                "id": "4.5",
+                "title": "Asynchronous Dynamic Programming",
+                "start_page": 85
+            },{
+                "id": "4.6",
+                "title": "Generalized Policy Iteration",
+                "start_page": 86
+            },{
+                "id": "4.7",
+                "title": "Efficiency of Dynamic Programming",
+                "start_page": 87
+            },{
+                "id": "4.8",
+                "title": "Summary",
+                "start_page": 88
+            }]
+        },{
+            "id": "5",
+            "title": "Monte Carlo Methods",
+            "content": [{
+                "id": "5.1",
+                "title": "Monte Carlo Prediction",
+                "start_page": 92
+            },{
+                "id": "5.2",
+                "title": "Monte Carlo Estimation of Action Values",
+                "start_page": 96
+            },{
+                "id": "5.3",
+                "title": "Monte Carlo Control",
+                "start_page": 97
+            },{
+                "id": "5.4",
+                "title": "Monte Carlo Control without Exploring Starts",
+                "start_page": 100
+            },{
+                "id": "5.5",
+                "title": "Off-policy Prediction via Importance Sampling",
+                "start_page": 103
+            },{
+                "id": "5.6",
+                "title": "Incremental Implementation",
+                "start_page": 109
+            },{
+                "id": "5.7",
+                "title": "Off-policy Monte Carlo Control",
+                "start_page": 110
+            },{
+                "id": "5.8",
+                "title": "*Discounting-aware Importance Sampling",
+                "start_page": 112
+            },{
+                "id": "5.9",
+                "title": "*Per-decision Importance Sampling",
+                "start_page": 114
+            },{
+                "id": "5.10",
+                "title": "Summary",
+                "start_page": 115
+            }]
+        },{
+            "id": "6",
+            "title": "Temporal-Difference Learning",
+            "content": [{
+                "id": "6.1",
+                "title": "TD Prediction",
+                "start_page": 119
+            },{
+                "id": "6.2",
+                "title": "Advantages of TD Prediction Methods",
+                "start_page": 124
+            },{
+                "id": "6.3",
+                "title": "Optimality of TD(0)",
+                "start_page": 126
+            },{
+                "id": "6.4",
+                "title": "Sarsa: On-policy TD Control",
+                "start_page": 129
+            },{
+                "id": "6.5",
+                "title": "Q-Learning: Off-policy TD Control",
+                "start_page": 131
+            },{
+                "id": "6.6",
+                "title": "Expected Sarsa",
+                "start_page": 133
+            },{
+                "id": "6.7",
+                "title": "Maximization Bias and Double Learning",
+                "start_page": 134
+            },{
+                "id": "6.8",
+                "title": "Games, Afterstates, and Other Special Cases",
+                "start_page": 136
+            },{
+                "id": "6.9",
+                "title": "Summary",
+                "start_page": 138
+            }]
+        },{
+            "id": "7",
+            "title": "n-step Bootstrapping",
+            "content": [{
+                "id": "7.1",
+                "title": "n-step TD Prediction",
+                "start_page": 142
+            },{
+                "id": "7.2",
+                "title": "n-step Sarsa",
+                "start_page": 145
+            },{
+                "id": "7.3",
+                "title": "n-step Off-policy Learning",
+                "start_page": 148
+            },{
+                "id": "7.4",
+                "title": "*Per-decision Methods with Control Variates",
+                "start_page": 150
+            },{
+                "id": "7.5",
+                "title": "Off-policy Learning Without Importance Sampling: The n-step Three Backup Algorithm",
+                "start_page": 152
+            },{
+                "id": "7.6",
+                "title": "*A Unifying Algorithm: n-step Q(\\sigma)",
+                "start_page": 154
+            },{
+                "id": "7.7",
+                "title": "Summary",
+                "start_page": 157
+            }]
+        },{
+            "id": "8",
+            "title": "Planning and Learning with Tabular Methods",
+            "content": [{
+                "id": "8.1",
+                "title": "Models and Planning",
+                "start_page": 159
+            },{
+                "id": "8.2",
+                "title": "Dyna: Integrated Planning, Acting, and Learning",
+                "start_page": 161
+            },{
+                "id": "8.3",
+                "title": "When the Model is Wrong",
+                "start_page": 166
+            },{
+                "id": "8.4",
+                "title": "Prioritized Sweeping",
+                "start_page": 168
+            },{
+                "id": "8.5",
+                "title": "Expected vs. Sample Updates",
+                "start_page": 172
+            },{
+                "id": "8.6",
+                "title": "Trajectory Sampling",
+                "start_page": 174
+            },{
+                "id": "8.7",
+                "title": "Real-time Dynamic Programming",
+                "start_page": 177
+            },{
+                "id": "8.8",
+                "title": "Planning at Decision Time",
+                "start_page": 180
+            },{
+                "id": "8.9",
+                "title": "Heuristic Search",
+                "start_page": 181
+            },{
+                "id": "8.10",
+                "title": "Rollout Algorithms",
+                "start_page": 183
+            },{
+                "id": "8.11",
+                "title": "Monte Carlo Tree Search",
+                "start_page": 185
+            },{
+                "id": "8.12",
+                "title": "Summary of the Chapter",
+                "start_page": 188
+            },{
+                "id": "8.13",
+                "title": "Summary of Part I: Dimensions",
+                "start_page": 189
+            }]
+        }]
+    },{
+        "id": "part-2",
+        "title": "II. Approximate Solution Methods",
+        "content": [{
+            "id": "9",
+            "title": "On-policy Prediction with Approximation",
+            "content": [{
+                "id": "9.1",
+                "title": "Value-function Approximation",
+                "start_page": 198
+            },{
+                "id": "9.2",
+                "title": "The Prediction Objective (VE)",
+                "start_page": 199
+            },{
+                "id": "9.3",
+                "title": "Stochastic-gradient and Semi-gradient Methods",
+                "start_page": 200
+            },{
+                "id": "9.4",
+                "title": "Linear Methods",
+                "start_page": 204
+            },{
+                "id": "9.5",
+                "title": "Feature Construction for Linear Methods",
+                "start_page": 210,
+                "content": [{
+                    "id": "9.5.1",
+                    "title": "Polynomials",
+                    "start_page": 210
+                },{
+                    "id": "9.5.2",
+                    "title": "Fourier Basis",
+                    "start_page": 211
+                },{
+                    "id": "9.5.3",
+                    "title": "Coarse Coding",
+                    "start_page": 215
+                },{
+                    "id": "9.5.4",
+                    "title": "Tile Coding",
+                    "start_page": 217
+                },{
+                    "id": "9.5.5",
+                    "title": "Radial Basis Functions",
+                    "start_page": 221
+                }]
+            },{
+                "id": "9.6",
+                "title": "Selecting Step-Size Parameters Manually",
+                "start_page": 222
+            },{
+                "id": "9.7",
+                "title": "Nonlinear Function Approximation: Artificial Neural Networks",
+                "start_page": 223
+            },{
+                "id": "9.8",
+                "title": "Least-Square TD",
+                "start_page": 228
+            },{
+                "id": "9.9",
+                "title": "Memory-based Function Approximation",
+                "start_page": 230
+            },{
+                "id": "9.10",
+                "title": "Kernel-based Function Approximation",
+                "start_page": 232
+            },{
+                "id": "9.11",
+                "title": "Looking Deeper at On-policy Learning: Interest and Emphasis",
+                "start_page": 234
+            },{
+                "id": "9.12",
+                "title": "Summary",
+                "start_page": 236
+            }]
+        },{
+            "id": "10",
+            "title": "On-policy Control with Approximation",
+            "content": [{
+                "id": "10.1",
+                "title": "Episodic Semi-gradient Control",
+                "start_page": 243
+            },{
+                "id": "10.2",
+                "title": "Semi-gradient n-step Sarsa",
+                "start_page": 247
+            },{
+                "id": "10.3",
+                "title": "Average Reward: A New Problem Setting for Continuing Tasks",
+                "start_page": 249
+            },{
+                "id": "10.4",
+                "title": "Deprecating the Discounted Setting",
+                "start_page": 253
+            },{
+                "id": "10.5",
+                "title": "Differential Semi-gradient n-step Sarsa",
+                "start_page": 255
+            },{
+                "id": "10.6",
+                "title": "Summary",
+                "start_page": 256
+            }]
+        },{
+            "id": "11",
+            "title": "11. *Off-policy Methods with Approximation",
+            "content": [{
+                "id": "11.1",
+                "title": "11.1 - Semi-gradient Methods",
+                "start_page": 258
+            },{
+                "id": "11.2",
+                "title": "11.2 - Examples of Off-policy Divergence",
+                "start_page": 260
+            },{
+                "id": "11.3",
+                "title": "11.3 - The Deadly Triad",
+                "start_page": 264
+            },{
+                "id": "11.4",
+                "title": "11.4 - Linear Value-function Geometry",
+                "start_page": 266
+            },{
+                "id": "11.5",
+                "title": "Gradient Descent in the Bellman Error",
+                "start_page": 269
+            },{
+                "id": "11.6",
+                "title": "The Bellman Error is Not Learnable",
+                "start_page": 274
+            },{
+                "id": "11.7",
+                "title": "11.7 - Gradient-TD Methods",
+                "start_page": 278
+            },{
+                "id": "11.8",
+                "title": "11.8 - Emphatic-TD Methods",
+                "start_page": 281
+            },{
+                "id": "11.9",
+                "title": "11.9 - Reducing Variance",
+                "start_page": 283
+            },{
+                "id": "11.10",
+                "title": "11.10 - Summary",
+                "start_page": 284
+            }]
+        },{
+            "id": "12",
+            "title": "Eligibility Traces",
+            "content": [{
+                "id": "12.1",
+                "title": "12.1 - The λ-return",
+                "start_page": 288
+            },{
+                "id": "12.2",
+                "title": "12.2 - TD(λ)",
+                "start_page": 292
+            },{
+                "id": "12.3",
+                "title": "12.3 - n-step Truncated λ-return Methods",
+                "start_page": 295
+            },{
+                "id": "12.4",
+                "title": "12.4 - Redoing Updates: Online λ-return Algorithm",
+                "start_page": 297
+            },{
+                "id": "12.5",
+                "title": "12.5 - True Online TD(λ)",
+                "start_page": 299
+            },{
+                "id": "12.6",
+                "title": "12.6 - *Dutch Traces in Monte Carlo Learning",
+                "start_page": 301
+            },{
+                "id": "12.7",
+                "title": "12.7 - Sarsa(λ)",
+                "start_page": 303
+            },{
+                "id": "12.8",
+                "title": "12.8 - Variable λ and γ",
+                "start_page": 307
+            },{
+                "id": "12.9",
+                "title": "12.9 - *Off-policy Traces with Control Variates",
+                "start_page": 309
+            },{
+                "id": "12.10",
+                "title": "12.10 - Watkins's Q(λ) to Tree-Backup(λ)",
+                "start_page": 312
+            },{
+                "id": "12.11",
+                "title": "12.11 - Stable Off-policy Methods with Traces",
+                "start_page": 314
+            },{
+                "id": "12.12",
+                "title": "12.12 - Implementation Issues",
+                "start_page": 316
+            },{
+                "id": "12.13",
+                "title": "12.13 - Conclusions",
+                "start_page": 317
+            }]
+        },{
+            "id": "13",
+            "title": "Policy Gradient Methods",
+            "content": [{
+                "id": "13.1",
+                "title": "13.1 - Policy Approximation and its Advantages",
+                "start_page": 322
+            },{
+                "id": "13.2",
+                "title": "13.2 - The Policy Gradient Theorem",
+                "start_page": 324
+            },{
+                "id": "13.3",
+                "title": "13.3 - REINFORCE: Monte Carlo Policy Gradient",
+                "start_page": 326
+            },{
+                "id": "13.4",
+                "title": "13.4 - REINFORCE with Baseline",
+                "start_page": 329
+            },{
+                "id": "13.5",
+                "title": "13.5 - Actor-Critic Methods",
+                "start_page": 331
+            },{
+                "id": "13.6",
+                "title": "13.6 - Policy Gradient for Continuing Problems",
+                "start_page": 333
+            },{
+                "id": "13.7",
+                "title": "13.7 - Policy Parameterization for Continuous Actions",
+                "start_page": 335
+            },{
+                "id": "13.8",
+                "title": "13.8 - Summary",
+                "start_page": 337
+            }]
+        }]
+    },{
+        "id": "part-3",
+        "title": "III. Looking Deeper",
+        "content": [{
+            "id": "14",
+            "title": "Psychology",
+            "content": [{
+                "id": "14.1",
+                "title": "14.1 - Prediction and Control",
+                "start_page": 342
+            },{
+                "id": "14.2",
+                "title": "14.2 - Classical Conditioning",
+                "start_page": 343,
+                "content": [{
+                    "id": "14.2.1",
+                    "title": "14.2.1 - Blocking and Higher-order Conditioning",
+                    "start_page": 345
+                },{
+                    "id": "14.2.2",
+                    "title": "14.2.2 - The Rescorla-Wagner Model",
+                    "start_page": 346
+                },{
+                    "id": "14.2.3",
+                    "title": "14.2.3 - The TD Model",
+                    "start_page": 349
+                },{
+                    "id": "14.2.4",
+                    "title": "14.2.4 - TD Models Simulations",
+                    "start_page": 350
+                }]
+            },{
+                "id": "14.3",
+                "title": "14.3 - Instrumental Conditioning",
+                "start_page": 357
+            },{
+                "id": "14.4",
+                "title": "14.4 - Delayed Reinforcement",
+                "start_page": 361
+            },{
+                "id": "14.5",
+                "title": "14.5 - Cognitive Maps",
+                "start_page": 363
+            },{
+                "id": "14.6",
+                "title": "14.6 - Habitual and Goal-directed Behavior",
+                "start_page": 364
+            },{
+                "id": "14.7",
+                "title": "14.7 - Summary",
+                "start_page": 368
+            }]
+        },{
+            "id": "15",
+            "title": "Neuroscience",
+            "content": [{
+                "id": "15.1",
+                "title": "15.1 - Neuroscience Basics",
+                "start_page": 378
+            },{
+                "id": "15.2",
+                "title": "15.2 - Reward Signals, Reinforcement Signals, Values, and Prediction Errors",
+                "start_page": 380
+            },{
+                "id": "15.3",
+                "title": "15.3 - The Reward Prediction Error Hypothesis",
+                "start_page": 381
+            },{
+                "id": "15.4",
+                "title": "15.4 - Dopamine",
+                "start_page": 383
+            },{
+                "id": "15.5",
+                "title": "15.5 - Experimental Support for the Reward Prediction Error Hypothesis",
+                "start_page": 387
+            },{
+                "id": "15.6",
+                "title": "15.6 - TD Error / Dopamine Correspondence",
+                "start_page": 390
+            },{
+                "id": "15.7",
+                "title": "15.7 - Neural Actor-Critic",
+                "start_page": 395
+            },{
+                "id": "15.8",
+                "title": "15.8 - Actor and Critic Learning Rules",
+                "start_page": 398
+            },{
+                "id": "15.9",
+                "title": "15.9 - Hedonistic Neurons",
+                "start_page": 402
+            },{
+                "id": "15.10",
+                "title": "15.10 - Collective Reinforcement Learning",
+                "start_page": 404
+            },{
+                "id": "15.11",
+                "title": "15.11 - Model-based Methods in the Brain",
+                "start_page": 407
+            },{
+                "id": "15.12",
+                "title": "15.12 - Addiction",
+                "start_page": 409
+            },{
+                "id": "15.13",
+                "title": "15.13 - Summary",
+                "start_page": 410
+            }]
+        },{
+            "id": "16",
+            "title": "Applications and Case Studies",
+            "content": [{
+                "id": "16.1",
+                "title": "16.1 - TD-Gammon",
+                "start_page": 421
+            },{
+                "id": "16.2",
+                "title": "16.2 - Samuel's Checkers Player",
+                "start_page": 426
+            },{
+                "id": "16.3",
+                "title": "16.3 - Watson's Daily-Double Wagering",
+                "start_page": 429
+            },{
+                "id": "16.4",
+                "title": "16.4 - Optimizing Memory Control",
+                "start_page": 432
+            },{
+                "id": "16.5",
+                "title": "16.5 - Human-level Video Game Play",
+                "start_page": 436
+            },{
+                "id": "16.6",
+                "title": "16.6 - Mastering the Game of Go",
+                "start_page": 441,
+                "content": [{
+                    "id": "16.6.1",
+                    "title": "16.6.1 - AlphaGo",
+                    "start_page": 444
+                },{
+                    "id": "16.6.2",
+                    "title": "16.6.2 - AlphaGo Zero",
+                    "start_page": 447
+                }]
+            },{
+                "id": "16.7",
+                "title": "16.7 - Personalized Web Services",
+                "start_page": 450
+            },{
+                "id": "16.8",
+                "title": "16.8 - Thermal Soaring",
+                "start_page": 453
+            }]
+        },{
+            "id": "17",
+            "title": "Frontiers",
+            "content": [{
+                "id": "17.1",
+                "title": "17.1 - General Value Functions and Auxiliary Tasks",
+                "start_page": 459
+            },{
+                "id": "17.2",
+                "title": "17.2 - Temporal Abstraction via Options",
+                "start_page": 461
+            },{
+                "id": "17.3",
+                "title": "17.3 - Observations and State",
+                "start_page": 464
+            },{
+                "id": "17.4",
+                "title": "17.4 - Designing Reward Signals",
+                "start_page": 469
+            },{
+                "id": "17.5",
+                "title": "17.5 - Remaining Issues",
+                "start_page": 472
+            },{
+                "id": "17.6",
+                "title": "17.6 - The Future of Artificial Intelligence",
+                "start_page": 475
+            }]
+        }]
+    }]
+}

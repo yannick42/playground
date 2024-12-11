@@ -186,7 +186,8 @@ const bookIds = [
     'SICP', 'CG', 'VG', 'LinearAlgebraHefferon',
     'Cormen', 'HoML3', 'AlgoForOptimization',
     'NumericalRecipes', 'AlgoForDecisionMaking', 'KR',
-    'FluentPython', 'CraftingInterpreters'
+    'FluentPython', 'CraftingInterpreters', 'Sutton',
+    'FundamentalsOfCG', 
 ];
 
 const booksIds_from_GCS = [];

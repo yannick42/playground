@@ -3,11 +3,7 @@
     "nb_pages": 481,
     "id": "AlgoForDecisionMaking",
     "front_cover": "https://m.media-amazon.com/images/I/61OL0H+gSNL._AC_UF100,100_QL80_.jpg",
-    "tags": [{
-        "text": "incomplete",
-        "bgColor": "yellow",
-        "textColor": "red"
-    }],
+    "tags": [],
     "authors": "Mykel J. Kochenderfer, Tim A. Wheeler & Kyle H. Wray",
     "pdf_url": "https://algorithmsbook.com/files/dm.pdf",
     "main_url": "https://algorithmsbook.com/",
@@ -658,6 +654,363 @@
                 "id": "18.8",
                 "title": "Exercises",
                 "start_page": 372
+            }]
+        }]
+    },{
+        "id": "part-4",
+        "title": "Part IV - State Uncertainty",
+        "content": [{
+            "id": "19",
+            "title": "Beliefs",
+            "start_page": 379,
+            "content": [{
+                "id": "19.1",
+                "title": "19.1 - Belief Initialization",
+                "start_page": 379
+            },{
+                "id": "19.2",
+                "title": "19.2 - Discrete State Filter",
+                "start_page": 380
+            },{
+                "id": "19.3",
+                "title": "19.3 - Kalman Filter",
+                "start_page": 383
+            },{
+                "id": "19.4",
+                "title": "19.4 - Extended Kalman Filter",
+                "start_page": 385
+            },{
+                "id": "19.5",
+                "title": "19.5 - Unscented Kalman Filter",
+                "start_page": 387
+            },{
+                "id": "19.6",
+                "title": "19.6 - Particle Filter",
+                "start_page": 390
+            },{
+                "id": "19.7",
+                "title": "19.7 - Particle Injection",
+                "start_page": 394
+            },{
+                "id": "19.8",
+                "title": "Summary",
+                "start_page": 395
+            },{
+                "id": "19.9",
+                "title": "Exercises",
+                "start_page": 397
+            }]
+        },{
+            "id": "20",
+            "title": "Exact Belief State Planning",
+            "start_page": 407,
+            "content": [{
+                "id": "20.1",
+                "title": "20.1 - Belief-State Markov Decision Processes",
+                "start_page": 407
+            },{
+                "id": "20.2",
+                "title": "20.2 - Conditional Plans",
+                "start_page": 408
+            },{
+                "id": "20.3",
+                "title": "20.3 - Alpha Vectors",
+                "start_page": 411
+            },{
+                "id": "20.4",
+                "title": "20.4 - Pruning",
+                "start_page": 412
+            },{
+                "id": "20.5",
+                "title": "20.5 - Value Iteration",
+                "start_page": 416
+            },{
+                "id": "20.6",
+                "title": "20.6 - Linear Policies",
+                "start_page": 419
+            },{
+                "id": "20.7",
+                "title": "Summary",
+                "start_page": 419
+            },{
+                "id": "20.8",
+                "title": "Exercises",
+                "start_page": 422
+            }]
+        },{
+            "id": "21",
+            "title": "21. Offline Belief State Planning",
+            "start_page": 427,
+            "content": [{
+                "id": "21.1",
+                "title": "21.1 - Fully Observable Value Approximation",
+                "start_page": 427
+            },{
+                "id": "21.2",
+                "title": "21.2 - Fast Informed Bound",
+                "start_page": 429
+            },{
+                "id": "21.3",
+                "title": "21.3 - Fast Lower Bounds",
+                "start_page": 430
+            },{
+                "id": "21.4",
+                "title": "21.4 - Point-Based Value Iteration",
+                "start_page": 431
+            },{
+                "id": "21.5",
+                "title": "21.5 - Randomized Point-Based Value Iteration",
+                "start_page": 433
+            },{
+                "id": "21.6",
+                "title": "21.6 - Sawtooth Upper Bound",
+                "start_page": 436
+            },{
+                "id": "21.7",
+                "title": "21.7 - Point Selection",
+                "start_page": 440
+            },{
+                "id": "21.8",
+                "title": "21.8 - Sawtooth Heuristic Search",
+                "start_page": 442
+            },{
+                "id": "21.9",
+                "title": "21.9 - Triangulated Value Functions",
+                "start_page": 445
+            },{
+                "id": "21.10",
+                "title": "Summary",
+                "start_page": 447
+            },{
+                "id": "21.11",
+                "title": "Exercises",
+                "start_page": 448
+            }]
+        },{
+            "id": "22",
+            "title": "22. Online Belief State Planning",
+            "start_page": 453,
+            "content": [{
+                "id": "22.1",
+                "title": "22.1 - Lookahead with Rollouts",
+                "start_page": 453
+            },{
+                "id": "22.2",
+                "title": "22.2 - Forward Search",
+                "start_page": 453
+            },{
+                "id": "22.3",
+                "title": "22.3 - Branch and Bound",
+                "start_page": 456
+            },{
+                "id": "22.4",
+                "title": "22.4 - Sparse Sampling",
+                "start_page": 456
+            },{
+                "id": "22.5",
+                "title": "22.5 - Monte Carlo Tree Search",
+                "start_page": 457
+            },{
+                "id": "22.6",
+                "title": "22.6 - Determinized Sparse Tree Search",
+                "start_page": 459
+            },{
+                "id": "22.7",
+                "title": "22.7 - Gap Heuristic Search",
+                "start_page": 460
+            },{
+                "id": "22.8",
+                "title": "Summary",
+                "start_page": 464
+            },{
+                "id": "22.9",
+                "title": "Exercises",
+                "start_page": 467
+            }]
+        },{
+            "id": "23",
+            "title": "23. Controller Abstractions",
+            "start_page": 471,
+            "content": [{
+                "id": "23.1",
+                "title": "23.1 - Controllers",
+                "start_page": 471
+            },{
+                "id": "23.2",
+                "title": "23.2 - Policy Iteration",
+                "start_page": 475
+            },{
+                "id": "23.3",
+                "title": "23.3 - Nonlinear Programming",
+                "start_page": 478
+            },{
+                "id": "23.4",
+                "title": "23.4 - Gradient Ascent",
+                "start_page": 481
+            },{
+                "id": "23.5",
+                "title": "Summary",
+                "start_page": 486
+            },{
+                "id": "23.6",
+                "title": "Exercises",
+                "start_page": 486
+            }]
+        }]
+    },{
+        "id": "part-5",
+        "title": "Part V - Multiagent Systems",
+        "content": [{
+            "id": "24",
+            "title": "24. Multiagent Reasoning",
+            "start_page": 493,
+            "content": [{
+                "id": "24.1",
+                "title": "24.1 - Simple Games",
+                "start_page": 493
+            },{
+                "id": "24.2",
+                "title": "24.2 - Response Models",
+                "start_page": 494
+            },{
+                "id": "24.3",
+                "title": "24.3 - Dominant Strategy Equilibrium",
+                "start_page": 497
+            },{
+                "id": "24.4",
+                "title": "24.4 - Nash Equilibrium",
+                "start_page": 498
+            },{
+                "id": "24.5",
+                "title": "24.5 - Correlated Equilibrium",
+                "start_page": 498
+            },{
+                "id": "24.6",
+                "title": "24.6 - Iterated Best Response",
+                "start_page": 503
+            },{
+                "id": "24.7",
+                "title": "24.7 - Hierarchical Softmax",
+                "start_page": 504
+            },{
+                "id": "24.8",
+                "title": "24.8 - Fictitious Play",
+                "start_page": 505
+            },{
+                "id": "24.9",
+                "title": "24.9 - Gradient Ascent",
+                "start_page": 509
+            },{
+                "id": "24.10",
+                "title": "Summary",
+                "start_page": 509
+            },{
+                "id": "24.11",
+                "title": "Exercises",
+                "start_page": 511
+            }]
+        },{
+            "id": "25",
+            "title": "25. Sequential Problems",
+            "start_page": 517,
+            "content": [{
+                "id": "25.1",
+                "title": "25.1 - Markov Games",
+                "start_page": 517
+            },{
+                "id": "25.2",
+                "title": "25.2 - Response Models",
+                "start_page": 519
+            },{
+                "id": "25.3",
+                "title": "25.3 - Nash Equilibrium",
+                "start_page": 520
+            },{
+                "id": "25.4",
+                "title": "25.4 - Fictitious Play",
+                "start_page": 521
+            },{
+                "id": "25.5",
+                "title": "25.5 - Gradient Ascent",
+                "start_page": 526
+            },{
+                "id": "25.6",
+                "title": "25.6 - Nash Q-Learning",
+                "start_page": 526
+            },{
+                "id": "25.7",
+                "title": "Summary",
+                "start_page": 528
+            },{
+                "id": "25.8",
+                "title": "Exercises",
+                "start_page": 530
+            }]
+        },{
+            "id": "26",
+            "title": "26. State Uncertainty",
+            "start_page": 533,
+            "content": [{
+                "id": "26.1",
+                "title": "26.1 - Partially Observable Markov Games",
+                "start_page": 533
+            },{
+                "id": "26.2",
+                "title": "26.2 - Policy Evaluation",
+                "start_page": 535
+            },{
+                "id": "26.3",
+                "title": "26.3 - Nash Equilibrium",
+                "start_page": 537
+            },{
+                "id": "26.4",
+                "title": "26.4 - Dynamic Programming",
+                "start_page": 540
+            },{
+                "id": "26.5",
+                "title": "Summary",
+                "start_page": 542
+            },{
+                "id": "26.6",
+                "title": "Exercises",
+                "start_page": 542
+            }]
+        },{
+            "id": "27",
+            "title": "27. Collaborative Agents",
+            "start_page": 545,
+            "content": [{
+                "id": "27.1",
+                "title": "27.1 - Decentralized Partially Observable Markov Decision Processes",
+                "start_page": 545
+            },{
+                "id": "27.2",
+                "title": "27.2 - Subclasses",
+                "start_page": 546
+            },{
+                "id": "27.3",
+                "title": "27.3 - Dynamic Programming",
+                "start_page": 549
+            },{
+                "id": "27.4",
+                "title": "27.4 - Iterated Best Response",
+                "start_page": 550
+            },{
+                "id": "27.5",
+                "title": "27.5 - Heuristic Search",
+                "start_page": 550
+            },{
+                "id": "27.6",
+                "title": "27.6 - Nonlinear programming",
+                "start_page": 551
+            },{
+                "id": "27.7",
+                "title": "Summary",
+                "start_page": 554
+            },{
+                "id": "27.8",
+                "title": "Exercises",
+                "start_page": 556
             }]
         }]
     }]
