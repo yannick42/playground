@@ -1,4 +1,15 @@
 export const entries = [{
+    id: 'fluid',
+    href: './fluid/',
+    name: 'Fluid dynamics',
+    desc: "To simulate smoke, fire, ...",
+    searchContext: '',
+    creationDate: '21/12/2024',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'verlet',
     href: './verlet/',
     name: 'Verlet integration',

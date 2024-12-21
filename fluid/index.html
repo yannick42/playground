@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Fluid dynamics</div>
+			<div id="subtitle">Method to simulate fluids in games, by Jos Stam (<a target="_blank" href="https://www.dgp.toronto.edu/public_user/stam/reality/Research/pdf/GDC03.pdf">2003</a>)</div>
+			<br/>
+
+			<div id="desc">
+                Using multiple steps: diffusion, projection (to keep flow incompressible) and advection.
+            </div>
+			<br/>
+
+			<canvas></canvas>
+
+			<br/>
+			<i>Move mouse over flames to interact</i>
+			
+        </div>
+
+        <script type="module" src="./fluid.js"></script>
+    </body>
+</html>
