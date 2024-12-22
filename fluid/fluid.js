@@ -282,20 +282,29 @@ function update() {
 }
 
 let lastX = 0, lastY = 0;
-canvas.addEventListener('mousemove', (e) => {
+const handleDrag = (e) => {
+    e.preventDefault();
+
+    const posX = (e.touches[0]?.clientX ?? e.clientX);
+    const posY = (e.touches[0]?.clientY ?? e.clientY);
+
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor(((e.clientX - rect.left) / canvas.width) * gridSize);
-    const y = Math.floor(((e.clientY - rect.top) / canvas.height) * gridSize);
+    const x = Math.floor(((posX - rect.left) / canvas.width) * gridSize);
+    const y = Math.floor(((posY - rect.top) / canvas.height) * gridSize);
     //addDensity(x, y, 1000);
-    if((lastX - e.clientX) > 0 || (lastY - e.clientY) > 0) {
-        const velX = e.clientX - lastX;
-        const velY = e.clientY - lastY;
+
+    if((lastX - posX) > 0 || (lastY - posY) > 0) {
+        const velX = posX - lastX;
+        const velY = posY - lastY;
         addVelocity(x, y, velX * 300, velY * 300);
     }
-    lastX = e.clientX;
-    lastY = e.clientY;
-    //console.log(lastX, lastY)
-});
+    lastX = posX;
+    lastY = posY;
+    //console.log(lastX, lastY, x, y)
+}
+
+canvas.addEventListener('mousemove', handleDrag);
+canvas.addEventListener('touchmove', handleDrag);
 
 
 update();
