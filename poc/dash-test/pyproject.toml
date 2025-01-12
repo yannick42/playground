@@ -3,13 +3,17 @@ name = "dash-test"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "yannick",email = ""}
+    {name = "yannick",email = "yannick@local.xxx"}
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "dash (>=2.18.2,<3.0.0)",
-    "pandas (>=2.2.3,<3.0.0)"
+    "pandas (>=2.2.3,<3.0.0)",
+    "matplotlib (>=3.10.0,<4.0.0)",
+    "numpy (>=2.2.1,<3.0.0)",
+    "scikit-learn (>=1.6.1,<2.0.0)",
+    "statsmodels (>=0.14.4,<0.15.0)"
 ]
 
 [build-system]

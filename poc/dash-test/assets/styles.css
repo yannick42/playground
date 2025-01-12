@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #3a8fc7;
+}
+p {
+    font-family: "Source Sans Pro", sans-serif;
+    color: rgb(38, 39, 48);
+}
+
+green {
+    color: green;
+}
+
+fieldset {
+    border-radius: 10px;
+}
