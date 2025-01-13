@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc, callback, Output, Input
 import plotly.express as px
 import pandas as pd
@@ -15,40 +16,70 @@ from statsmodels.stats.stattools import durbin_watson
 
 
 
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv')
+
+app = Dash(__name__, title='Durbin-Watson', external_stylesheets=[dbc.themes.BOOTSTRAP])
+server = app.server
 
 
-
-X_train = None
-y_train = None
-my_slider_val = 10
-nb_points = 250
-add_AR1 = False
-reg = None
-residuals = None
 
 def fn1(X):
-	rand = np.random.normal(0, my_slider_val, nb_points)
+	rand = np.random.normal(0, gaussian_noise, nb_points)
 	#print(rand)
 	return 40 \
 			+ 3*X + rand
-			#- 2*(x[1]+np.random.normal(0, my_slider_val, 1))
-			#+ 4*(x[2] + np.random.normal(0, my_slider_val, 1))
+			#- 2*(x[1]+np.random.normal(0, gaussian_noise, 1))
+			#+ 4*(x[2] + np.random.normal(0, gaussian_noise, 1))
 
 def create_dataset():
-    print("(re)create dataset")
     global X_train, y_train
-    X_train = np.random.rand(nb_points, 1) * 50 # X samples of size 1 (from 0 to 50)
-    y_train = fn1(X_train.T)[0]
-    #print(y_train)
 
-    # TODO: y should be ordered ? by X (and Xs too...)
     if add_AR1:
-        y_train = addAR1(y_train, phi=0.8, sigma=0.5)
+        print("!")
+        X_train = np.linspace(0, 50, nb_points).reshape(-1, 1) # X samples of size 1 (from 0 to 50)
+        y_train = fn1(X_train.T)[0]
+        y_train = addAR1(y_train, phi=phi, sigma=sigma)
+    else:
+        X_train = np.random.rand(nb_points, 1) * 50 # X samples of size 1 (from 0 to 50)
+        y_train = fn1(X_train.T)[0]
 
+    print("(create_dataset) len(x)=", len(X_train), "len(y)=", len(y_train))
     return X_train, y_train
 
+# phi : AR(1) coefficient
+# sigma : variance of the error term
+def addAR1(y, phi=1, sigma=1):
+    
+    L = len(y)
+    delta = 0  # constant term
+    ar1_noise = np.zeros(L)
+    ar1_noise[0] = delta  # initialize first value
+    eta = np.random.normal(loc=0, scale=sigma, size=L)  # White noise
+
+    # Initialize the first value of AR(1) noise
+    ar1_noise[0] = eta[0]
+
+    for t in range(1, L):
+        ar1_noise[t] = delta + phi * ar1_noise[t-1] + eta[t]
+
+    y = y + ar1_noise
+
+    print("AR(1) noise :", len(y))
+    return y.reshape(-1, 1)
 
 
+
+
+nb_points = 250
+gaussian_noise = 10
+add_AR1 = False
+phi = 0.8
+sigma = 0.5
+
+reg = None
+residuals = None
+X_train = None
+y_train = None
 X, y = create_dataset()
 
 def linear_reg(X, y):
@@ -65,24 +96,6 @@ def scatter(ax, X_train, y_train, title=''):
 	if title:
 		ax.set_title(title)
 
-
-# phi : AR(1) coefficient
-# sigma : variance of the error term
-def addAR1(X, phi=1, sigma=1, pos=1):
-	X = X.squeeze()
-	if pos == 10:
-		X[0] = 1
-		for t in range(1, len(X)):
-			#X[t] = X[t] + phi * X[t-1] + np.random.normal(scale=sigma)
-			X[t] = phi * X[t-1] + np.random.normal(scale=sigma)
-	else: # DOESN'T WORK ???
-		L = len(X)
-		X[L-1] = 1
-		for t in range(1, len(X)):
-			#X[t+1] = X[t+1] + phi * X[t] + np.random.normal(scale=sigma)
-			X[L-t-1] = phi * X[L-t] + np.random.normal(scale=sigma)
-	return X.reshape(-1, 1)
-
 def computeDW():
 
     global X, y, reg, residuals
@@ -98,35 +111,30 @@ def computeDW():
     reg = linear_reg(X, y)
 
     residuals = reg.predict(X) - y
-    #print("residuals:", residuals)
+    print("residuals:", len(residuals))
     
     DW = durbin_watson(residuals.squeeze()) # info : should be ordered ?
-    print("DW:", DW)
+    print("DW=", DW)
     return DW
 
 
 
 
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv')
 
-app = Dash(__name__, title='Durbin-Watson')
-server = app.server
 
 app.layout = [
     #html.Img(src='/assets/image.png'),
 
     html.H1(children='🧮 Durbin-Watson test statistic', style={'textAlign':'center', 'textDecoration': 'underline'}),
 
-    html.Mark('TODO:'),
-    dcc.Checklist(
-        options=[
-            {'label': 'Style input number', 'value': 'style_input_number'},
-            {'label': 'Make AR(1) checkbox work', 'value': 'add_checkbox'},
-            {'label': 'Add submit button ?', 'value': 'add_submit'},
-        ],
-        value=['Montreal']
-    ),
+    #html.Mark('TODO:'),
+    #dcc.Checklist(
+    #    options=[
+    #        {'label': 'Find what to do next !', 'value': 'next'},
+    #    ],
+    #    value=[]
+    #),
 
     dcc.Markdown(
         children='''
@@ -156,23 +164,31 @@ app.layout = [
                 html.H5('Gaussian noise :', style={'height': '10px', 'marginTop': '2px', 'marginBottom': '20px'}),
                 # added Gaussian noise
                 dcc.Slider(min=0, max=30, step=0.5, value=10, marks=None, id='gaussian-noise', tooltip={"placement": "bottom", "always_visible": True}),
-                
+
                 html.H5('Number of points :', style={'height': '10px', 'marginTop': '2px', 'marginBottom': '20px'}),
                 # number of points
-                dcc.Input(id="input_number",
-                        type="number",
-                        placeholder="input type number",
-                        value=250
-                    ),
+                dbc.Input(id="input_number", placeholder="Type number of points...", value=250, type="number"),
                 html.Br(),
+
                 dcc.Checklist(
                     ['Add AR(1) correlation to data'],
                     [],
                     id='check_ar1',
                 ),
+
+
+                html.H5('Autocorrelation coef (φ) :', style={'height': '10px', 'marginTop': '2px', 'marginBottom': '20px'}),
+                # added Gaussian noise
+                dcc.Slider(min=0, max=1, step=0.05, value=1, marks=None, id='phi', tooltip={"placement": "bottom", "always_visible": True}),
+
+                html.H5('Std. dev. for white noise (σ) :', style={'height': '10px', 'marginTop': '2px', 'marginBottom': '20px'}),
+                # added Gaussian noise
+                dcc.Slider(min=0, max=5, step=0.05, value=1, marks=None, id='sigma', tooltip={"placement": "bottom", "always_visible": True}),
+
             ]),
 
-            html.Div(id='slider-output-container'),
+            html.Br(),
+            html.Div(id='slider-output-container', style={'color': 'red', 'fontWeight': 'bold'}),
 
         ], style={"flex": 1, "padding": "10px"}),
         
@@ -180,8 +196,6 @@ app.layout = [
             html.Img(id='dw-image'),
         ], style={"flex": 1, "padding": "10px"}),
     ], style={"display": "flex", "margin-bottom": "10px"}),
-
-    html.Hr(),
 
     html.H3('Interactive Plotly graph'),
     html.P("Using gapminder dataset (Per year countries population/life expectancy/GDP)"),
@@ -200,49 +214,40 @@ app.layout = [
 
 @callback(
     Output('slider-output-container', 'children'),
+    Output('dw-image', 'src'), # src attribute
     Input('gaussian-noise', 'value'),
+    Input('phi', 'value'),
+    Input('sigma', 'value'),
     Input("input_number", "value"),
     Input("check_ar1", "value")
 )
-def update_output(value, NB_PTS, use_ar1):
+def update_output(value, phi_, sigma_, NB_PTS, use_ar1):
 
-    print(value, NB_PTS, use_ar1)
+    print("fn update_output")
+    print("value=", value, "NB_PTS=", NB_PTS, "use_ar1=", use_ar1)
 
-    global my_slider_val, nb_points, X, y, add_AR1
-    my_slider_val = value
+    global gaussian_noise, nb_points, X, y, add_AR1, phi, sigma
 
-    use_ar1 = True if len(use_ar1) > 0 else False
+    sigma = sigma_
+    phi = phi_
 
-    if nb_points != NB_PTS or add_AR1 != use_ar1:
+    if nb_points != NB_PTS or gaussian_noise != value or len(use_ar1) > 0 != add_AR1 or (len(use_ar1) == 0) == add_AR1:
         nb_points = NB_PTS
-        add_AR1 = use_ar1
+        gaussian_noise = value
+        add_AR1 = True if len(use_ar1) > 0 else False
+
         X, y = create_dataset()
+
+    #if add_AR1:
+    #    y = addAR1(y, phi=phi, sigma=sigma)
 
     DW = computeDW()
 
-    return 'DW = {}'.format(DW)
-
-@callback(
-    Output('graph-content', 'figure'),
-    Input('dropdown-selection', 'value'))
-def update_graph(value):
-    dff = df[df.country==value]
-    return px.line(dff, x='year', y='pop')
-
-@callback(
-    Output('dw-image', 'src'), # src attribute
-    Input('gaussian-noise', 'value'),
-    Input("input_number", "value"),
-    Input("check_ar1", "value")
-)
-def update_graph_2(gaussian_noise, input_number, use_ar1):
-
-    global X, y, residuals, reg, add_AR1
-
-    add_AR1 = True if len(use_ar1) > 0 else False
+    global residuals, reg
 
     fig, ax = plt.subplots(2)
     fig.suptitle('Scatterplot & Residuals')
+
     scatter(ax[0], X, y)
     ax[0].axline((0, reg.intercept_[0]), slope=reg.coef_[0][0], color='red', label='regression line')
     ax[0].legend()
@@ -256,8 +261,18 @@ def update_graph_2(gaussian_noise, input_number, use_ar1):
     buf.close()
     data_ = "data:image/png;base64,{}".format(data)
 
-    return data_
+    print("len(X)=", len(X), "len(Y)=", len(y))
 
+    return 'DW = {}'.format(DW), data_
+
+
+
+@callback(
+    Output('graph-content', 'figure'),
+    Input('dropdown-selection', 'value'))
+def update_graph(value):
+    dff = df[df.country==value]
+    return px.line(dff, x='year', y='pop')
 
 
 if __name__ == '__main__':
