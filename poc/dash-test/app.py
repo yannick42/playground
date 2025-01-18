@@ -20,4 +20,4 @@ app.layout = [
 ]
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='localhost', port=8000, use_reloader=False)
