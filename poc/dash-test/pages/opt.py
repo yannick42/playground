@@ -404,7 +404,7 @@ hide_trail = False
 
 
 def compute():
-
+    print("compute")
     #x = jnp.array(starting_point, dtype=float)
 
     x_init = jnp.array(starting_point)
