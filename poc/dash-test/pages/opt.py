@@ -503,7 +503,7 @@ def visualize(methods_to_show):
         )
 
     # Plots
-    fig, (ax, ax2) = plt.subplots(ncols=2, figsize=(13, 6))
+    fig, (ax, ax2) = plt.subplots(ncols=2, figsize=(11, 6))
 
     """
     Contour plot

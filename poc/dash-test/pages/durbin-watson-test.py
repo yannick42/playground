@@ -124,7 +124,7 @@ def computeDW():
 
 
 layout = html.Div([
-    
+
     html.H1(children='🧮 Durbin-Watson test statistic', style={'textAlign':'center', 'textDecoration': 'underline'}),
 
     #html.Mark('TODO:'),

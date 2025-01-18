@@ -117,7 +117,6 @@ layout = html.Div([
 
 
 
-
 @callback(
     Output('result', 'children'),
     Input('gender', 'value'),

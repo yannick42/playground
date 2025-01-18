@@ -14,7 +14,7 @@ layout = html.Div(children=[
     dbc.Button("New random starting point", id="reload", color="primary", className="me-1", n_clicks=0, style={'marginBottom': '10px'}),
     dcc.Dropdown(
         ['gd', 'cgd', 'momentum', 'nesterov_momentum', 'adagrad', 'dfp', 'bfgs'],
-        ['gd', 'cgd', 'momentum', 'nesterov_momentum', 'adagrad', 'dfp', 'bfgs'],
+        ['gd', 'cgd', 'momentum', 'dfp', 'bfgs'],
         id='methods',
         multi=True,
     ),
@@ -26,6 +26,7 @@ layout = html.Div(children=[
         overlay_style={"visibility":"visible", "filter": "blur(2px)"},
     ),
 ])
+
 
 current_n_clicks = 0
 
