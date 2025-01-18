@@ -8,8 +8,9 @@ app = Dash(
     title='Web data apps',
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     prevent_initial_callbacks=True,
-    suppress_callback_exceptions=True,
+    #suppress_callback_exceptions=True,
 )
+server = app.server
 
 app.layout = [
     html.Div([
@@ -25,7 +26,5 @@ app.layout = [
     #html.Img(src='/assets/image.png'),
 ]
 
-server = app.server
-
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=8000, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=8000, use_reloader=True)

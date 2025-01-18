@@ -7,6 +7,8 @@ import jax.numpy as jnp
 
 from math import pi, exp, sqrt, cos
 
+import random
+
 from matplotlib import ticker
 
 def rosenbrock_function(x, a=1, b=5):
@@ -20,7 +22,6 @@ rosenbrock_grad = grad(rosenbrock_function)
 #starting_point = [-1., 0.]
 #starting_point = [-1., -1.9]
 starting_point = [-1.5, 0.5]
-
 x_init = jnp.array(starting_point)
 
 x = None # ???
@@ -403,8 +404,18 @@ hide_trail = False
 
 
 
-def compute(methods_to_show):
+def compute(methods_to_show, change_start=False):
     print("compute")
+
+    global values_2, starting_point, x_init
+    values_2 = [] # reinit
+
+    if change_start:
+        starting_point = [random.uniform(-2.0, 2.0), random.uniform(-0.5, 2.0)]
+        x_init = jnp.array(starting_point)
+
+    print(f"starting point: {starting_point}" + (" (new)" if change_start else ""))
+
     #x = jnp.array(starting_point, dtype=float)
 
     x_init = jnp.array(starting_point)
@@ -417,8 +428,16 @@ def compute(methods_to_show):
         x = x_init
         length = None
 
+        # erase previous computation
+        obj['values'] = []
+        obj['arrows'] = []
+        obj['x_opt'] = None
+        obj['iter'] = 0
+
         if obj['hide'] or method not in methods_to_show:
             continue
+
+        print("computing with " + method)
 
         while length is None or (length > TOLERANCE and obj['iter'] < MAX_ITER): # stop if no more progress on GD (not CGD..)
             #

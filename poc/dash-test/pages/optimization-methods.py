@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, callback, Output, Input
+from dash import html, dcc, callback, Output, Input, no_update
 import dash_bootstrap_components as dbc
 
 import io
@@ -11,6 +11,7 @@ dash.register_page(__name__, title='Optimization methods', path='/opt')
 
 layout = html.Div(children=[
     html.H3('Optimization methods'),
+    dbc.Button("New random starting point", id="reload", color="primary", className="me-1", n_clicks=0, style={'marginBottom': '10px'}),
     dcc.Dropdown(
         ['gd', 'cgd', 'momentum', 'nesterov_momentum', 'adagrad', 'dfp', 'bfgs'],
         ['gd', 'cgd', 'momentum', 'nesterov_momentum', 'adagrad', 'dfp', 'bfgs'],
@@ -18,24 +19,43 @@ layout = html.Div(children=[
         multi=True,
     ),
     html.Br(),
-    html.Img(id='plot'),
+    dcc.Loading(
+        id="loading-2",
+        children=[html.Img(id='plot', style={'height': '600px'})],
+        type="circle",
+        overlay_style={"visibility":"visible", "filter": "blur(2px)"},
+    ),
 ])
+
+current_n_clicks = 0
 
 @callback(
     Output('plot', 'src'),
     Input('methods', 'value'),
+    Input('reload', 'n_clicks'),
 )
-def update(methods):
+def update(methods, n_clicks):
     
-    compute(methods)
-    plt = visualize(methods)
-    plt.show()
-    
-    buf = io.BytesIO() # in-memory files
-    plt.savefig(buf, format = "png")
-    plt.close()
-    data = base64.b64encode(buf.getbuffer()).decode("utf8") # encode to html elements
-    buf.close()
-    dataImage = "data:image/png;base64,{}".format(data)
+    try:
+        print(n_clicks)
+        change_start = True if n_clicks != 0 else False
+        print(f"change starting point ? {change_start}")
 
-    return dataImage
+        compute(methods, change_start)
+        current_n_clicks = n_clicks
+
+        plt = visualize(methods)
+        plt.show()
+        
+        buf = io.BytesIO() # in-memory files
+        plt.savefig(buf, format = "png")
+        plt.close()
+        data = base64.b64encode(buf.getbuffer()).decode("utf8") # encode to html elements
+        buf.close()
+        dataImage = "data:image/png;base64,{}".format(data)
+
+        return dataImage
+    except Exception as inst:
+        print(type(inst))
+        print(inst)
+        return no_update, "error when computing results..."
