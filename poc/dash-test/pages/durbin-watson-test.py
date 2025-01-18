@@ -16,10 +16,10 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from statsmodels.stats.stattools import durbin_watson
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv')
-
-
 dash.register_page(__name__, title='Durbin-Watson test statistic', path='/durbin')
+
+
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv')
 
 
 def fn1(X):

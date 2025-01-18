@@ -403,7 +403,7 @@ hide_trail = False
 
 
 
-def compute():
+def compute(methods_to_show):
     print("compute")
     #x = jnp.array(starting_point, dtype=float)
 
@@ -417,7 +417,7 @@ def compute():
         x = x_init
         length = None
 
-        if obj['hide']:
+        if obj['hide'] or method not in methods_to_show:
             continue
 
         while length is None or (length > TOLERANCE and obj['iter'] < MAX_ITER): # stop if no more progress on GD (not CGD..)

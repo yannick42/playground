@@ -3,7 +3,6 @@ import dash
 from dash import Dash, html, dcc
 
 app = Dash(__name__, use_pages=True, title='Web data apps', external_stylesheets=[dbc.themes.BOOTSTRAP])
-server = app.server
 
 app.layout = [
     html.Div([
@@ -18,6 +17,8 @@ app.layout = [
     ]),
     #html.Img(src='/assets/image.png'),
 ]
+
+server = app.server
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=8000, use_reloader=False)

@@ -9,17 +9,6 @@ from .opt import compute, visualize
 
 dash.register_page(__name__, title='Optimization methods', path='/opt')
 
-
-
-
-
-compute()
-
-
-
-
-
-
 layout = html.Div(children=[
     html.H3('Optimization methods'),
     dcc.Dropdown(
@@ -38,6 +27,7 @@ layout = html.Div(children=[
 )
 def update(methods):
     
+    compute(methods)
     plt = visualize(methods)
     plt.show()
     
