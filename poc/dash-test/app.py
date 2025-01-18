@@ -2,7 +2,14 @@ import dash_bootstrap_components as dbc
 import dash
 from dash import Dash, html, dcc
 
-app = Dash(__name__, use_pages=True, title='Web data apps', external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(
+    __name__,
+    use_pages=True,
+    title='Web data apps',
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    prevent_initial_callbacks=True,
+    suppress_callback_exceptions=True,
+)
 
 app.layout = [
     html.Div([
