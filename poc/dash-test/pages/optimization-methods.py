@@ -37,13 +37,16 @@ current_n_clicks = 0
 def update(methods, n_clicks):
     
     try:
-        print(n_clicks)
-        change_start = True if n_clicks != 0 else False
+        global current_n_clicks
+        
+        change_start = True if n_clicks != current_n_clicks else False
         print(f"change starting point ? {change_start}")
 
-        compute(methods, change_start)
         current_n_clicks = n_clicks
 
+        # slow
+        compute(methods, change_start)
+        # 
         plt = visualize(methods)
         plt.show()
         

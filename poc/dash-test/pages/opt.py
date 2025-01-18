@@ -29,7 +29,7 @@ x = None # ???
 values_2 = []
 
 ALPHA = 0.05 # constant
-TOLERANCE = 1e-4 # to know when to stop iterating    
+TOLERANCE = 1e-3 # to know when to stop iterating    
 MAX_ITER = 100
 
 
@@ -411,7 +411,7 @@ def compute(methods_to_show, change_start=False):
     values_2 = [] # reinit
 
     if change_start:
-        starting_point = [random.uniform(-2.0, 2.0), random.uniform(-0.5, 2.0)]
+        starting_point = [random.uniform(-1.8, 1.8), random.uniform(-0.3, 1.8)]
         x_init = jnp.array(starting_point)
 
     print(f"starting point: {starting_point}" + (" (new)" if change_start else ""))
