@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from jax import grad
+from jax import grad, jit
 import jax.numpy as jnp
 
 from math import pi, exp, sqrt, cos
@@ -14,7 +14,40 @@ from matplotlib import ticker
 def rosenbrock_function(x, a=1, b=5):
   return (a - x[0])**2 + b * (x[1] - x[0]**2)**2
 
-rosenbrock_grad = grad(rosenbrock_function)
+def sphere_function(x):
+  return x[0]**2 + x[1]**2
+
+@jit
+def ackley_function(x, a=20, b=0.2, c=2 * pi):
+    """
+    Compute the Ackley function.
+
+    Parameters:
+    x (array-like): Input array of values (1D or 2D).
+    a (float): Parameter, default is 20.
+    b (float): Parameter, default is 0.2.
+    c (float): Parameter, default is 2 * pi.
+
+    Returns:
+    float: Ackley function value.
+    """
+
+    n = 2
+    term1 = -a * jnp.exp(-b * jnp.sqrt(x[0]**2 / n + x[1]**2 / n))
+    term2 = -jnp.exp((jnp.cos(c * x[0]) / n) + (jnp.cos(c * x[1]) / n))
+    return term1 + term2 + a + jnp.exp(1)
+
+
+
+
+functions = {
+  'rosenbrock': rosenbrock_function,
+  'rosenbrock_grad': grad(rosenbrock_function),
+  'sphere': sphere_function,
+  'sphere_grad': grad(sphere_function),
+  'ackley': ackley_function,
+  'ackley_grad': grad(ackley_function),
+}
 
 
 
@@ -303,89 +336,12 @@ class BFGS(DescentMethod):
 
 
 
-methods = {
-    'gd': {
-        'hide': False,
-        'name': 'Gradient descent',
-        'method': GradientDescent(f=rosenbrock_function, df=rosenbrock_grad, x=x_init),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'lime',
-        'x_opt': None,
-        'label': lambda method: 'Gradient Descent $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$',
-    },
-    'cgd': {
-        'hide': False,
-        'name': 'Conjugate GD',
-        'method': ConjugateGradientDescent(f=rosenbrock_function, df=rosenbrock_grad, x=x_init),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'deeppink',
-        'x_opt': None,
-        'label': lambda method: 'Conjugate GD $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith Polak-Ribière update $\it{(1969)}$',
-    },
-    'momentum': {
-        'hide': False,
-        'name': 'Momentum',
-        'method': Momentum(f=rosenbrock_function, df=rosenbrock_grad, x=x_init, alpha=0.05, beta=0.85),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'orange',
-        'x_opt': None,
-        'label': lambda method: 'Momentum $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α) + ' and β=' + str(method['method'].β),
-    },
-    'nesterov_momentum': {
-        'hide': False,
-        'name': 'Nesterov momentum',
-        'method': NesterovMomentum(f=rosenbrock_function, df=rosenbrock_grad, x=x_init, alpha=0.05, beta=0.85),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'lightcoral',
-        'x_opt': None,
-        'label': lambda method: 'Nesterov momentum $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α) + ' and β=' + str(method['method'].β),
-    },
-    'adagrad': {
-        'hide': False,
-        'name': 'Adagrad',
-        'method': Adagrad(f=rosenbrock_function, df=rosenbrock_grad, x=x_init, alpha=0.1),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'darkred',
-        'x_opt': None,
-        'label': lambda method: 'Adagrad $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α),
-    },
-    'dfp': {
-        'hide': False,
-        'name': 'Adagrad',
-        'method': DFP(f=rosenbrock_function, df=rosenbrock_grad, x=x_init),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'grey',
-        'x_opt': None,
-        'label': lambda method: 'DFP $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ ',
-    },
-    'bfgs': {
-        'hide': False,
-        'name': 'Adagrad',
-        'method': BFGS(f=rosenbrock_function, df=rosenbrock_grad, x=x_init),
-        'values': [],
-        'arrows': [],
-        'iter': 0,
-        'color': 'yellow',
-        'x_opt': None,
-        'label': lambda method: 'BFGS $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ ',
-    }
-}
+methods = {}
 
 hide_trail = False
 
 
+iter_2 = 0
 
 
 
@@ -403,12 +359,93 @@ hide_trail = False
 
 
 
-
-def compute(methods_to_show, change_start=False):
+def compute(methods_to_show, test_function='rosenbrock', change_start=False):
     print("compute")
 
-    global values_2, starting_point, x_init
+
+    global values_2, starting_point, x_init, methods, iter_2
     values_2 = [] # reinit
+
+    methods = {
+        'gd': {
+            'hide': False,
+            'name': 'Gradient descent',
+            'method': GradientDescent(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'lime',
+            'x_opt': None,
+            'label': lambda method: 'Gradient Descent $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$',
+        },
+        'cgd': {
+            'hide': False,
+            'name': 'Conjugate GD',
+            'method': ConjugateGradientDescent(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'deeppink',
+            'x_opt': None,
+            'label': lambda method: 'Conjugate GD $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith Polak-Ribière update $\it{(1969)}$',
+        },
+        'momentum': {
+            'hide': False,
+            'name': 'Momentum',
+            'method': Momentum(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init, alpha=0.05, beta=0.85),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'orange',
+            'x_opt': None,
+            'label': lambda method: 'Momentum $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α) + ' and β=' + str(method['method'].β),
+        },
+        'nesterov_momentum': {
+            'hide': False,
+            'name': 'Nesterov momentum',
+            'method': NesterovMomentum(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init, alpha=0.05, beta=0.85),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'lightcoral',
+            'x_opt': None,
+            'label': lambda method: 'Nesterov momentum $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α) + ' and β=' + str(method['method'].β),
+        },
+        'adagrad': {
+            'hide': False,
+            'name': 'Adagrad',
+            'method': Adagrad(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init, alpha=0.1),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'darkred',
+            'x_opt': None,
+            'label': lambda method: 'Adagrad $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ \nwith α=' + str(method['method'].α),
+        },
+        'dfp': {
+            'hide': False,
+            'name': 'Adagrad',
+            'method': DFP(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'grey',
+            'x_opt': None,
+            'label': lambda method: 'DFP $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ ',
+        },
+        'bfgs': {
+            'hide': False,
+            'name': 'Adagrad',
+            'method': BFGS(f=functions[test_function], df=functions[test_function + '_grad'], x=x_init),
+            'values': [],
+            'arrows': [],
+            'iter': 0,
+            'color': 'yellow',
+            'x_opt': None,
+            'label': lambda method: 'BFGS $\\bf{(in\ ' + str(method['iter']) + '\ steps)}$ ',
+        }
+    }
+
 
     if change_start:
         starting_point = [random.uniform(-1.8, 1.8), random.uniform(-0.3, 1.8)]
@@ -469,9 +506,9 @@ def compute(methods_to_show, change_start=False):
 
     for i in range(methods['gd']['iter']):
 
-        values_2.append(rosenbrock_function(x))
+        values_2.append(functions[test_function](x))
 
-        gradient = rosenbrock_grad(x)
+        gradient = functions[test_function + "_grad"](x)
         direction = - gradient / np.abs(gradient) # gradient direction (normalized)
 
         new_x = x + ALPHA * direction
@@ -488,7 +525,11 @@ def compute(methods_to_show, change_start=False):
         iter_2 += 1
 
 
-def visualize(methods_to_show):
+def visualize(methods_to_show, test_function='rosenbrock'):
+
+    print("(visualize)")
+    global iter_2
+
     def drawArrow(ax, x, new_x, color='red', alpha=1, zorder=2):
         length = np.linalg.norm(np.array(new_x) - x)
         ax.arrow(
@@ -514,14 +555,21 @@ def visualize(methods_to_show):
     x2 = np.linspace(-.5, 2.0, ngridy)
 
     X1, X2 = np.meshgrid(x1, x2)
-    v_func = np.vectorize(lambda x, y: rosenbrock_function([x, y]))
+    v_func = np.vectorize(lambda x, y: functions[test_function]([x, y]))
     Y = v_func(X1, X2)
 
-    csf = ax.contourf(X1, X2, Y, locator=ticker.LogLocator(), levels=15, cmap="viridis") #  ignored by contourf
-    cs = ax.contour(csf, linewidths=1, colors='k')
-    ax.clabel(cs, inline=True, fontsize=6, zorder=1)
-    fig.colorbar(csf, ax=ax)
+    if test_function in ['ackley', 'sphere']:
+      csf = ax.contourf(X1, X2, Y, levels=15, cmap="viridis") #  ignored by contourf
+      cs = ax.contour(csf, linewidths=1, colors='k')
+      ax.clabel(cs, inline=True, fontsize=6, zorder=1)
+      fig.colorbar(csf, ax=ax)
+    else:
+      csf = ax.contourf(X1, X2, Y, locator=ticker.LogLocator(), levels=15, cmap="viridis") #  ignored by contourf
+      cs = ax.contour(csf, linewidths=1, colors='k')
+      ax.clabel(cs, inline=True, fontsize=6, zorder=1)
+      fig.colorbar(csf, ax=ax)
 
+    print("(visualize) contour plot. Done.")
 
     # starting point
     ax.scatter(
@@ -532,8 +580,11 @@ def visualize(methods_to_show):
         zorder=4,
     )
     # True optimal point for GD
-    circle = plt.Circle((1, 1), 0.15, color='white', fill=False)
-    ax.add_patch(circle)
+
+    if test_function == 'rosenbrock':
+      circle = plt.Circle((1, 1), 0.15, color='white', fill=False)
+      ax.add_patch(circle)
+    
     """ax.scatter(
         1, 1,
         c='white',
@@ -565,6 +616,7 @@ def visualize(methods_to_show):
             linewidths=3,
             )
 
+    print("(visualize) show optimal points found per method. Done.")
 
 
     # show trail
@@ -573,11 +625,12 @@ def visualize(methods_to_show):
             for arrow in methods[method]['arrows']:
                 drawArrow(ax, arrow[0], arrow[1], obj['color'])
 
+    print("(visualize) show trail. Done.")
 
 
 
     # cost function evolution, for each method
-    ax2.plot(range(0, len(values_2)), values_2, color='blue', label=f'fixed step-size (α={ALPHA})')
+    ax2.plot(range(0, len(values_2)), values_2, color='blue', label='fixed step-size (α=' + str(ALPHA) + ') $\\bf{(in\ ' + str(iter_2) + '\ steps)}$')
     for i, (method, obj) in enumerate(methods.items()):
         if not obj['hide'] and method in methods_to_show:
             ax2.plot(range(0, len(methods[method]['values'])), methods[method]['values'], color=obj['color'], label=obj['label'](methods[method]))
@@ -600,7 +653,8 @@ def visualize(methods_to_show):
     ax2.set_ylabel('y')
     ax2.legend(fontsize=7, borderpad=1, labelspacing=0.8, handlelength=3)
 
-    ax.set_title("Rosenbrock's banana test function")
+    # Rosenbrock's banana
+    ax.set_title(test_function + " test function")
     ax.set_xlabel(r'$x_1$')
     ax.set_ylabel(r'$x_2$')
 

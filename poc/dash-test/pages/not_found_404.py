@@ -6,10 +6,4 @@ from .side_bar import sidebar
 
 dash.register_page(__name__)
 
-layout = dbc.Row([
-    dbc.Col(sidebar(), width=2),
-    dbc.Col(children=[
-        html.H1("404: Please, choose a topic in the sidebar")
-    ])
-])
-
+layout = html.H1("404: Please, choose a topic in the sidebar")

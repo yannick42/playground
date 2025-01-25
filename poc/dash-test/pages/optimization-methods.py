@@ -12,11 +12,29 @@ dash.register_page(__name__, title='Optimization methods', path='/opt')
 layout = html.Div(children=[
     html.H3('Optimization methods'),
     dbc.Button("New random starting point", id="reload", color="primary", className="me-1", n_clicks=0, style={'marginBottom': '10px'}),
+    html.Div('Optimization methods :'),
     dcc.Dropdown(
-        ['gd', 'cgd', 'momentum', 'nesterov_momentum', 'adagrad', 'dfp', 'bfgs'],
+        [
+            {'label': 'Gradient descent', 'value': 'gd'}, #, 'className': 'test-1'}, not available ? https://github.com/plotly/dash/issues/1796
+            {'label': 'Conjugate gradient descent', 'value': 'cgd'},
+            {'label': 'Momentum', 'value': 'momentum'},
+            {'label': 'Nesterov momentum', 'value': 'nesterov_momentum'},
+            {'label': 'AdaGrad', 'value': 'adagrad'},
+            {'label': 'Davidon-Fletcher-Powell', 'value': 'dfp'},
+            {'label': 'BFGS', 'value': 'bfgs'},
+        ],
         ['gd', 'cgd', 'momentum', 'dfp', 'bfgs'],
         id='methods',
         multi=True,
+    ),
+    dcc.Dropdown(
+        [
+            {'label': 'Rosenbruck\'s function', 'value': 'rosenbrock'},
+            {'label': 'Sphere function', 'value': 'sphere'},
+            {'label': 'Ackley function', 'value': 'ackley'},
+        ],
+        "rosenbrock",
+        id='function'
     ),
     html.Br(),
     dcc.Loading(
@@ -33,9 +51,10 @@ current_n_clicks = 0
 @callback(
     Output('plot', 'src'),
     Input('methods', 'value'),
+    Input('function', 'value'),
     Input('reload', 'n_clicks'),
 )
-def update(methods, n_clicks):
+def update(methods, test_function, n_clicks):
     
     try:
         global current_n_clicks
@@ -46,9 +65,9 @@ def update(methods, n_clicks):
         current_n_clicks = n_clicks
 
         # slow
-        compute(methods, change_start)
+        compute(methods, test_function, change_start)
         # 
-        plt = visualize(methods)
+        plt = visualize(methods, test_function)
         plt.show()
         
         buf = io.BytesIO() # in-memory files
