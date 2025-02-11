@@ -1,4 +1,11 @@
 export const entries = [{
+    id: 'shunting-yard',
+    href: './shunting-yard/',
+    name: 'Shunting-yard algorithm',
+    desc: "to evaluate expressions",
+    searchContext: '',
+    creationDate: '11/2/2025'
+},{
     id: 'fluid',
     href: './fluid/',
     name: 'Fluid dynamics',
@@ -8,6 +15,9 @@ export const entries = [{
     chips: [{
         type: 'draft',
         text: "DRAFT"
+    },{
+        type: 'buggy',
+        text: 'buggy'
     }]
 },{
     id: 'verlet',
