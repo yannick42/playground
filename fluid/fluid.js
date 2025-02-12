@@ -285,8 +285,8 @@ let lastX = 0, lastY = 0;
 const handleDrag = (e) => {
     e.preventDefault();
 
-    const posX = (e.touches[0]?.clientX ?? e.clientX);
-    const posY = (e.touches[0]?.clientY ?? e.clientY);
+    const posX = (e.touches ? e.touches[0]?.clientX : e.clientX);
+    const posY = (e.touches ? e.touches[0]?.clientY : e.clientY);
 
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor(((posX - rect.left) / canvas.width) * gridSize);
