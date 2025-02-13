@@ -6,7 +6,7 @@ import { computeBézierCurve, round } from '../common/math.helper.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"
 import { getAuth, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyAvPeqHFoSYuETGai2VoAtDmbP8a_F3QR0", // no risk : https://firebase.google.com/docs/projects/api-keys
@@ -27,6 +27,9 @@ let userData;
 const storage = getStorage(app);
 const firestore = getFirestore(app);
 
+//
+// data that will be stored remotely
+//
 let payload;
 
 document.getElementById('sync').addEventListener('click', async (event) => {
@@ -43,13 +46,12 @@ document.getElementById('sync').addEventListener('click', async (event) => {
         payload
     })
       .then(() => {
-        // Data saved successfully to Firestore!
+        console.log("Data saved successfully to Firestore!")
       })
       .catch((error) => {
         console.error("Error saving data to Firestore:", error);
       });
 })
-
 
 document.getElementById('connect').addEventListener('click', async (event) => {
     const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
@@ -59,7 +61,7 @@ document.getElementById('connect').addEventListener('click', async (event) => {
     event.target.style.display = 'none';
     document.getElementById('sync').style.display = 'block';
     document.getElementById('disconnect').style.display = 'block';
-})
+});
 
 document.getElementById('disconnect').addEventListener('click', async (event) => {
     try {
@@ -74,52 +76,68 @@ document.getElementById('disconnect').addEventListener('click', async (event) =>
     } catch (error) {
         console.error("Error signing out:", error);
     }
-})
+});
 
 // Check if a user is already signed in
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // User is signed in
-      console.warn("User is signed in", user);
-      payload = _getLocalStorageObj('book_progress'); // from local storage first ?!
-  
-      userData = user;
-  
-      // Get user details
-      const displayName = user.displayName;
-      //const email = user.email;
-      //const photoURL = user.photoURL;
-      const uid = user.uid; // User's unique ID
-  
-      // Example: Show user's details on the webpage
-      document.getElementById("user-info").innerHTML = `<p>Welcome, <b>${displayName}</b>!</p>`;
+        // User is signed in
+        console.warn("User is signed in", user);
+        //payload = _getLocalStorageObj('book_progress'); // from local storage first ?!
+    
+        userData = user;
+    
+        // Get user details
+        const displayName = user.displayName;
+        //const email = user.email;
+        //const photoURL = user.photoURL;
+        const uid = user.uid; // User's unique ID
 
-      document.getElementById('disconnect').style.display = 'block';
-      document.getElementById('sync').style.display = 'block';
-      document.getElementById('connect').style.display = 'none';
+
+        if(userData) {
+            console.error(userData);
+            console.error(doc(firestore, "users", userData.uid));
+            
+            getDoc(doc(firestore, "users", userData.uid))
+            .then((d) => {
+                payload = d.data().payload; // ?
+                console.log("Data loaded successfully from Firestore!")
+            })
+            .catch((error) => {
+                console.error("Error loading data from Firestore:", error);
+            });
+        }
+
+
+        // Example: Show user's details on the webpage
+        document.getElementById("user-info").innerHTML = `<p>Welcome, <b>${displayName}</b>!</p>`;
+
+        document.getElementById('disconnect').style.display = 'block';
+        document.getElementById('sync').style.display = 'block';
+        document.getElementById('connect').style.display = 'none';
     } else {
-      // No user is signed in
-      document.getElementById('disconnect').style.display = 'none';
-      document.getElementById('sync').style.display = 'none';
-      document.getElementById('connect').style.display = 'block';
+        // No user is signed in
+        document.getElementById('disconnect').style.display = 'none';
+        document.getElementById('sync').style.display = 'none';
+        document.getElementById('connect').style.display = 'block';
     }
-  });
-
+});
 
 // check regularly if sync. is needed !
 setInterval(() => {
 
-    const last = payload; // null at the beginning
-    const current = _getLocalStorageObj('book_progress');
+    // skip "last_updated_at" property
+    const last = payload?.map(o => ({ id: o.id, progress: o.progress })); // null at the beginning
+    const current = _getLocalStorageObj('book_progress')?.map(o => ({ id: o.id, progress: o.progress }));
 
-    if(JSON.stringify(last?.sort((a, b) => a.id > b.id ? 1 : -1)) != JSON.stringify(current.sort((a, b) => a.id > b.id ? 1 : -1))) {
+    const isDiff = JSON.stringify(last?.sort((a, b) => a.id > b.id ? 1 : -1)) != JSON.stringify(current.sort((a, b) => a.id > b.id ? 1 : -1));
+    if(isDiff) {
         document.getElementById("user-info").style.backgroundColor = 'lightgrey';
     } else {
         document.getElementById("user-info").style.backgroundColor = 'transparent';
     }
 
-    console.warn(last, current);
-
+    console.warn(last, current, "-> isDiff:", isDiff);
 }, 5000);
 
 
@@ -674,8 +692,19 @@ function redraw(books) {
         .sort((a, b) => {
             const bookA = getProgress(a.id);
             const bookB = getProgress(b.id);
+
+            const bookItemA = getBookList().find(b => b.id == a.id);
+            const bookItemB = getBookList().find(b => b.id == a.id);
+
+            let countA = countIds(bookItemA.content);
+            let percA = (countA ? (bookA.progress?.length ?? 0) / countA : 0) * 100;
+            let countB = countIds(bookItemB.content);
+            let percB = (countB ? (bookB.progress?.length ?? 0) / countB : 0) * 100;
+
             //console.log(bookA.id, bookB.id, bookA.last_updated_at, bookB.last_updated_at)
-            return (bookA?.last_updated_at??0) < (bookB?.last_updated_at??0) ? 1 : -1
+            return percA < percB ?
+                1
+                : -1;
         });
     //console.error(orderedBooks)
     const booksHtml = orderedBooks.map(book => createHtml(book))
