@@ -58,6 +58,18 @@ document.getElementById('connect').addEventListener('click', async (event) => {
     userData = userCred.user;
     console.log("connected: user =", userData);
 
+    getDoc(doc(firestore, "users", userData.uid))
+    .then((d) => {
+        payload = d.data().payload; // ?
+        console.log("Data loaded successfully from Firestore!")
+        console.log("payload:", payload)
+        localStorage.setItem('book_progress', JSON.stringify(payload)); // in LocalStorage
+        redraw(visibleBooks);
+    })
+    .catch((error) => {
+        console.error("Error loading data from Firestore:", error);
+    });
+
     event.target.style.display = 'none';
     document.getElementById('sync').style.display = 'block';
     document.getElementById('disconnect').style.display = 'block';
@@ -67,6 +79,10 @@ document.getElementById('disconnect').addEventListener('click', async (event) =>
     try {
         await signOut(auth);
         console.log("User signed out");
+
+        payload = [];
+        localStorage.setItem('book_progress', '[]');
+        redraw(visibleBooks);
 
         // Clear user info on the webpage
         document.getElementById("user-info").innerHTML = "You are logged out.";
@@ -104,7 +120,7 @@ onAuthStateChanged(auth, async (user) => {
                 console.log("Data loaded successfully from Firestore!")
                 console.log("payload:", payload)
                 localStorage.setItem('book_progress', JSON.stringify(payload)); // in LocalStorage
-                main();
+                redraw(visibleBooks);
             })
             .catch((error) => {
                 console.error("Error loading data from Firestore:", error);
@@ -700,9 +716,9 @@ function redraw(books) {
             const bookItemB = getBookList().find(b => b.id == a.id);
 
             let countA = countIds(bookItemA.content);
-            let percA = (countA ? (bookA.progress?.length ?? 0) / countA : 0) * 100;
+            let percA = (countA ? (bookA?.progress?.length ?? 0) / countA : 0) * 100;
             let countB = countIds(bookItemB.content);
-            let percB = (countB ? (bookB.progress?.length ?? 0) / countB : 0) * 100;
+            let percB = (countB ? (bookB?.progress?.length ?? 0) / countB : 0) * 100;
 
             //console.log(bookA.id, bookB.id, bookA.last_updated_at, bookB.last_updated_at)
             return percA < percB ?
@@ -711,6 +727,10 @@ function redraw(books) {
         });
     //console.error(orderedBooks)
     const booksHtml = orderedBooks.map(book => createHtml(book))
+
+    removeEvents();
+    // erase all .....
+    bookListEl.innerHTML = '';
     // add it to the DOM
     booksHtml.forEach(html => bookListEl.innerHTML += html);
 
