@@ -103,6 +103,8 @@ onAuthStateChanged(auth, async (user) => {
                 payload = d.data().payload; // ?
                 console.log("Data loaded successfully from Firestore!")
                 console.log("payload:", payload)
+                localStorage.setItem('book_progress', JSON.stringify(payload)); // in LocalStorage
+                main();
             })
             .catch((error) => {
                 console.error("Error loading data from Firestore:", error);
