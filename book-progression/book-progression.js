@@ -712,16 +712,16 @@ function redraw(books) {
             const bookA = getProgress(a.id);
             const bookB = getProgress(b.id);
 
-            const bookItemA = getBookList().find(b => b.id == a.id);
-            const bookItemB = getBookList().find(b => b.id == a.id);
+            const bookItemA = getBookList().find(c => c.id == a.id);
+            const bookItemB = getBookList().find(c => c.id == b.id);
 
             let countA = countIds(bookItemA.content);
-            let percA = (countA ? (bookA?.progress?.length ?? 0) / countA : 0) * 100;
+            let percA = countA ? (bookA?.progress?.length ?? 0) / countA : 0;
             let countB = countIds(bookItemB.content);
-            let percB = (countB ? (bookB?.progress?.length ?? 0) / countB : 0) * 100;
+            let percB = countB ? (bookB?.progress?.length ?? 0) / countB : 0;
 
             //console.log(bookA.id, bookB.id, bookA.last_updated_at, bookB.last_updated_at)
-            return percA < percB ?
+            return percA <= percB ?
                 1
                 : -1;
         });
