@@ -102,6 +102,7 @@ onAuthStateChanged(auth, async (user) => {
             .then((d) => {
                 payload = d.data().payload; // ?
                 console.log("Data loaded successfully from Firestore!")
+                console.log("payload:", payload)
             })
             .catch((error) => {
                 console.error("Error loading data from Firestore:", error);
