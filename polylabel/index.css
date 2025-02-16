@@ -34,3 +34,11 @@ body {
 .centroid {
 	color: red;
 }
+
+.intermediate {
+	color: orange;
+}
+
+.poi {
+	color: green;
+}

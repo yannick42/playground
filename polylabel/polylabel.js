@@ -14,16 +14,17 @@ const precision = 1, // pixels
     gridLineWidth = 0.5,
     gridColor = 'white',
     circleColor = '#289059', // green
-    finalCircleWidth = 3,
+    finalCircleWidth = 4,
     finalPointSize = 4,
     finalPointColor = '#289059', //green
     polygonColor = '#8edef5', // blue
     intermediateCircleColor = '#f7cc61', // orange
-    intermediateCircleWidth = 2;
+    intermediateCircleWidth = 4;
 
 // evolution of the current best values (.d : min distance to polygon)
 let bestsProgression = [];
 let bestCells = [];
+let skippedCells = [];
 let centroid;
 
 function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness=0.35, avgRadius=250) {
@@ -222,7 +223,7 @@ function findPOI(polygon) {
     // where cells are ordered by "max" potential distance
     while(pq.count()) {
 
-        console.log(">>>", pq.peek())
+        //console.log(">>>", pq.peek())
 
         const cell = pq.dequeue();
         //console.log(cell.d, cell.max);
@@ -243,6 +244,7 @@ function findPOI(polygon) {
             console.log("better cell found with distance of ", bestCell.d)
             bestsProgression.push(bestCell.d);
         } else {
+            skippedCells.push(cell);
             //console.log(cell.d, "is not better than", bestCell.d)
         }
 
@@ -369,6 +371,7 @@ function redraw() {
     debugDiv.innerHTML = "";
     bestsProgression = []; // erase all
     bestCells = [];
+    skippedCells = [];
 
     drawPolygon(ctx, polygon, polygonColor, "black");
 
@@ -377,6 +380,13 @@ function redraw() {
     //
     // show result
     //
+
+    skippedCells.forEach(c => {
+        if (c.d > 0) {
+            drawCircle(ctx, c.x, c.y, c.d, "grey", 0.15);
+            drawPointAt(ctx, c.x, c.y, 0.15, "grey");
+        }
+    });
 
     bestCells.forEach((c, i) => {
         if (i > 0) {
@@ -397,7 +407,11 @@ function redraw() {
     // redraw the outline of the polygon shape
     drawPolygon(ctx, polygon, "transparent", "black");
 
-    debugDiv.innerHTML += "<b>Progression:</b> " + bestsProgression.map(dist => Math.round(dist * 10) / 10).join(' -> ') ?? 'no best option than centroid';
+    debugDiv.innerHTML += "<b>Progression:</b> " + bestsProgression.map((dist, i, arr) => {
+        const rounded = Math.round(dist * 10) / 10;
+        const className = i === null /*TODO!*/ ? "centroid" : (i == arr.length - 1 ? "poi" : "intermediate");
+        return `<span class='${className}'>${rounded}</span>`;
+    }).join(' -> ') ?? 'no best option than centroid';
 
     ctx.fillStyle = finalPointColor;
     ctx.font = `10pt Verdana`;
