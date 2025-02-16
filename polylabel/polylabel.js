@@ -17,7 +17,7 @@ const precision = 1, // pixels
     finalCircleWidth = 4,
     finalPointSize = 4,
     finalPointColor = '#289059', //green
-    polygonColor = '#8edef5', // blue
+    polygonColor = '#57b8d4', // blue
     intermediateCircleColor = '#f7cc61', // orange
     intermediateCircleWidth = 4;
 
@@ -383,8 +383,8 @@ function redraw() {
 
     skippedCells.forEach(c => {
         if (c.d > 0) {
-            drawCircle(ctx, c.x, c.y, c.d, "grey", 0.15);
-            drawPointAt(ctx, c.x, c.y, 0.15, "grey");
+            drawCircle(ctx, c.x, c.y, c.d, "gainsboro", 0.6);
+            drawPointAt(ctx, c.x, c.y, 0.6, "gainsboro");
         }
     });
 
@@ -397,10 +397,13 @@ function redraw() {
 
     // centroid (center)
     //drawPointAt(ctx, centroid.x, centroid.y, 2, "red");
-    drawCircle(ctx, bestCells[0].x, bestCells[0].y, bestCells[0].d, "red", intermediateCircleWidth, [5, 5]);
+    if (bestCells[0].d > 0) {
+        drawCircle(ctx, bestCells[0].x, bestCells[0].y, bestCells[0].d, "red", intermediateCircleWidth, [5, 5]);
+    }
     drawPointAt(ctx, bestCells[0].x, bestCells[0].y, intermediateCircleWidth, "red");
 
     console.log("best:", cell)
+    // should always have a radius > 0 ?
     drawCircle(ctx, cell.x, cell.y, cell.d, circleColor, finalCircleWidth);
     drawPointAt(ctx, cell.x, cell.y, finalPointSize, finalPointColor);
 
