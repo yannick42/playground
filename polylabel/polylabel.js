@@ -1,6 +1,6 @@
 
 import { setUpCanvas, drawPointAt, drawRectangle, drawCircle } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { randInt, randFloat } from '../common/common.helper.js';
 import { PriorityQueue } from './priority-queue.js';
 
 const canvas = document.querySelector("canvas");
@@ -24,17 +24,55 @@ const precision = 1, // pixels
 let bestsProgression = [];
 let bestCells = [];
 
-function createRandomPolygon(centerX, centerY, minRadius, maxRadius) {
-    const n = 30; // n points
-    const incrementBy = 2 * Math.PI / n;
+function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness=0.35, avgRadius=250) {
+    //const incrementBy = 2 * Math.PI / n; // equally-spaced
     const polygons = []
 
-    for(let phi = 0; phi < 2 * Math.PI; phi += incrementBy) {
-        const r = Math.random() * (maxRadius - minRadius) + minRadius;
-        const x = r * Math.cos(phi) + centerX;
-        const y = r * Math.sin(phi) + centerY;
-        polygons.push([x, y]);
+    function BoxMuller(mu=0, sigma=1) {
+        // 
+        // Box-Muller transform
+        //
+        const u1 = 1 - randFloat(0, 1); // to avoid log(0)
+        const u2 = randFloat(0, 1);
+        const pointX = Math.sqrt(-2*Math.log(u1)) * Math.cos(2*Math.PI*u2);
+        const pointY = Math.sqrt(-2*Math.log(u1)) * Math.sin(2*Math.PI*u2);
+        //const r = Math.sqrt(pointX*pointX + pointY*pointY)
+        const theta = Math.atan(pointY / pointX);
+
+        return theta;
     }
+
+    function clip(value, min, max) {
+        return Math.min(max, Math.max(value, min))
+    }
+
+    const irr = irregularity * 2 * Math.PI / n;
+    const lower = 2 * Math.PI / n - irr;
+    const upper = 2 * Math.PI / n + irr;
+
+    let angles = [];
+    let cumsum = 0;
+    for(let i = 0; i < n; i++) {
+        const angle = randFloat(lower, upper);
+        angles.push(angle);
+        cumsum += angle;
+    }
+
+    cumsum = cumsum / (2 * Math.PI);
+    
+    angles = angles.map(a => a / cumsum);
+
+    let currentAngle = 0;
+    angles.forEach(phi_step => {
+        //console.log(phi_step)
+        const gaussian = BoxMuller()
+        const r = clip(gaussian * spikiness * avgRadius/2 + avgRadius, 0, 2*avgRadius);
+        const x = r * Math.cos(currentAngle) + centerX;
+        const y = r * Math.sin(currentAngle) + centerY;
+        polygons.push([x, y]);
+
+        currentAngle += phi_step;
+    });
     return polygons;
 }
 
@@ -177,7 +215,7 @@ function findPOI(polygon) {
     while(pq.count()) {
 
         const cell = pq.dequeue();
-        console.log(cell.d, cell.max)
+        //console.log(cell.d, cell.max) // TODO : min-heap ?!
 
         // TODO ??? 
         //drawRectangle(ctx, cell.x, cell.y, cell.x+cell.h, cell.y+cell.h, gridLineWidth, gridColor);
@@ -251,9 +289,20 @@ function redraw() {
     bestsProgression = []; // erase all
     bestCells = [];
 
-    const maxRadius = 225,
-        minRadius = 85;
-    const polygon = createRandomPolygon(canvas.width / 2, canvas.height / 2 + 20, minRadius, maxRadius);
+    const avgRadius = 150,
+        n = 40,
+        spikiness = 0.6,
+        irregularity = 0.95;
+
+    const polygon = createRandomPolygon(
+        // polygon center
+        canvas.width / 2,
+        canvas.height / 2 + 20,
+        n,
+        irregularity,
+        spikiness,
+        avgRadius
+    );
     drawPolygon(ctx, polygon);
 
     const cell = findPOI(polygon);
@@ -271,7 +320,7 @@ function redraw() {
     drawCircle(ctx, cell.x, cell.y, cell.d, circleColor, finalCircleWidth);
     drawPointAt(ctx, cell.x, cell.y, finalPointSize, finalPointColor);
 
-    debugDiv.innerHTML += "<b>Progression:</b> " + bestsProgression.map(dist => Math.round(dist * 10) / 10).join(' -> ');
+    debugDiv.innerHTML += "<b>Progression:</b> " + bestsProgression.map(dist => Math.round(dist * 10) / 10).join(' -> ') ?? 'no best option than centroid';
 
     ctx.fillStyle = finalPointColor;
     ctx.font = `10pt Verdana`;
