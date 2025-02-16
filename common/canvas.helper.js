@@ -119,11 +119,24 @@ export function drawLine(context, x, y, x2, y2, width=3, color="blue") {
 	context.stroke();
 }
 
-export function drawRectangle(context, x, y, x2, y2, width=1) {
+export function drawRectangle(context, x, y, x2, y2, width=1, color='black') {
 	context.beginPath();
+  context.strokeStyle = color;
   context.lineWidth = width;
 	context.rect(x, y, x2 - x, y2 - y);
 	context.stroke();
+}
+
+// Draw a circle (eg. the circumcircle of triangle ABC)
+export function drawCircle(ctx, circumcenterX, circumcenterY, radius, color="lightblue", width=2) {
+	ctx.beginPath();
+	ctx.setLineDash([5, 5]);
+	ctx.arc(circumcenterX, circumcenterY, radius, 0, 2 * Math.PI);
+	ctx.strokeStyle = color;
+	ctx.lineWidth = width;
+	ctx.stroke();
+	ctx.closePath();
+	ctx.setLineDash([]);
 }
 
 export function addHorizontalAt(canvas, canvasXPos, width=0.25) {
