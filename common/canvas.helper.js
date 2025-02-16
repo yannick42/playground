@@ -128,10 +128,12 @@ export function drawRectangle(context, x, y, x2, y2, width=1, color='black') {
 }
 
 // Draw a circle (eg. the circumcircle of triangle ABC)
-export function drawCircle(ctx, circumcenterX, circumcenterY, radius, color="lightblue", width=2) {
+export function drawCircle(ctx, circumcenterX, circumcenterY, radius, color="lightblue", width=2, lineDash=null) {
 	ctx.beginPath();
-	ctx.setLineDash([5, 5]);
-	ctx.arc(circumcenterX, circumcenterY, radius, 0, 2 * Math.PI);
+  if (lineDash) {
+  	ctx.setLineDash(lineDash);
+  }
+  ctx.arc(circumcenterX, circumcenterY, radius, 0, 2 * Math.PI);
 	ctx.strokeStyle = color;
 	ctx.lineWidth = width;
 	ctx.stroke();
