@@ -9,8 +9,8 @@ const ctx = canvas.getContext("2d");
 const debugDiv = document.getElementById('debug');
 const resultsDiv = document.getElementById('results');
 
-const precision = 1, // pixels
-    gridLineWidth = 0.25,
+const precision = 1.5, // pixels
+    gridLineWidth = 0.5,
     gridColor = 'white',
     finalCircleWidth = 5,
     circleColor = '#289059', // green
@@ -34,12 +34,16 @@ function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness
         //
         const u1 = 1 - randFloat(0, 1); // to avoid log(0)
         const u2 = randFloat(0, 1);
+        
+        // both have mu=0, s²=1
         const pointX = Math.sqrt(-2*Math.log(u1)) * Math.cos(2*Math.PI*u2);
-        const pointY = Math.sqrt(-2*Math.log(u1)) * Math.sin(2*Math.PI*u2);
-        //const r = Math.sqrt(pointX*pointX + pointY*pointY)
-        const theta = Math.atan(pointY / pointX);
+        //const pointY = Math.sqrt(-2*Math.log(u1)) * Math.sin(2*Math.PI*u2);
 
-        return theta;
+        //const r = Math.sqrt(pointX*pointX + pointY*pointY);
+        //const theta = Math.atan(pointY / pointX);
+
+        //console.log(pointX, pointY);
+        return pointX;
     }
 
     function clip(value, min, max) {
@@ -76,10 +80,10 @@ function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness
     return polygons;
 }
 
-function drawPolygon(ctx, polygon) {
+function drawPolygon(ctx, polygon, polygonColor="white", strokeStyle="black") {
     ctx.fillStyle = polygonColor;
-    ctx.lineWidth = 0.9;
-    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 0.4;
+    ctx.strokeStyle = strokeStyle;
     ctx.beginPath();
     ctx.moveTo(polygon[0][0], polygon[0][1]);
     polygon.forEach(pt => ctx.lineTo(pt[0], pt[1]));
@@ -291,8 +295,8 @@ function redraw() {
 
     const avgRadius = 150,
         n = 40,
-        spikiness = 0.6,
-        irregularity = 0.95;
+        spikiness = 0.55,
+        irregularity = 0.9;
 
     const polygon = createRandomPolygon(
         // polygon center
@@ -303,7 +307,7 @@ function redraw() {
         spikiness,
         avgRadius
     );
-    drawPolygon(ctx, polygon);
+    drawPolygon(ctx, polygon, polygonColor, "black");
 
     const cell = findPOI(polygon);
     
@@ -319,6 +323,9 @@ function redraw() {
     console.log("best:", cell)
     drawCircle(ctx, cell.x, cell.y, cell.d, circleColor, finalCircleWidth);
     drawPointAt(ctx, cell.x, cell.y, finalPointSize, finalPointColor);
+
+    // redraw the outline of the polygon shape
+    drawPolygon(ctx, polygon, "transparent", "black");
 
     debugDiv.innerHTML += "<b>Progression:</b> " + bestsProgression.map(dist => Math.round(dist * 10) / 10).join(' -> ') ?? 'no best option than centroid';
 
