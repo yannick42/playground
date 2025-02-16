@@ -2,6 +2,7 @@
 import { setUpCanvas, drawPointAt, drawRectangle, drawCircle } from '../common/canvas.helper.js';
 import { randInt, randFloat } from '../common/common.helper.js';
 import { PriorityQueue } from './priority-queue.js';
+import { Iceland } from './Iceland.js';
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -28,7 +29,7 @@ function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness
     //const incrementBy = 2 * Math.PI / n; // equally-spaced
     const polygons = []
 
-    function BoxMuller(mu=0, sigma=1) {
+    function BoxMuller(mu=0, sigma=1) { // TODO
         // 
         // Box-Muller transform
         //
@@ -43,7 +44,7 @@ function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness
         //const theta = Math.atan(pointY / pointX);
 
         //console.log(pointX, pointY);
-        return pointX;
+        return sigma * pointX + mu;
     }
 
     function clip(value, min, max) {
@@ -69,8 +70,8 @@ function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness
     let currentAngle = 0;
     angles.forEach(phi_step => {
         //console.log(phi_step)
-        const gaussian = BoxMuller()
-        const r = clip(gaussian * spikiness * avgRadius/2 + avgRadius, 0, 2*avgRadius);
+        const gaussian = BoxMuller(avgRadius /* mu */, spikiness * avgRadius/2 /* sigma */)
+        const r = clip(gaussian, 0, 2  *avgRadius);
         const x = r * Math.cos(currentAngle) + centerX;
         const y = r * Math.sin(currentAngle) + centerY;
         polygons.push([x, y]);
@@ -282,8 +283,77 @@ function findPOI(polygon) {
 
 
 function main() {
-    document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    document.querySelector("#iceland").addEventListener('click', (e) => redrawIceland());
 
+    document.querySelector("#refresh").addEventListener('click', (e) => {
+        const avgRadius = 150,
+            n = 40,
+            spikiness = 0.55,
+            irregularity = 0.9;
+
+        polygon = createRandomPolygon(
+            // polygon center
+            canvas.width / 2,
+            canvas.height / 2 + 20,
+            n,
+            irregularity,
+            spikiness,
+            avgRadius
+        );
+
+        redraw();
+    });
+
+    const avgRadius = 150,
+        n = 40,
+        spikiness = 0.55,
+        irregularity = 0.9;
+
+    polygon = createRandomPolygon(
+        // polygon center
+        canvas.width / 2,
+        canvas.height / 2 + 20,
+        n,
+        irregularity,
+        spikiness,
+        avgRadius
+    );
+
+    redraw();
+}
+
+function normalizePolygon(points, canvasSize = 500, centerLat = 65, centerLon = -18) {
+
+    let R = 6371; // Approximate Earth radius in km (optional for scaling)
+    let rad = Math.PI / 180; // Degree to radian conversion
+
+    let projectedPoints = points.map(([lon, lat]) => [
+        R * (lon - centerLon) * Math.cos(centerLat * rad),  // X Projection
+        R * (lat - centerLat)                               // Y Projection
+    ]);
+
+    // Step 1: Find the bounding box
+    let minX = Math.min(...projectedPoints.map(p => p[0]));
+    let maxX = Math.max(...projectedPoints.map(p => p[0]));
+    let minY = Math.min(...projectedPoints.map(p => p[1]));
+    let maxY = Math.max(...projectedPoints.map(p => p[1]));
+
+    // Step 2: Compute scale while maintaining aspect ratio
+    let scaleX = canvasSize / (maxX - minX);
+    let scaleY = canvasSize / (maxY - minY);
+    let scale = Math.min(scaleX, scaleY); // Keep aspect ratio
+
+    // Step 3: Apply scaling and translation to center
+    return projectedPoints.map(([x, y]) => [
+        (x - minX) * scale,   // Scale X
+        canvasSize - (y - minY) * scale - 50    // Scale Y
+    ]);
+}
+
+let polygon;
+
+function redrawIceland() {
+    polygon = normalizePolygon(Iceland, 500);
     redraw();
 }
 
@@ -293,20 +363,6 @@ function redraw() {
     bestsProgression = []; // erase all
     bestCells = [];
 
-    const avgRadius = 150,
-        n = 40,
-        spikiness = 0.55,
-        irregularity = 0.9;
-
-    const polygon = createRandomPolygon(
-        // polygon center
-        canvas.width / 2,
-        canvas.height / 2 + 20,
-        n,
-        irregularity,
-        spikiness,
-        avgRadius
-    );
     drawPolygon(ctx, polygon, polygonColor, "black");
 
     const cell = findPOI(polygon);
