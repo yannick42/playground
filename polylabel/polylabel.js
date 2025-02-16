@@ -9,6 +9,7 @@ const ctx = canvas.getContext("2d");
 
 const debugDiv = document.getElementById('debug');
 const resultsDiv = document.getElementById('results');
+const chaikinChk = document.getElementById('chaikin');
 
 const precision = 1, // pixels
     gridLineWidth = 0.5,
@@ -19,7 +20,8 @@ const precision = 1, // pixels
     finalPointColor = '#289059', //green
     polygonColor = '#57b8d4', // blue
     intermediateCircleColor = '#f7cc61', // orange
-    intermediateCircleWidth = 4;
+    intermediateCircleWidth = 4,
+    nb_chaikin = 3; // to make polygon smooth...
 
 // evolution of the current best values (.d : min distance to polygon)
 let bestsProgression = [];
@@ -168,6 +170,21 @@ function pointToPolygon(pt, polygon) {
     return (inside ? 1 : -1) * minDist;
 }
 
+// smoothen polygon
+function chaikin(polygon) {
+    const newPoints = [];
+
+    for(let i = 0; i < polygon.length - 1; i++) {
+        const a = polygon[i];
+        const b = polygon[i + 1];
+
+        newPoints.push([a[0] * 0.75 + b[0] * 0.25, a[1] * 0.75 + b[1] * 0.25]);
+        newPoints.push([a[0] * 0.25 + b[0] * 0.75, a[1] * 0.25 + b[1] * 0.75]);
+    };
+
+    return newPoints;
+}
+
 class Cell {
     constructor(cx, cy, h, polygon) {
         this.d = pointToPolygon([cx, cy], polygon);
@@ -254,8 +271,6 @@ function findPOI(polygon) {
             continue;
         }
         // cell_max - best_dist > precision -> SPLIT CELL in 4
-        
-        console.log("split in 4")
 
         h = cell.h / 2;
 
@@ -315,8 +330,8 @@ function main() {
 
     const avgRadius = 150,
         n = 40,
-        spikiness = 0.55,
-        irregularity = 0.9;
+        spikiness = 0.45,
+        irregularity = 0.95;
 
     polygon = createRandomPolygon(
         // polygon center
@@ -331,8 +346,8 @@ function main() {
     redraw();
 }
 
-function normalizePolygon(points, canvasSize = 500, centerLat = 65, centerLon = -18) {
-
+function normalizePolygon(points, canvasSize = 500, centerLat = 65, centerLon = -18)
+{
     let R = 6371; // Approximate Earth radius in km (optional for scaling)
     let rad = Math.PI / 180; // Degree to radian conversion
 
@@ -355,7 +370,7 @@ function normalizePolygon(points, canvasSize = 500, centerLat = 65, centerLon = 
     // Step 3: Apply scaling and translation to center
     return projectedPoints.map(([x, y]) => [
         (x - minX) * scale,   // Scale X
-        canvasSize - (y - minY) * scale - 50    // Scale Y
+        canvasSize - (y - minY) * scale - 50    // Scale Y (inverted !)
     ]);
 }
 
@@ -373,7 +388,14 @@ function redraw() {
     bestCells = [];
     skippedCells = [];
 
-    drawPolygon(ctx, polygon, polygonColor, "black");
+    // 3x Chaikin
+    if(chaikinChk.checked) {
+        for(let i = 0; i < nb_chaikin; i++) {
+            polygon = chaikin(polygon);
+        }
+    }
+
+    drawPolygon(ctx, polygon, polygonColor);
 
     const cell = findPOI(polygon);
     
@@ -397,7 +419,7 @@ function redraw() {
 
     // centroid (center)
     //drawPointAt(ctx, centroid.x, centroid.y, 2, "red");
-    if (bestCells[0].d > 0) {
+    if (bestCells[0]?.d > 0) {
         drawCircle(ctx, bestCells[0].x, bestCells[0].y, bestCells[0].d, "red", intermediateCircleWidth, [5, 5]);
     }
     drawPointAt(ctx, bestCells[0].x, bestCells[0].y, intermediateCircleWidth, "red");

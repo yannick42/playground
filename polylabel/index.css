@@ -42,3 +42,18 @@ body {
 .poi {
 	color: green;
 }
+
+#control {
+	text-align: center;
+}
+
+label {
+	font-size: x-small;
+	user-select: none;
+}
+
+input[type=checkbox] {
+	transform: scale(0.7);
+    position: relative;
+    top: 4px;
+}
