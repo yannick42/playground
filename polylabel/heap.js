@@ -1,5 +1,5 @@
 // adds the provided newKey into the min-heap named "heap"
-export function heappush(heap, newObject, key){
+export function heappush(heap, newObject, key, type='minHeap') {
     // push the new key at the end of the array representing the heap
     heap.push(newObject);
   
@@ -9,7 +9,10 @@ export function heappush(heap, newObject, key){
     // keep comparing till root is reached or we terminate in middle
     while(curr > 0){
         let parent = Math.floor((curr-1)/2) // formula to find parent
-        if( heap[curr][key] < heap[parent][key] ){ // if less than its parent
+        if(
+            (type == 'minHeap' && heap[curr][key] < heap[parent][key])
+            || (type == 'maxHeap' && heap[curr][key] > heap[parent][key])
+        ){ // if less than its parent
             // quick swap
             [ heap[curr], heap[parent] ] = [ heap[parent], heap[curr] ]
             // update the index of newKey
@@ -22,7 +25,7 @@ export function heappush(heap, newObject, key){
 }
   
 // removes the smallest key from the min-heap named "heap"
-export function heappop(heap, key) {
+export function heappop(heap, key, type='minHeap') {
     // swap root with last node
     const n = heap.length;
     [ heap[0], heap[n-1] ] = [ heap[n-1], heap[0] ];
@@ -36,9 +39,17 @@ export function heappop(heap, key) {
     while(2*curr + 1 < heap.length){
         const leftIndex = 2*curr+1; 
         const rightIndex = 2*curr+2;
-        const minChildIndex = (rightIndex < heap.length && heap[rightIndex][key] < heap[leftIndex][key] ) ? rightIndex : leftIndex;
-      
-        if(heap[minChildIndex][key] < heap[curr][key]) {
+        const minChildIndex = (
+            rightIndex < heap.length && (
+                (type == 'minHeap' && heap[rightIndex][key] < heap[leftIndex][key])
+                || (type == 'maxHeap' && heap[rightIndex][key] > heap[leftIndex][key])
+            )
+        ) ? rightIndex : leftIndex;
+
+        if(
+            (type == 'minHeap' && heap[minChildIndex][key] < heap[curr][key])
+            || (type == 'maxHeap' && heap[minChildIndex][key] > heap[curr][key])
+         ) {
             // quick swap, if smaller of two children is smaller than the parent (min-heap)
             [heap[minChildIndex], heap[curr]] = [heap[curr], heap[minChildIndex]]
             curr = minChildIndex

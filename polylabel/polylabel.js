@@ -10,15 +10,15 @@ const ctx = canvas.getContext("2d");
 const debugDiv = document.getElementById('debug');
 const resultsDiv = document.getElementById('results');
 
-const precision = 1.5, // pixels
+const precision = 1, // pixels
     gridLineWidth = 0.5,
     gridColor = 'white',
     circleColor = '#289059', // green
     finalCircleWidth = 3,
-    finalPointSize = 5,
+    finalPointSize = 4,
     finalPointColor = '#289059', //green
-    polygonColor = '#7dcde5',
-    intermediateCircleColor = '#f5c03b', // orange
+    polygonColor = '#8edef5', // blue
+    intermediateCircleColor = '#f7cc61', // orange
     intermediateCircleWidth = 2;
 
 // evolution of the current best values (.d : min distance to polygon)
@@ -201,10 +201,10 @@ function findPOI(polygon) {
                 polygon
             );
             drawRectangle(ctx, x, y, x + 2*h, y + 2*h, gridLineWidth, gridColor)
-            pq.enqueue(cell, cell.max);
+            pq.enqueue(cell, 'max');
         }
     }
-    
+
     // TODO: compute distance from center of cell to the polygon (???)
     // [negative if outside (detected by raycasting = ??)]
 
@@ -213,7 +213,7 @@ function findPOI(polygon) {
     centroid = getCentroidCell(polygon);
     
     let bestCell = centroid;
-    console.log("centroid cell:", bestCell)
+    console.log("centroid cell:", bestCell);
 
     let numProbes = pq.count();
     //console.log("numProbes:", numProbes) // at first, the 2+ initial cells
@@ -222,8 +222,10 @@ function findPOI(polygon) {
     // where cells are ordered by "max" potential distance
     while(pq.count()) {
 
+        console.log(">>>", pq.peek())
+
         const cell = pq.dequeue();
-        //console.log(cell.d, cell.max) // TODO : min-heap ?!
+        //console.log(cell.d, cell.max);
 
         // TODO ??? 
         //drawRectangle(ctx, cell.x, cell.y, cell.x+cell.h, cell.y+cell.h, gridLineWidth, gridColor);
@@ -251,19 +253,21 @@ function findPOI(polygon) {
         }
         // cell_max - best_dist > precision -> SPLIT CELL in 4
         
+        console.log("split in 4")
+
         h = cell.h / 2;
 
         const cell1 = new Cell(cell.x - h, cell.y - h, h, polygon);
-        pq.enqueue(cell1, cell1.max);
+        pq.enqueue(cell1, 'max');
 
         const cell2 = new Cell(cell.x + h, cell.y - h, h, polygon);
-        pq.enqueue(cell2, cell2.max);
+        pq.enqueue(cell2, 'max');
         
         const cell3 = new Cell(cell.x - h, cell.y + h, h, polygon);
-        pq.enqueue(cell3, cell3.max);
+        pq.enqueue(cell3, 'max');
         
         const cell4 = new Cell(cell.x + h, cell.y + h, h, polygon);
-        pq.enqueue(cell4, cell4.max);
+        pq.enqueue(cell4, 'max');
 
         // draw them
         drawRectangle(ctx, cell1.x - h, cell1.y - h, cell1.x + h, cell1.y + h, gridLineWidth, gridColor);

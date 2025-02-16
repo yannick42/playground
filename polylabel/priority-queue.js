@@ -6,13 +6,13 @@ export class PriorityQueue {
         this.data = [];
     }
 
-    enqueue(item, priority) {
+    enqueue(item, priorityKey) {
         // item Insertion
-        heappush(this.data, item, priority);
+        heappush(this.data, item, priorityKey, 'maxHeap');
     }
 
     dequeue() {
-        return heappop(this.data)
+        return heappop(this.data, 'max', 'maxHeap');
     }
 
     peek() {
