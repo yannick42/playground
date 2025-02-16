@@ -7,6 +7,8 @@
 		<meta http-Equiv="Pragma" Content="no-cache" />
 		<meta http-Equiv="Expires" Content="0" />
 		
+		<base target="_blank">
+
 		<!-- for latex (loaded before else..)-->
 		<script>
 			window.MathJax = {
@@ -27,10 +29,11 @@
 				<ul id="bullet_points">
 					<li><i><b>Poisson disk sampling</b></i> allows to maintain an user-defined minimal spacing between the random points</li>
 
-                	<li>The <i><b>acceptance-<a target="_blank" href="https://en.wikipedia.org/wiki/Rejection_sampling">rejection</a> algorithm</b></i>
-				uses an <mark>uniform</mark> distribution (JS Math.random()) as the proposal distribution, and use the PDF (density function) of the
-				<mark>Gaussian</mark> (µ=0, σ=1) as the desired/target distribution (centered on the canvas). It needs two values x and y.
+                	<li>The <i><b>acceptance-<a href="https://en.wikipedia.org/wiki/Rejection_sampling">rejection</a> algorithm</b></i>
+				uses an <mark>uniform</mark> distribution (JS Math.random()) as the <u>proposal</u> distribution, and use the PDF (density function) of the
+				<mark>Gaussian</mark> (µ=0, σ=1) as the <u>desired/target</u> distribution (centered on the canvas), but it can be any distribution. (It needs two values x and y).
 					</li>
+					<li><i><b><a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">Box-Muller</a> transform</b></i>: by picking 2 random values from a uniform distribution.</li>
 					<li><mark>TODO ?</mark> stratified sampling, Gibbs sampling (1984), importance sampling (1978), ...</li>
 				</ul>
             </div>
@@ -43,6 +46,7 @@
 					<option value="poisson" selected>Poisson disk sampling</option>
 					<option value="uniform">uniform</option>
 					<option value="rejection">rejection sampling</option>
+					<option value="box-muller">Box-Muller transform (faster)</option>
 				</select>
 
 				<fieldset id="options">

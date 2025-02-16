@@ -1,6 +1,6 @@
 
 import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.helper.js';
-import { randInt } from '../common/common.helper.js';
+import { randInt, randFloat } from '../common/common.helper.js';
 import { gaussian, rejectionSampling } from '../common/stats.helper.js';
 import { round } from '../common/math.helper.js';
 
@@ -176,7 +176,6 @@ function redraw() {
             break;
 
         case "poisson":
-
             let randX = randInt(0, WIDTH-1);
             let randY = randInt(0, HEIGHT-1);
     
@@ -209,7 +208,6 @@ function redraw() {
                     ctx.fillRect(0, i * CELL_SIZE, WIDTH, 1);
                 }
             }
-
 
             let it = 0;
             while(activeList.length)
@@ -260,8 +258,29 @@ function redraw() {
 
             }
 
-            debugEl.innerHTML += `${points.length} points generated in ${it} iterations.`
+            debugEl.innerHTML += `${points.length} points generated with ${it} iterations.`
         
+            break;
+        
+        case "box-muller":
+
+            for(let i = 0; i < 800; i++) {
+                const u1 = 1 - randFloat(0, 1); // to avoid log(0)
+                const u2 = randFloat(0, 1);
+
+                const pointX = Math.sqrt(-2*Math.log(u1)) * Math.cos(2*Math.PI*u2);
+                const pointY = Math.sqrt(-2*Math.log(u1)) * Math.sin(2*Math.PI*u2);
+
+                const scale = 8; // ...
+                const point = [pointX * canvas.width/scale + canvas.width/2, pointY * canvas.height/scale + canvas.height/2];
+
+                // draw it on canvas
+                addPoint(ctx, point[0], point[1], POINT_COLOR);
+                points.push(point);
+            }
+
+            debugEl.innerHTML += `${points.length} points generated.`
+
             break;
         default:
             throw new("Unknown method : " + method);
