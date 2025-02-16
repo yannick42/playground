@@ -13,13 +13,13 @@ const resultsDiv = document.getElementById('results');
 const precision = 1.5, // pixels
     gridLineWidth = 0.5,
     gridColor = 'white',
-    finalCircleWidth = 5,
     circleColor = '#289059', // green
+    finalCircleWidth = 3,
     finalPointSize = 5,
     finalPointColor = '#289059', //green
     polygonColor = '#7dcde5',
     intermediateCircleColor = '#f5c03b', // orange
-    intermediateCircleWidth = 3;
+    intermediateCircleWidth = 2;
 
 // evolution of the current best values (.d : min distance to polygon)
 let bestsProgression = [];
@@ -374,17 +374,21 @@ function redraw() {
     // show result
     //
 
-    bestCells.forEach((c) => {
-        drawCircle(ctx, c.x, c.y, c.d, intermediateCircleColor, intermediateCircleWidth);
-        drawPointAt(ctx, c.x, c.y, intermediateCircleWidth, intermediateCircleColor);
+    bestCells.forEach((c, i) => {
+        if (i > 0) {
+            drawCircle(ctx, c.x, c.y, c.d, intermediateCircleColor, intermediateCircleWidth, [2.5, 2.5]);
+            drawPointAt(ctx, c.x, c.y, intermediateCircleWidth, intermediateCircleColor);
+        }
     });
+
+    // centroid (center)
+    //drawPointAt(ctx, centroid.x, centroid.y, 2, "red");
+    drawCircle(ctx, bestCells[0].x, bestCells[0].y, bestCells[0].d, "red", intermediateCircleWidth, [5, 5]);
+    drawPointAt(ctx, bestCells[0].x, bestCells[0].y, intermediateCircleWidth, "red");
 
     console.log("best:", cell)
     drawCircle(ctx, cell.x, cell.y, cell.d, circleColor, finalCircleWidth);
     drawPointAt(ctx, cell.x, cell.y, finalPointSize, finalPointColor);
-
-    // centroid (center)
-    drawPointAt(ctx, centroid.x, centroid.y, 2, "red");
 
     // redraw the outline of the polygon shape
     drawPolygon(ctx, polygon, "transparent", "black");
