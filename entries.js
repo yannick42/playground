@@ -1,4 +1,11 @@
 export const entries = [{
+    id: 'polylabel',
+    href: './polylabel/',
+    name: 'Polylabel',
+    desc: "find a polygon's point of inaccessibility",
+    searchContext: '',
+    creationDate: '15/2/2025'
+},{
     id: 'shunting-yard',
     href: './shunting-yard/',
     name: 'Shunting-yard algorithm',
