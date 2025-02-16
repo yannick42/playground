@@ -24,6 +24,7 @@ const precision = 1.5, // pixels
 // evolution of the current best values (.d : min distance to polygon)
 let bestsProgression = [];
 let bestCells = [];
+let centroid;
 
 function createRandomPolygon(centerX, centerY, n=30, irregularity=0.6, spikiness=0.35, avgRadius=250) {
     //const incrementBy = 2 * Math.PI / n; // equally-spaced
@@ -209,7 +210,9 @@ function findPOI(polygon) {
 
     // Calculate the distance from the centroid of the polygon and pick it as the first "best so far"
     // take centroid as the first best guess
-    let bestCell = getCentroidCell(polygon);
+    centroid = getCentroidCell(polygon);
+    
+    let bestCell = centroid;
     console.log("centroid cell:", bestCell)
 
     let numProbes = pq.count();
@@ -379,6 +382,9 @@ function redraw() {
     console.log("best:", cell)
     drawCircle(ctx, cell.x, cell.y, cell.d, circleColor, finalCircleWidth);
     drawPointAt(ctx, cell.x, cell.y, finalPointSize, finalPointColor);
+
+    // centroid (center)
+    drawPointAt(ctx, centroid.x, centroid.y, 2, "red");
 
     // redraw the outline of the polygon shape
     drawPolygon(ctx, polygon, "transparent", "black");

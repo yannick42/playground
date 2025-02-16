@@ -30,3 +30,7 @@ body {
 #resources {
 	width: 100%;
 }
+
+.centroid {
+	color: red;
+}
