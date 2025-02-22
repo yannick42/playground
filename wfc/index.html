@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+
+		<!-- no cache ... -->
+		<meta http-Equiv="Cache-Control" Content="no-cache" />
+		<meta http-Equiv="Pragma" Content="no-cache" />
+		<meta http-Equiv="Expires" Content="0" />
+		
+		<base target="_blank">
+
+		<!-- for latex (loaded before else..)-->
+		<script>
+			window.MathJax = {
+				loader: {load: ['[tex]/color']},
+				tex: {packages: {'[+]': ['color']}}
+			};
+		</script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body>
+		
+		<div id="content">
+			<div id="title">Wave Function Collapse algorithm</div>
+			<div id="subtitle"><b>Goal:</b> to generate random content (procedural generation) following constraints</div>
+			<br/>
+
+			<div id="desc">
+				Two modes are possible : tiled (used here) or overlapping
+				<br/>
+				Selecting the next tile to set/collapse, as the one with the lowest possible moves
+            </div>
+			<br/>
+
+			<canvas></canvas>
+
+			<button id="refresh">Refresh</button>
+			
+			<div>
+				<a href="https://en.wikipedia.org/wiki/Model_synthesis">Model synthesis</a> by <a href="https://paulmerrell.org/model-synthesis/">Paul Merrell (2007)</a>,
+				a previous method (more complex ?) that inspired the WFC popular method (by <a href="https://github.com/mxgmn">Maxim Gumin</a>, 2016)
+			</div>
+
+        </div>
+
+        <script type="module" src="./wfc.js"></script>
+    </body>
+</html>
