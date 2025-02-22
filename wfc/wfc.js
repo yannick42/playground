@@ -39,6 +39,7 @@ class Cell {
         this.collapsed = true;
     }
     draw() {
+
         const Y = this.y * scale;
         const X = this.x * scale;
         const a = 0.6, b = 0.4, c = a - b;
@@ -46,94 +47,122 @@ class Cell {
         const s50 = scale * c;
         const s25 = scale * b;
         if (this.collapsed) {
-            switch (JSON.stringify(this.options[0].edges)) {
-                case "[0,0,0,0]":
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    break;
-                case "[1,1,0,1]": // top, left, right (no bottom)
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(s75));
 
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(scale), Math.round(s25)); // no bottom
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(s25));
-                    ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(s25));
-                    break;
-                case "[1,1,1,0]": // top, right, bottom (no left)
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s75), Math.round(scale));
+            if (this.options[0].file) {
 
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(scale)); // no left
-                    ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(s25));
-                    ctx.fillRect(Math.round(Y + s75), Math.round(X + s75), Math.round(s25), Math.round(s25));
-                    break;
-                case "[0,1,1,1]": // right, bottom, left (no top)
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s75));
-                    
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(s25)); // no top
-                    ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(s25), Math.round(s25));
-                    ctx.fillRect(Math.round(Y + s75), Math.round(X + s75), Math.round(s25), Math.round(s25));
-                    break;
-                case "[1,0,1,1]": // top, bottom, left (no right)
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s75), Math.round(scale));
-                    
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(scale));
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(s25));
-                    ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(s25), Math.round(s25));
-                    break;
-                case "[0,1,0,1]": // horizontal
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s50));
-                    break;
-                case "[1,0,1,0]": // vertical
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(scale));
-                    break;
-                case "[1,1,1,1]": // hub
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(scale));
-                    ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s50));
-                    break;
-                case "[1,1,0,0]": // top to right
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(s75));
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s75), Math.round(s50));
-                    break;
-                case "[0,1,1,0]": // right to bottom
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s50), Math.round(s75));
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s75), Math.round(s50));
-                    break;
-                case "[0,0,1,1]": // bottom to left
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(s75), Math.round(s50));
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s50), Math.round(s75));
-                    break;
-                case "[1,0,0,1]": // left to top
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
-                    ctx.fillStyle = COLOR;
-                    ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(s75));
-                    ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(s75), Math.round(s50));
-                    break;
+                const name = this.options[0].name;
+                let angle = 0;
+                const [filename, rot] = name.split("_");
+                if (rot == 2) {
+                    angle = -Math.PI / 2;
+                } else if (rot == 3) {
+                    angle = -Math.PI;
+                } else if (rot == 4) {
+                    angle = -3 * Math.PI / 2;
+                }
+
+                ctx.translate(Y + scale / 2, X + scale / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(tileImages[filename], -scale/2, -scale/2, scale, scale);
+                ctx.rotate(-angle);
+                ctx.translate(-Y - scale/2, -X - scale/2);
+
+                // show final tile name 
+                //ctx.fillStyle = "red";
+                //ctx.font = "11px Arial";
+                //ctx.fillText(name, Y, X);
+
+            } else {
+
+                switch (JSON.stringify(this.options[0].edges)) {
+                    case "[0,0,0,0]":
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        break;
+                    case "[1,1,0,1]": // top, left, right (no bottom)
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(s75));
+
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(scale), Math.round(s25)); // no bottom
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(s25));
+                        ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(s25));
+                        break;
+                    case "[1,1,1,0]": // top, right, bottom (no left)
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s75), Math.round(scale));
+
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(scale)); // no left
+                        ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(s25));
+                        ctx.fillRect(Math.round(Y + s75), Math.round(X + s75), Math.round(s25), Math.round(s25));
+                        break;
+                    case "[0,1,1,1]": // right, bottom, left (no top)
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s75));
+                        
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(s25)); // no top
+                        ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(s25), Math.round(s25));
+                        ctx.fillRect(Math.round(Y + s75), Math.round(X + s75), Math.round(s25), Math.round(s25));
+                        break;
+                    case "[1,0,1,1]": // top, bottom, left (no right)
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s75), Math.round(scale));
+                        
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y + s75), Math.round(X), Math.round(s25), Math.round(scale));
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(s25), Math.round(s25));
+                        ctx.fillRect(Math.round(Y), Math.round(X + s75), Math.round(s25), Math.round(s25));
+                        break;
+                    case "[0,1,0,1]": // horizontal
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s50));
+                        break;
+                    case "[1,0,1,0]": // vertical
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(scale));
+                        break;
+                    case "[1,1,1,1]": // hub
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(scale));
+                        ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(scale), Math.round(s50));
+                        break;
+                    case "[1,1,0,0]": // top to right
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(s75));
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s75), Math.round(s50));
+                        break;
+                    case "[0,1,1,0]": // right to bottom
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s50), Math.round(s75));
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s75), Math.round(s50));
+                        break;
+                    case "[0,0,1,1]": // bottom to left
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(s75), Math.round(s50));
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X + s25), Math.round(s50), Math.round(s75));
+                        break;
+                    case "[1,0,0,1]": // left to top
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(Math.round(Y), Math.round(X), Math.round(scale), Math.round(scale));
+                        ctx.fillStyle = COLOR;
+                        ctx.fillRect(Math.round(Y + s25), Math.round(X), Math.round(s50), Math.round(s75));
+                        ctx.fillRect(Math.round(Y), Math.round(X + s25), Math.round(s75), Math.round(s50));
+                        break;
+                }
             }
         } else {
             ctx.fillStyle = "white";
@@ -248,6 +277,10 @@ class Grid {
         }
     }
 
+    finished() {
+        return this.grid.every(row => row.every(c => c.entropy() === 1));
+    }
+
     draw() {
         for(let row = 0; row < this.grid.length; row++) {
             for(let col = 0; col < this.grid[row].length; col++) {
@@ -298,6 +331,7 @@ class Grid {
         }
 
         const toCheck = [];
+        toCheck.push(pick);
         toCheck.push(...addNeighbors(nextGrid, pick.x, pick.y));
 
         while(toCheck.length) {
@@ -394,42 +428,175 @@ class Tile {
 
 function main() {
     document.querySelector("#refresh").addEventListener('click', (e) => redraw());
+    document.querySelector("#next").addEventListener('click', (e) => {
+        if(grid.finished()) {
+            ctx.fillRect(0, 0, scale * NB_ROW, scale * NB_COL, "white");
+            grid = new Grid(NB_ROW, NB_COL, tiles);
+            grid.initiate();
+        }
+        nextMove(grid);
+    });
 
     redraw();
 }
 
 
 let grid;
+let tileImages = {}
 
-function redraw() {
+//const tileset = "pipes"
+let tileset;
+let tiles, options;
 
-    const options = [
-        // [top, right, bottom, left]
-        [0, 0, 0, 0], // black area 
-        [1, 1, 0, 1], // link to top, left and right (no bottom)
-        [1, 1, 1, 0], // link to top, right, bottom (no left)
-        [0, 1, 1, 1], // (no top)
-        [1, 0, 1, 1], // (no right)
-        // HUB
-        [1, 1, 1, 1],
-        // CORRIDORS
-        [0, 1, 0, 1], // horizontal
-        [1, 0, 1, 0], // vertical
-        // ROADS
-        [1, 1, 0, 0], // from top to right
-        [0, 1, 1, 0], // from right to bottom
-        [0, 0, 1, 1], // from bottom to left
-        [1, 0, 0, 1], // from left to top
-    ];
+async function redraw() {
 
-    // create 8 tile types
-    const tiles = options.map(edge => new Tile(edge));
-    tiles.forEach((tile, i) => {
-        tile.index = i;
-        tile.setRules(options);
-    });
+    tileset = document.getElementById('tileset').value;
 
+    switch(tileset) {
+        case "pipes":
+
+            options = [
+                // [top, right, bottom, left]
+                [0, 0, 0, 0], // black area 
+                [1, 1, 0, 1], // link to top, left and right (no bottom)
+                [1, 1, 1, 0], // link to top, right, bottom (no left)
+                [0, 1, 1, 1], // (no top)
+                [1, 0, 1, 1], // (no right)
+                // HUB
+                [1, 1, 1, 1],
+                // CORRIDORS
+                [0, 1, 0, 1], // horizontal
+                [1, 0, 1, 0], // vertical
+                // ROADS
+                [1, 1, 0, 0], // from top to right
+                [0, 1, 1, 0], // from right to bottom
+                [0, 0, 1, 1], // from bottom to left
+                [1, 0, 0, 1], // from left to top
+            ];
+
+            tiles = options.map(edge => new Tile(edge));
+            tiles.forEach((tile, i) => {
+                tile.index = i;
+                tile.setRules(options);
+            });
+
+            break;
+        
+        case "circuit":
+
+            // 0 = lightgreen (middle)
+            // 1 = gray (middle)
+            // 2 = black (all)
+            // 3 = green + a part in black
+            // 4 = a part in black + green
+            // 5 = green
+            options = { // top, right, bottom, left
+                'bridge': [0, 1, 0, 1],
+                'bridge_2': [1, 0, 1, 0], // rotated
+                'component': [2, 2, 2, 2],
+                'connection': [0, 3, 2, 4],
+                'connection_2': [3, 2, 4, 0], // rotated -90°
+                'connection_3': [2, 4, 0, 3], // rotated -180°
+                'connection_4': [4, 0, 3, 2], // rotated -270°
+                'corner': [5, 5, 3, 4],     // TODO: BUG WITH SYMMETRY: replace 3 & 4 by [5, 5, 2] ? and [2, 5, 5]
+                'corner_2': [5, 3, 4, 5], // rotated 90°
+                'corner_3': [3, 4, 5, 5], // rotated 180°
+                'corner_4': [4, 5, 5, 3], // rotated 270°
+                'dskew': [0, 0, 0, 0],
+                'dskew_2': [0, 0, 0, 0],
+                'skew': [0, 0, 5, 5],
+                'skew_2': [0, 5, 5, 0],
+                'skew_3': [5, 5, 0, 0],
+                'skew_4': [5, 0, 0, 5],
+                'substrate': [5, 5, 5, 5],
+                't': [5, 0, 0, 0],
+                't_2': [0, 0, 0, 5],
+                't_3': [0, 0, 5, 0],
+                't_4': [0, 5, 0, 0],
+                // 2 sym.
+                'track': [0, 5, 0, 5],
+                'track_2': [5, 0, 5, 0],
+                // 4 sym.
+                'transition': [1, 5, 0, 5],
+                'transition_2': [5, 0, 5, 1],
+                'transition_3': [0, 5, 1, 5],
+                'transition_4': [5, 1, 5, 0],
+                // 4 sym.
+                'turn': [0, 0, 5, 5],
+                'turn_2': [0, 5, 5, 0],
+                'turn_3': [5, 5, 0, 0],
+                'turn_4': [5, 0, 0, 5],
+                // 2 sym.
+                'viad': [5, 0, 5, 0],
+                'viad_2': [0, 5, 0, 5],
+                // 4 sym.
+                'vias': [0, 5, 5, 5],
+                'vias_2': [5, 5, 5, 0],
+                'vias_3': [5, 5, 0, 5],
+                'vias_4': [5, 0, 5, 5],
+                // 2 symmetries
+                'wire': [5, 1, 5, 1],
+                'wire_2': [1, 5, 1, 5],
+            }
+
+            //
+            // Create tiles
+            //
+            tiles = Object.keys(options).map(name => new Tile(options[name]));
+            tiles.forEach((tile, i) => {
+                const name = Object.keys(options)[i];
+
+                tile.index = i;
+                tile.name = name;
+
+                const [filename, rot] = name.split("_");
+
+                tile.file = `./tilesets/circuits/${filename}.png`;
+
+                // Load the image
+                const img = new Image();
+                img.src = tile.file;
+                img.onload = () => {
+                    if(rot == 2) {
+                        img.style.transform = "rotate(-90deg)";
+                    } else if (rot == 3) {
+                        img.style.transform = "rotate(-180deg)";
+                    } else if (rot == 4) {
+                        img.style.transform = "rotate(-270deg)";
+                    }
+                    //console.log(typeof img, img)
+                    tileImages[name] = img;
+                };
+                img.onerror = (e) => {
+                    console.error("Image failed to load", e);
+                };
+
+                tile.setRules(Object.values(options));
+            });
+
+            break;
+    }
+    
     console.log("Tiles:", tiles);
+    
+    if(tileset == "circuit" && Object.keys(tileImages).length === 0) {
+        const tiles = document.getElementById("tiles");
+
+        tiles.innerHTML = "";
+        console.log("waiting tiles loading ...")
+        await sleep(2000);
+        console.log(tileImages)
+        console.log(Object.keys(tileImages).length, "loaded images:", tileImages);
+
+        Object.keys(tileImages).sort().forEach(tile => {
+            console.log(tile);
+            const t = document.createElement('div');
+            t.innerHTML = tile + '&nbsp; : &nbsp;' + options[tile];
+            
+            t.appendChild(tileImages[tile]);
+            tiles.appendChild(t);
+        })
+    }
 
     // clear
     ctx.fillRect(0, 0, scale * NB_ROW, scale * NB_COL, "white");
@@ -451,7 +618,9 @@ function redraw() {
 
         //console.log("next move :", ret, elapsed);
 
-        requestAnimationFrame(step);
+        if (ret === false) {
+            requestAnimationFrame(step);
+        }
     }
 
     requestAnimationFrame(step);

@@ -34,3 +34,12 @@ canvas {
 #refresh {
 	margin: 5px;
 }
+
+#tiles {
+	margin: 5px;
+	display: none;
+}
+
+#next {
+	display: none;
+}
