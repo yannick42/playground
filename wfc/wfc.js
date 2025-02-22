@@ -10,7 +10,7 @@ canvas.width = 640;
 
 console.log(canvas.width, canvas.height)
 
-const NB_ROW = 16,
+const NB_ROW = 32,
     NB_COL = Math.floor(NB_ROW / aspectRatio),
     COLOR = "lightgreen";
 
@@ -270,29 +270,63 @@ class Grid {
 
         const nextGrid = this.grid.slice(); // copy
 
-        for(let row = 0; row < this.grid.length; row++) {
-            for(let col = 0; col < this.grid[row].length; col++) {
-                if (! this.grid[row][col].collapsed) {
-                    //console.error("not collapsed :", nextGrid[row][col])
-                    //console.error(row, col)
+        const leftCell = (grid, x, y) => y - 1 >= 0 ? grid[x][y - 1] : null;
+        const rightCell = (grid, x, y) => y + 1 < grid[x].length ? grid[x][y + 1] : null;
+        const upCell = (grid, x, y) => x - 1 >= 0 ? grid[x - 1][y] : null;
+        const downCell = (grid, x, y) => x + 1 < grid.length ? grid[x + 1][y] : null;
 
-                    const cumulValidOptions = updateAvailableMoves(this.grid, row, col);
+        const addNeighbors = (grid, x, y) => {
+            const toCheck = [];
 
-                    // new available options for this cell
-                    nextGrid[row][col].options = nextGrid[row][col].options.filter(o => cumulValidOptions.includes(o.edges));
+            const left = leftCell(grid, x, y)
+            if(left && ! left.collapsed) {
+                toCheck.push(left);
+            }
+            const right = rightCell(nextGrid, x, y)
+            if(right && ! right.collapsed) {
+                toCheck.push(right);
+            }
+            const up = upCell(nextGrid, x, y)
+            if(up && ! up.collapsed) {
+                toCheck.push(up);
+            }
+            const down = downCell(nextGrid, x, y)
+            if(down && ! down.collapsed) {
+                toCheck.push(down);
+            }
+            return toCheck;
+        }
 
-                    if(nextGrid[row][col].options.length == 0) {
-                        // NO MORE OPTION for this cell, so restart all ...
-                        return -1;
-                    }
+        const toCheck = [];
+        toCheck.push(...addNeighbors(nextGrid, pick.x, pick.y));
 
-                    //console.log(nextGrid[row][col].options);
-                    nextGrid[row][col].update();
-                    //console.log(nextGrid)
-                } else {
-                    //console.error(nextGrid[row][col])
-                    //nextGrid[row][col] = this.grid[row][col];
+        while(toCheck.length) {
+
+            const cell = toCheck.pop();
+
+            const row = cell.x;
+            const col = cell.y;
+
+            const nbValidOptions = nextGrid[row][col].options.map(o => o.edges).length;
+            const cumulValidOptions = updateAvailableMoves(this.grid, row, col);
+
+            if(cumulValidOptions.length === nbValidOptions) {
+                //no changes !
+            } else {
+
+                // set "new" available options for this cell
+                nextGrid[row][col].options = nextGrid[row][col].options.filter(o => cumulValidOptions.includes(o.edges));
+
+                if(nextGrid[row][col].options.length == 0) {
+                    // NO MORE OPTION for this cell, so restart all ...
+                    return -1;
                 }
+
+                //console.log(nextGrid[row][col].options);
+                nextGrid[row][col].update();
+                //console.log(nextGrid)
+
+                toCheck.push(...addNeighbors(nextGrid, row, col));
             }
         }
 
