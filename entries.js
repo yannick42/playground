@@ -1,4 +1,15 @@
 export const entries = [{
+    id: 'wfc',
+    href: './wfc/',
+    name: 'Wave Function Collapse',
+    desc: "To create random content (map, ...)",
+    searchContext: '',
+    creationDate: '21/2/2025',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    }]
+},{
     id: 'polylabel',
     href: './polylabel/',
     name: 'Polylabel',
