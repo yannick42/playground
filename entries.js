@@ -10,6 +10,20 @@ export const entries = [{
         text: "DRAFT"
     }]
 },{
+    id: 'trivia',
+    href: './quiz/dist/',
+    name: 'Trivia',
+    desc: "A simple trivia quiz, build with React",
+    searchContext: '',
+    creationDate: '15/2/2025',
+    chips: [{
+        type: 'draft',
+        text: "DRAFT"
+    },{
+        type: 'tool',
+        text: "TOOL"
+    }]
+},{
     id: 'polylabel',
     href: './polylabel/',
     name: 'Polylabel',
@@ -33,9 +47,6 @@ export const entries = [{
     chips: [{
         type: 'draft',
         text: "DRAFT"
-    },{
-        type: 'buggy',
-        text: 'buggy'
     }]
 },{
     id: 'verlet',
