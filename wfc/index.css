@@ -9,7 +9,7 @@ body {
 
 #content {
 	margin-left: calc(50vw - (var(--canvas-size) + 150px)/2);
-  margin-top: 15px;
+	margin-top: 15px;
 	width: calc(var(--canvas-size) + 150px);
 	display: flex;
 	flex-direction: column;
@@ -28,7 +28,7 @@ body {
 }
 
 canvas {
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 }
 
 #refresh {
@@ -37,7 +37,6 @@ canvas {
 
 #tiles {
 	margin: 5px;
-	display: none;
 }
 
 #next {

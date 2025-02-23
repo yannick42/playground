@@ -5,12 +5,12 @@ import { randInt, choice } from '../common/common.helper.js';
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const aspectRatio = 16 / 9;
-canvas.width = 640;
+const aspectRatio = 2;
+canvas.width = 600;
 
 console.log(canvas.width, canvas.height)
 
-const NB_ROW = 32,
+const NB_ROW = 60,
     NB_COL = Math.floor(NB_ROW / aspectRatio),
     COLOR = "lightgreen";
 
@@ -179,10 +179,10 @@ class Cell {
                     color = "green"
                 }
                 ctx.fillStyle = color;
-                ctx.font = "12px Arial";
+                ctx.font = "7px Arial";
             } else {
                 ctx.fillStyle = "red";
-                ctx.font = "bold 13px Arial";
+                ctx.font = "bold 8px Arial";
             }
             ctx.fillText(this.options.length, this.y * scale + scale / 2 - 3, this.x * scale + scale / 2 + 3);
         }
@@ -455,6 +455,8 @@ async function redraw() {
 
     tileset = document.getElementById('tileset').value;
 
+    tileImages = [];
+
     switch(tileset) {
         case "pipes":
 
@@ -581,14 +583,79 @@ async function redraw() {
             });
 
             break;
+        
+
+        case "circles":
+
+            // 
+            options = { // top, right, bottom, left
+                'w-quarter': [1, 1, 0, 0],
+                'w-quarter_2': [1, 0, 0, 1],
+                'w-quarter_3': [0, 0, 1, 1],
+                'w-quarter_4': [0, 1, 1, 0],
+                'w': [1, 1, 1, 1],
+                'b-half': [0, 1, 1, 1],
+                'b-half_2': [1, 1, 1, 0],
+                'b-half_3': [1, 1, 0, 1],
+                'b-half_4': [1, 0, 1, 1],
+                'b-i': [0, 1, 0, 1],
+                'b-i_2': [1, 0, 1, 0],
+                'b-quarter': [0, 0, 1, 1],
+                'b-quarter_2': [0, 1, 1, 0],
+                'b-quarter_3': [1, 1, 0, 0],
+                'b-quarter_4': [1, 0, 0, 1],
+                'b': [0, 0, 0, 0],
+                'w-half': [1, 0, 0, 0],
+                'w-half_2': [0, 0, 0, 1],
+                'w-half_3': [0, 0, 1, 0],
+                'w-half_4': [0, 1, 0, 0],
+                'w-i': [1, 0, 1, 0],
+                'w-i_2': [0, 1, 0, 1],
+            }
+
+            //
+            // Create tiles
+            //
+            tiles = Object.keys(options).map(name => new Tile(options[name]));
+            tiles.forEach((tile, i) => {
+                const name = Object.keys(options)[i];
+
+                tile.index = i;
+                tile.name = name;
+
+                const [filename, rot] = name.split("_");
+
+                tile.file = `./tilesets/circles/${filename}.png`;
+
+                // Load the image
+                const img = new Image();
+                img.src = tile.file;
+                img.onload = () => {
+                    if(rot == 2) {
+                        img.style.transform = "rotate(-90deg)";
+                    } else if (rot == 3) {
+                        img.style.transform = "rotate(-180deg)";
+                    } else if (rot == 4) {
+                        img.style.transform = "rotate(-270deg)";
+                    }
+                    //console.log(typeof img, img)
+                    tileImages[name] = img;
+                };
+                img.onerror = (e) => {
+                    console.error("Image failed to load", e);
+                };
+
+                tile.setRules(Object.values(options));
+            });
+
+            break;
     }
     
     console.log("Tiles:", tiles);
     
-    if(tileset == "circuit" && Object.keys(tileImages).length === 0) {
-        const tiles = document.getElementById("tiles");
-
-        tiles.innerHTML = "";
+    const tilesDiv = document.getElementById("tiles");
+    tilesDiv.innerHTML = "";
+    if(["circuit", "circles"].includes(tileset)) {
         console.log("waiting tiles loading ...")
         await sleep(2000);
         console.log(tileImages)
@@ -600,7 +667,7 @@ async function redraw() {
             t.innerHTML = tile + '&nbsp; : &nbsp;' + options[tile];
             
             t.appendChild(tileImages[tile]);
-            tiles.appendChild(t);
+            tilesDiv.appendChild(t);
         })
     }
 
