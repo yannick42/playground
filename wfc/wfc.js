@@ -408,16 +408,19 @@ class Tile {
 
     setRules(tiles) {
         tiles.forEach(tile => {
-            if (this.edges[0] === tile[2]) {
+
+            const fit = (e1, e2) => e1.toString() === e2.toString().split('').reverse().join('')
+
+            if (fit(this.edges[0], tile[2])) {
                 this.up.push(tile);
             }
-            if (this.edges[1] === tile[3]) {
+            if (fit(this.edges[1], tile[3])) {
                 this.right.push(tile);
             }
-            if (this.edges[2] === tile[0]) {
+            if (fit(this.edges[2], tile[0])) {
                 this.down.push(tile);
             }
-            if (this.edges[3] === tile[1]) {
+            if (fit(this.edges[3], tile[1])) {
                 this.left.push(tile);
             }
         });
@@ -494,14 +497,17 @@ async function redraw() {
                 'bridge': [0, 1, 0, 1],
                 'bridge_2': [1, 0, 1, 0], // rotated
                 'component': [2, 2, 2, 2],
-                'connection': [0, 3, 2, 4],
-                'connection_2': [3, 2, 4, 0], // rotated -90°
-                'connection_3': [2, 4, 0, 3], // rotated -180°
-                'connection_4': [4, 0, 3, 2], // rotated -270°
-                'corner': [5, 5, 3, 4],     // TODO: BUG WITH SYMMETRY: replace 3 & 4 by [5, 5, 2] ? and [2, 5, 5]
-                'corner_2': [5, 3, 4, 5], // rotated 90°
-                'corner_3': [3, 4, 5, 5], // rotated 180°
-                'corner_4': [4, 5, 5, 3], // rotated 270°
+                'component_2': [2, 2, 2, 2],
+                'component_3': [2, 2, 2, 2],
+                'component_4': [2, 2, 2, 2],
+                'connection': [0, '552', 2, '255'],
+                'connection_2': ['552', 2, '255', 0], // rotated -90°
+                'connection_3': [2, '255', 0, '552'], // rotated -180°
+                'connection_4': ['255', 0, '552', 2], // rotated -270°
+                'corner': [5, 5, '552', '255'],   // bottom-left corner (black)
+                'corner_2': [5, '552', '255', 5], // rotated 90°
+                'corner_3': ['552', '255', 5, 5], // rotated 180°
+                'corner_4': ['255', 5, 5, '552'], // rotated 270°
                 'dskew': [0, 0, 0, 0],
                 'dskew_2': [0, 0, 0, 0],
                 'skew': [0, 0, 5, 5],
