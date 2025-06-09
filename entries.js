@@ -237,8 +237,8 @@ export const entries = [{
 },{
     id: 'gradient-descent',
     href: './gradient-descent/',
-    name: 'Gradient descent',
-    desc: 'Batch GD & SGD applied to linear regression',
+    name: 'Gradient descent methods',
+    desc: 'Batch GD & SGD applied to linear regression and logistic regression',
     searchContext: 'Stochastic,machine learning',
     chips: [{
         type: 'draft',
