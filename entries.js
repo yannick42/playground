@@ -66,14 +66,14 @@ export const entries = [{
     id: 'neural-nets',
     href: './neural-nets/',
     name: 'Neural networks',
-    desc: "...",
+    desc: "MLP feed-forward ANN",
     searchContext: '',
     creationDate: '22/08/2024',
     chips: [{
         type: 'draft',
         text: "DRAFT"
     }]
-},{
+},/*{
     id: 'char-rnn',
     href: './char-rnn/',
     name: 'Char RNN',
@@ -84,7 +84,7 @@ export const entries = [{
         type: 'draft',
         text: "DRAFT"
     }]
-},{
+},*/{
     id: 'quadtree',
     href: './quadtree/',
     name: 'Quadtree',

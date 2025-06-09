@@ -22,12 +22,22 @@
 		<div id="content">
 			<div id="title">Neural networks</div>
 			<div id="subtitle"><u>Goal:</u> learn the basics of neural net optimization</div>
+			<br/>
 
 			<div id="desc">
-                Optimizers (SGD, Adam, AdamW, RMSProp, ...), activation functions (tanh, ReLU, ...)
+                <mark>TODO:</mark> add choices for optimizers (SGD, Adam, AdamW, RMSProp, NAG, Momentum, ...), activation functions (tanh, ReLU, ...)
             </div>
+			<br/>
+
+			Learning Rate : <input id="lr" type="number" step="0.001" value="0.005" /><br/>
 
 			<canvas width=500 height=500></canvas>
+
+			<br/>
+			<span id="loss"></span>
+
+			<br/>
+			<button id="redraw">Re-run</button>
 			
         </div>
 
