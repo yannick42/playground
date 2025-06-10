@@ -58,9 +58,6 @@ export const entries = [{
     chips: [{
         type: 'draft',
         text: "DRAFT"
-    },{
-        type: 'buggy',
-        text: 'buggy'
     }]
 },{
     id: 'neural-nets',
