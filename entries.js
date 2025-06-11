@@ -54,11 +54,7 @@ export const entries = [{
     name: 'Verlet integration',
     desc: "Simulate physical system: collisions, rigid bodies, ...",
     searchContext: '',
-    creationDate: '15/11/2024',
-    chips: [{
-        type: 'draft',
-        text: "DRAFT"
-    }]
+    creationDate: '15/11/2024'
 },{
     id: 'neural-nets',
     href: './neural-nets/',
