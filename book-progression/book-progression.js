@@ -3,55 +3,33 @@ import { setUpCanvas, drawPointAt, drawArrow, drawLine } from '../common/canvas.
 import { randInt } from '../common/common.helper.js';
 import { computeBézierCurve, round } from '../common/math.helper.js';
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+import { saveUserData } from './utils.js';
+
+import { app } from './firebase.js';
+
+//
+// Firebase SDKs
+//
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"
 import { getAuth, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAvPeqHFoSYuETGai2VoAtDmbP8a_F3QR0", // no risk : https://firebase.google.com/docs/projects/api-keys
-    authDomain: "book-progression.firebaseapp.com",
-    projectId: "book-progression",
-    storageBucket: "book-progression.appspot.com",
-    messagingSenderId: "1017563463675",
-    appId: "1:1017563463675:web:4c84cebf8c0c78a7d0d55e",
-    measurementId: "G-BS2RFS52ET"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-let userData;
+
 //const analytics = getAnalytics(app);
 const storage = getStorage(app);
 const firestore = getFirestore(app);
+
+// current user info
+let userData;
 
 //
 // data that will be stored remotely
 //
 let payload;
 
-document.getElementById('sync').addEventListener('click', async (event) => {
-    console.log("syncing...", userData);
-
-    const userDoc = doc(firestore, "users", userData.uid);
-
-    // state to store remotely in user's data
-    payload = _getLocalStorageObj('book_progress');
-
-    setDoc(userDoc, {
-        username: userData.displayName,
-        email: userData.email,
-        payload
-    })
-      .then(() => {
-        console.log("Data saved successfully to Firestore!")
-      })
-      .catch((error) => {
-        console.error("Error saving data to Firestore:", error);
-      });
-})
+document.getElementById('sync').addEventListener('click', async (event) => saveUserData(firestore, userData));
 
 document.getElementById('connect').addEventListener('click', async (event) => {
     const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
@@ -94,7 +72,9 @@ document.getElementById('disconnect').addEventListener('click', async (event) =>
     }
 });
 
+//
 // Check if a user is already signed in
+//
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         // User is signed in
@@ -117,9 +97,10 @@ onAuthStateChanged(auth, async (user) => {
             getDoc(doc(firestore, "users", userData.uid))
             .then((d) => {
                 payload = d.data().payload; // ?
-                console.log("Data loaded successfully from Firestore!")
-                console.log("payload:", payload)
-                localStorage.setItem('book_progress', JSON.stringify(payload)); // in LocalStorage
+                console.log("Data loaded successfully from Firestore!");
+                console.log("payload:", payload);
+
+                localStorage.setItem('book_progress', JSON.stringify(payload)); // save to LocalStorage
                 redraw(visibleBooks);
             })
             .catch((error) => {
@@ -185,7 +166,7 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 function main() {
-    visibleBooks = getBookList();
+    visibleBooks = getBookList(); // all books at the beginning
 
     console.warn(JSON.stringify(visibleBooks))
 
@@ -234,21 +215,38 @@ const booksIds_from_GCS = [];
  */
 async function getBookListFromFirebase() {
 
-    const books = [];
+    // use web worker to load books from GCS
+    function runWorker(bookId) {
+        return new Promise(async (resolve, reject) => {
+            const myWorker = new Worker("worker.js", { type: "module" }); // to use import instead of importScripts
+            myWorker.onmessage = async (e) => {
+                if (!e.data.error) {
+                    booksIds_from_GCS.push(e.data.bookId);
+                    resolve(e.data);
+                } else {
+                    console.error("Error received from worker:", e.data.error);
+                    //reject(e.data.error);
 
-    for (const bookId of bookIds) {
-        let fetched;
-        // hard-coded books stored in Firebase Storage (GCS)
-        try {
-            let url = await getDownloadURL(ref(storage, 'gs://book-progression.appspot.com/' + bookId + '.json'));
-            fetched = await fetch(url);
-            booksIds_from_GCS.push(bookId);
-        } catch(e) {
-            console.error(`loading ${bookId} from local`);
-            fetched = await fetch('./books/'+bookId+'.json');
-        }
-        books.push(await fetched.json());
-    };
+                    console.error(`loading ${bookId} from local`);
+                    const fetched = await fetch('./books/'+bookId+'.json');
+                    resolve(await fetched.json());
+                }
+            };
+
+            myWorker.onmessageerror = (e) => {
+                console.error("Message error from worker:", e);
+                reject(e);
+            };
+
+            myWorker.postMessage(bookId);
+        });
+    }
+
+    // load hard-coded books stored in Firebase Storage (GCS)
+    const jobs = bookIds.map(bookId => runWorker(bookId))
+
+    // wait for all books to be loaded
+    const books = await Promise.all(jobs);
     
     console.warn(books);
     return books;
@@ -756,5 +754,8 @@ function updateOverallProgress() {
     document.getElementById('score').innerHTML = `<u>Current progression : <b><i>${round(overallAverage(), 2)}%</i></b></u>`;
 }
 
+console.time("load books from firebase");
 const bookList = await getBookListFromFirebase();
+console.timeEnd("load books from firebase");
+
 main();
