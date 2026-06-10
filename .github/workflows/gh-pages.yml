@@ -1,15 +1,15 @@
-name: Configure GitHub Pages
-
-on:
-    push:
-        branches:
-            - main # Set a branch name to trigger deployment
-
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        permissions:
-            id-token: write
-        steps:
-            - name: Deploy
-              uses: actions/configure-pages@v5
+#name: "Configure GitHub Pages"
+#
+#on:
+#    push:
+#        branches:
+#            - main # Set a branch name to trigger deployment
+#
+#jobs:
+#    deploy:
+#        runs-on: ubuntu-latest
+#        permissions:
+#            id-token: write
+#        steps:
+#            - name: "Deploy"
+#              uses: actions/configure-pages@v5
